@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MCSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <MCServer>sr-vm-062.corp.gidroogk.com</MCServer>
+  <MCUser>egschu_votges</MCUser>
+  <MCPassword>A@a70352</MCPassword>
+  <!--
+  <MCUser>egshu_votges</MCUser>
+  <MCPassword>A@a70352</MCPassword>
+  -->
+  <MCData>
+    <MCSettingsRecord>
+      <MCCode>0</MCCode>
+      <!--ГТП ГЭС-->
+      <MCName>338730</MCName>
+      <PiramidaCode>1</PiramidaCode>
+      <EDSPoint>PBR_GES.EDS@CALC</EDSPoint>
+      <EDSPointSmooth>PBR_GES_SMOOTH.EDS@CALC</EDSPointSmooth>
+      <WriteIntegratedData>1</WriteIntegratedData>
+      <WriteToEDS>1</WriteToEDS>
+      <IntegratedEDSPoint>PBR_GES_VYR_PLAN.EDS@CALC</IntegratedEDSPoint>
+      <Autooper>0</Autooper>
+    </MCSettingsRecord>
+    <MCSettingsRecord>
+      <!--ГТП 1-->
+      <MCCode>1</MCCode>
+      <MCName>1045</MCName>
+      <PiramidaCode>2</PiramidaCode>
+      <WriteToEDS>1</WriteToEDS>
+      <EDSPoint>PBR_GTP1.EDS@CALC</EDSPoint>
+      <EDSPointSmooth>PBR_GTP1_SMOOTH.EDS@CALC</EDSPointSmooth>
+      <WriteIntegratedData>0</WriteIntegratedData>
+      <Autooper>0</Autooper>
+    </MCSettingsRecord>
+    <MCSettingsRecord>
+      <!--ГТП 2-->
+      <MCCode>2</MCCode>
+      <MCName>1948</MCName>
+      <PiramidaCode>3</PiramidaCode>
+      <WriteToEDS>1</WriteToEDS>
+      <EDSPoint>PBR_GTP2.EDS@CALC</EDSPoint>
+      <EDSPointSmooth>PBR_GTP2_SMOOTH.EDS@CALC</EDSPointSmooth>
+      <WriteIntegratedData>0</WriteIntegratedData>
+      <Autooper>1</Autooper>
+    </MCSettingsRecord>
+    <MCSettingsRecord>
+      <!--РГЕ ГГ1,2-->
+      <MCCode>3</MCCode>
+      <MCName>1045</MCName>
+      <PiramidaCode>1045</PiramidaCode>
+      <WriteToEDS>0</WriteToEDS>
+      <WriteIntegratedData>0</WriteIntegratedData>
+      <Autooper>1</Autooper>
+    </MCSettingsRecord>
+    <MCSettingsRecord>
+      <!--РГЕ ГГ7-9-->
+      <MCCode>4</MCCode>
+      <MCName>1046</MCName>
+      <PiramidaCode>1046</PiramidaCode>
+      <WriteToEDS>0</WriteToEDS>
+      <WriteIntegratedData>0</WriteIntegratedData>
+      <Autooper>1</Autooper>
+    </MCSettingsRecord>
+    <MCSettingsRecord>
+      <!--РГЕ ГГ3,4-->
+      <MCCode>5</MCCode>
+      <MCName>1703</MCName>
+      <PiramidaCode>1703</PiramidaCode>
+      <WriteToEDS>0</WriteToEDS>      
+      <WriteIntegratedData>0</WriteIntegratedData>
+      <Autooper>1</Autooper>
+    </MCSettingsRecord>
+    <MCSettingsRecord>
+      <!--РГЕ ГГ5,6-->
+      <MCCode>6</MCCode>
+      <MCName>1704</MCName>
+      <WriteToEDS>0</WriteToEDS>
+      <PiramidaCode>1704</PiramidaCode>
+      <WriteIntegratedData>0</WriteIntegratedData>
+      <Autooper>1</Autooper>
+    </MCSettingsRecord>
+  <MCSettingsRecord>
+      <!--РГЕ ГГ10-->
+      <MCCode>7</MCCode>
+      <MCName>1374</MCName>
+      <WriteToEDS>0</WriteToEDS>
+      <PiramidaCode>1374</PiramidaCode>
+      <WriteIntegratedData>0</WriteIntegratedData>
+      <Autooper>1</Autooper>
+    </MCSettingsRecord>
+  </MCData>
+
+  
+</MCSettings>

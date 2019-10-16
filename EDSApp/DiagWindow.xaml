@@ -1,0 +1,130 @@
+﻿<Window x:Class="EDSApp.DiagWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EDSApp"
+        mc:Ignorable="d"
+        xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+        xmlns:zd="clr-namespace:ZedGraph;assembly=ZedGraph"
+        Title="DiagWindow" Height="600" Width="800">
+    <Grid>
+        <Grid Margin="0,20,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TabControl Grid.Column="0" Grid.Row="1">
+                <TabItem Header="Дренажные насосы">
+                    <Grid>
+                        <Grid.RowDefinitions >
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0">
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox Content="Делить по мощности" Name="chbDNSplitPower" IsChecked="False"  VerticalAlignment="Center"/>
+                                <TextBox Text="10" Name="txtDNSplitPower"/>
+                                <Button Content="Сформировать" Name="drenClick" Click="drenClick_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Row="1">
+                            <TabControl Grid.Row="1">
+
+                                <TabItem Header="Длительность работы">
+                                    <local:ChartZedControl x:Name="DNTimeWork"/>
+                                </TabItem>
+                                <TabItem Header="Работа в сутки">
+                                    <local:ChartZedControl x:Name="DNTimeDay"/>
+                                </TabItem>
+                                <TabItem Header="Пусков в сутки">
+                                    <local:ChartZedControl x:Name="DNPuskDay"/>
+                                </TabItem>
+                            </TabControl>
+
+                        </Border>
+                    </Grid>
+                </TabItem>
+
+                <TabItem Header="Насосы МНУ">
+                    <Grid>
+                        <Grid.RowDefinitions >
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0">
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox Content="Делить по мощности" Name="chbMNUSplitPower" IsChecked="False"  VerticalAlignment="Center"/>
+                                <TextBox Text="10" Name="txtMNUSplitPower"/>
+                                <Button Content="Сформировать" Name="mnuClick" Click="mnuClick_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Row="1">
+                            <TabControl Grid.Row="1">
+                                <TabItem Header="Длительность работы">
+                                    <local:ChartZedControl x:Name="MNUTimeWork"/>
+                                </TabItem>
+                                <TabItem Header="Работа в сутки">
+                                    <local:ChartZedControl x:Name="MNUTimeDay"/>
+                                </TabItem>
+                                <TabItem Header="Пусков в сутки">
+                                    <local:ChartZedControl x:Name="MNUPuskDay"/>
+                                </TabItem>
+                                <TabItem Header="ЛН Работа в сутки">
+                                    <local:ChartZedControl x:Name="LNTimeDay"/>
+                                </TabItem>
+                                <TabItem Header="ЛН Пусков в сутки">
+                                    <local:ChartZedControl x:Name="LNPuskDay"/>
+                                </TabItem>
+                            </TabControl>
+                        </Border>
+                    </Grid>
+
+                </TabItem>
+                <TabItem Header="ГП/ПП">
+                    <Grid>
+                        <Grid.RowDefinitions >
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0">
+                            <StackPanel Orientation="Horizontal">
+                                <CheckBox Content="Делить по гор. маслу" Name="chbOilSplitHot" IsChecked="False"  VerticalAlignment="Center" />
+                                <CheckBox Content="Делить по хол. маслу" Name="chbOilSplitCold" IsChecked="False"  VerticalAlignment="Center" />
+                                <TextBox Text="10" Name="txtOilSplitTemp"/>
+                                <Button Content="Сформировать" Name="oilClick" Click="oilClick_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Row="1">
+                            <TabControl Grid.Row="1">
+                                <TabItem Header="ГП Масло">
+                                    <local:ChartZedControl x:Name="GPLevel"/>
+                                </TabItem>
+                                <TabItem Header="ПП Масло">
+                                    <local:ChartZedControl x:Name="PPLevel"/>
+                                </TabItem>
+                                <TabItem Header="ГП Охлаждение">
+                                    <local:ChartZedControl x:Name="GPOhl"/>
+                                </TabItem>
+                                <TabItem Header="ПП Охлаждение">
+                                    <local:ChartZedControl x:Name="PPOhl"/>
+                                </TabItem>
+
+                            </TabControl>
+                        </Border>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+            <Border Height="30" Width="200" HorizontalAlignment="Left">
+                <StackPanel  Orientation="Horizontal">
+                    <DatePicker Name="clndFrom"/>
+                    <DatePicker Name="clndTo"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

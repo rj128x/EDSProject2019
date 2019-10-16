@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 xmlns:xsd="http://www.w3.org/2001/XMLSchema">  
+  <SMTPServer>mx-votges-021.corp.gidroogk.com</SMTPServer>
+  <SMTPUser>is</SMTPUser>
+  <SMTPPassword>12345</SMTPPassword>
+  <SMTPDomain>CORP</SMTPDomain>
+  <SMTPFrom>is@votges.rushydro.ru</SMTPFrom>
+  <SMTPTo>chekunovaMV@votges.rushydro.ru</SMTPTo>
+  <SMTPPort>25</SMTPPort>
+
+  <EDSUser>admin</EDSUser>
+  <EDSPassword>Ovation123</EDSPassword>
+  
+  <AOMail>autooper_votges@rushydro.ru</AOMail>
+
+  <DiadDBServer>sr-votges-015\sqlexpress</DiadDBServer>
+  <DiagDBPassword>psWD!159!</DiagDBPassword>
+  <DiagDBUser>sa</DiagDBUser>
+  <DiagDBName>Diagnostics</DiagDBName>
+  <DiagFolder>\\10.7.227.12\c$\EDSReports\pump\csv\</DiagFolder>
+
+  <LogPath>c:/edscalc/logs</LogPath> 
+
+</Settings>

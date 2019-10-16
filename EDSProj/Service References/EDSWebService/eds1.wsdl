@@ -1,0 +1,2393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WSDL:definitions xmlns:DIME="http://schemas.xmlsoap.org/ws/2002/04/dime/wsdl/" xmlns:tns="http://tt.com.pl/eds/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://www.w3.org/2003/05/soap-encoding" xmlns:SOAP-ENV="http://www.w3.org/2003/05/soap-envelope" xmlns:SOAP="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:MIME="http://schemas.xmlsoap.org/wsdl/mime/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:eds="http://tt.com.pl/eds/" name="eds" targetNamespace="http://tt.com.pl/eds/" xmlns:WSDL="http://schemas.xmlsoap.org/wsdl/">
+  <WSDL:types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://tt.com.pl/eds/">
+      <xsd:simpleType name="ClientType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="CLIENT-TYPE-DEFAULT" />
+          <xsd:enumeration value="CLIENT-TYPE-MOBILE" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="ObjectSourceKind">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="OBJECT-SOURCE-KIND-UNKNOWN" />
+          <xsd:enumeration value="OBJECT-SOURCE-KIND-DISK" />
+          <xsd:enumeration value="OBJECT-SOURCE-KIND-FTP" />
+          <xsd:enumeration value="OBJECT-SOURCE-KIND-DB" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="PointType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="POINT-TYPE-UNKNOWN" />
+          <xsd:enumeration value="POINT-TYPE-ANALOG" />
+          <xsd:enumeration value="POINT-TYPE-DOUBLE" />
+          <xsd:enumeration value="POINT-TYPE-BINARY" />
+          <xsd:enumeration value="POINT-TYPE-PACKED" />
+          <xsd:enumeration value="POINT-TYPE-INT64" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="Quality">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="QUALITY-NONE" />
+          <xsd:enumeration value="QUALITY-GOOD" />
+          <xsd:enumeration value="QUALITY-FAIR" />
+          <xsd:enumeration value="QUALITY-POOR" />
+          <xsd:enumeration value="QUALITY-BAD" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="ArchivingType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="ARCHIVING-UNKNOWN" />
+          <xsd:enumeration value="ARCHIVING-NONE" />
+          <xsd:enumeration value="ARCHIVING-LOCAL" />
+          <xsd:enumeration value="ARCHIVING-EXTERNAL" />
+          <xsd:enumeration value="ARCHIVING-FILLIN" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="ArchivingDeadbandType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="ARCHIVING-DEADBAND-UNKNOWN" />
+          <xsd:enumeration value="ARCHIVING-DEADBAND-NONE" />
+          <xsd:enumeration value="ARCHIVING-DEADBAND-FLOW" />
+          <xsd:enumeration value="ARCHIVING-DEADBAND-LOG" />
+          <xsd:enumeration value="ARCHIVING-DEADBAND-PCT-RANGE" />
+          <xsd:enumeration value="ARCHIVING-DEADBAND-POWER" />
+          <xsd:enumeration value="ARCHIVING-DEADBAND-RADIATION" />
+          <xsd:enumeration value="ARCHIVING-DEADBAND-RATIO" />
+          <xsd:enumeration value="ARCHIVING-DEADBAND-STANDARD" />
+          <xsd:enumeration value="ARCHIVING-DEADBAND-TEST" />
+          <xsd:enumeration value="ARCHIVING-DEADBAND-GEOMETRIC1" />
+          <xsd:enumeration value="ARCHIVING-DEADBAND-GEOMETRIC3" />
+          <xsd:enumeration value="ARCHIVING-DEADBAND-TRAPEZOIDAL" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="RequestStatus">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="REQUEST-QUEUED" />
+          <xsd:enumeration value="REQUEST-EXECUTING" />
+          <xsd:enumeration value="REQUEST-FAILURE" />
+          <xsd:enumeration value="REQUEST-SUCCESS" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="ShadePriority">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="REGULAR-OVER-SHADE" />
+          <xsd:enumeration value="SHADE-OVER-REGULAR" />
+          <xsd:enumeration value="REGULAR-ONLY" />
+          <xsd:enumeration value="SHADE-ONLY" />
+          <xsd:enumeration value="DEFAULT-SHADE-PRIORITY" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="EventCategory">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="EVENT-CATEGORY-SYSTEM" />
+          <xsd:enumeration value="EVENT-CATEGORY-CUSTOM" />
+          <xsd:enumeration value="EVENT-CATEGORY-EXTERNAL" />
+          <xsd:enumeration value="EVENT-CATEGORY-ALARM" />
+          <xsd:enumeration value="EVENT-CATEGORY-SET-POINT" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="EventType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="EVENT-UNKNOWN" />
+          <xsd:enumeration value="EVENT-SYSTEM-STARTUP" />
+          <xsd:enumeration value="EVENT-SYSTEM-SHUTDOWN" />
+          <xsd:enumeration value="EVENT-SYSTEM-GRANT-LOGIN" />
+          <xsd:enumeration value="EVENT-SYSTEM-DENY-LOGIN" />
+          <xsd:enumeration value="EVENT-SYSTEM-AMGR-DATA-AVAILABLE" />
+          <xsd:enumeration value="EVENT-SYSTEM-AMGR-DATA-RECORDED" />
+          <xsd:enumeration value="EVENT-SYSTEM-DIAGRAM-CHANGE" />
+          <xsd:enumeration value="EVENT-SYSTEM-ZD-STARTUP" />
+          <xsd:enumeration value="EVENT-SYSTEM-ZD-SHUTDOWN" />
+          <xsd:enumeration value="EVENT-CUSTOM-MESSAGE" />
+          <xsd:enumeration value="EVENT-EXTERNAL-ALARM-ANALOG" />
+          <xsd:enumeration value="EVENT-EXTERNAL-ALARM-BINARY" />
+          <xsd:enumeration value="EVENT-EXTERNAL-ALARM-PACKED" />
+          <xsd:enumeration value="EVENT-EXTERNAL-ALARM-DROP" />
+          <xsd:enumeration value="EVENT-EXTERNAL-ALARM-HARDWARE" />
+          <xsd:enumeration value="EVENT-EXTERNAL-ALARM-MODULE" />
+          <xsd:enumeration value="EVENT-EXTERNAL-ALARM-NODE" />
+          <xsd:enumeration value="EVENT-EXTERNAL-ALARM-DEVICE" />
+          <xsd:enumeration value="EVENT-EXTERNAL-ALARM-COS" />
+          <xsd:enumeration value="EVENT-EXTERNAL-ALARM-SOE" />
+          <xsd:enumeration value="EVENT-EXTERNAL-ALARM-SYSTEM" />
+          <xsd:enumeration value="EVENT-EXTERNAL-ALARM-OEL" />
+          <xsd:enumeration value="EVENT-EXTERNAL-REPORT-EXEC-SUCC" />
+          <xsd:enumeration value="EVENT-EXTERNAL-REPORT-EXEC-RETR" />
+          <xsd:enumeration value="EVENT-EXTERNAL-REPORT-EXEC-FAIL" />
+          <xsd:enumeration value="EVENT-ALARM-ANALOG" />
+          <xsd:enumeration value="EVENT-ALARM-DOUBLE" />
+          <xsd:enumeration value="EVENT-ALARM-BINARY" />
+          <xsd:enumeration value="EVENT-ALARM-PACKED" />
+          <xsd:enumeration value="EVENT-ALARM-INT64" />
+          <xsd:enumeration value="EVENT-SET-ANALOG" />
+          <xsd:enumeration value="EVENT-SET-DOUBLE" />
+          <xsd:enumeration value="EVENT-SET-BINARY" />
+          <xsd:enumeration value="EVENT-SET-PACKED" />
+          <xsd:enumeration value="EVENT-SET-INT64" />
+          <xsd:enumeration value="EVENT-SYSTEM-FORCE-FILLIN" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="ReportOutputType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="REPORT-OUTPUT-TYPE-UNKNOWN" />
+          <xsd:enumeration value="REPORT-OUTPUT-TYPE-FILE-TXT" />
+          <xsd:enumeration value="REPORT-OUTPUT-TYPE-FILE-RDF" />
+          <xsd:enumeration value="REPORT-OUTPUT-TYPE-FILE-EDF" />
+          <xsd:enumeration value="REPORT-OUTPUT-TYPE-FILE-HTML" />
+          <xsd:enumeration value="REPORT-OUTPUT-TYPE-FILE-PDF" />
+          <xsd:enumeration value="REPORT-OUTPUT-TYPE-FILE-CSV" />
+          <xsd:enumeration value="REPORT-OUTPUT-TYPE-DATABASE-RDF" />
+          <xsd:enumeration value="REPORT-OUTPUT-TYPE-DATABASE-EDF" />
+          <xsd:enumeration value="REPORT-OUTPUT-TYPE-DATABASE-HTML" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="ReportExecutionCondition">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="REPORT-EXECUTION-CONDITION-UNKNOWN" />
+          <xsd:enumeration value="REPORT-EXECUTION-CONDITION-CYCLIC" />
+          <xsd:enumeration value="REPORT-EXECUTION-CONDITION-ON-EVENT" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="ReportAddressingType">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="REPORT-ADDRESSING-TYPE-R1C1" />
+          <xsd:enumeration value="REPORT-ADDRESSING-TYPE-A1" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="DiagramRole">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="DIAGRAM-ROLE-MAIN" />
+          <xsd:enumeration value="DIAGRAM-ROLE-SUBWINDOW" />
+          <xsd:enumeration value="DIAGRAM-ROLE-WINDOW" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType name="DiagramNavigation">
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="DIAGRAM-NAVIGATE-HOME" />
+          <xsd:enumeration value="DIAGRAM-NAVIGATE-PREVIOUS" />
+          <xsd:enumeration value="DIAGRAM-NAVIGATE-NEXT" />
+          <xsd:enumeration value="DIAGRAM-NAVIGATE-UP" />
+          <xsd:enumeration value="DIAGRAM-NAVIGATE-DOWN" />
+          <xsd:enumeration value="DIAGRAM-NAVIGATE-LEFT" />
+          <xsd:enumeration value="DIAGRAM-NAVIGATE-RIGHT" />
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:complexType name="Timestamp">
+        <xsd:annotation>
+          <xsd:documentation>Represents a point in time, defined as the number of seconds elapsed since midnight proleptic Coordinated Universal Time (UTC) of January 1, 1970, not counting leap seconds.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="second" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TimeDuration">
+        <xsd:annotation>
+          <xsd:documentation>Represents a length of time.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="seconds" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TimePeriod">
+        <xsd:annotation>
+          <xsd:documentation>Represents a range between two points in time.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="from" type="eds:Timestamp" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="till" type="eds:Timestamp" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Color">
+        <xsd:annotation>
+          <xsd:documentation>Represents color from sRGB color space with alpha channel. Value has Alpha sample in the highest 8 bits, followed by the Red sample, Green sample and the Blue sample in the lowest 8 bits.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="argb" type="xsd:unsignedInt" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Group">
+        <xsd:annotation>
+          <xsd:documentation>Information about a single technological or security group.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="id" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="desc" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ObjectMetadata">
+        <xsd:annotation>
+          <xsd:documentation>Information about a single object (file) stored on EDS server.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="file" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="sourceName" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="sourceId" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="lastModified" type="eds:Timestamp" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="sg" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="tg" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="md5" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="hasPermission" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ObjectFilter">
+        <xsd:annotation>
+          <xsd:documentation>Filter allows selecting objects using values of most of their fields. <em>SourceNameRe</em>, <em>fileRe</em> and <em>nameRe</em> fields are Perl regular expressions. If more than one filter field is set, only objects matching all fields will match the whole filter.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="fileRe" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="nameRe" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="sourceNameRe" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="sourceId" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="modified" type="eds:TimePeriod" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="sg" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="tg" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="md5" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="withoutPermission" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AlterableObjectAttributes">
+        <xsd:annotation>
+          <xsd:documentation>Object's attributes that can be modified.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="name" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="sg" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="tg" type="xsd:unsignedByte" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ObjectSource">
+        <xsd:annotation>
+          <xsd:documentation>Contains information about a single object source.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="id" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="desc" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="sg" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="tg" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="kind" type="eds:ObjectSourceKind" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="host" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="prefix" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="suffix" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="options" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="hasPermission" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ObjectSourceFilter">
+        <xsd:annotation>
+          <xsd:documentation>It allows selecting objects sources using values of most of their fields. Filters for <em>nameRe</em>, <em>descRe</em>, <em>hostRe</em>, <em>prefixRe</em> and <em>suffixRe</em> fields are Perl regular expressions.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="id" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="nameRe" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="descRe" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="sg" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="tg" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="OBJECT-SOURCE-KIND-UNKNOWN" name="kind" type="eds:ObjectSourceKind" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="hostRe" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="prefixRe" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="suffixRe" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="optionsSet" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="optionsUnset" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="withoutPermission" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="AlterableObjectSourceAttributes">
+        <xsd:annotation>
+          <xsd:documentation>Object source attributes that can be modified.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="desc" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="sg" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="tg" type="xsd:unsignedByte" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="PointId">
+        <xsd:annotation>
+          <xsd:documentation>Information uniquely identifying EDS point. To identify point sid or iess or idcs and zd fields must be set.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="sid" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="iess" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="idcs" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="zd" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="PointValue">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="av" nillable="true" type="xsd:float" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="dav" nillable="true" type="xsd:double" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="bv" nillable="true" type="xsd:boolean" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="pv" nillable="true" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="ipv" nillable="true" type="xsd:long" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Point">
+        <xsd:annotation>
+          <xsd:documentation>Information about a single EDS point. See EDS Database Access documentation appendix A.8 "Types of EDS points" for details.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="id" type="eds:PointId" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="rt" type="eds:PointType" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="value" type="eds:PointValue" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="quality" type="eds:Quality" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="ts" type="eds:Timestamp" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="tss" type="eds:TimeDuration" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="at" type="eds:Timestamp" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="atss" type="eds:TimeDuration" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="desc" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="st" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="xst1" nillable="true" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="xst2" nillable="true" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="xst3" nillable="true" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="ar" type="eds:ArchivingType" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="artd" type="eds:ArchivingDeadbandType" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="sg" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="tg" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="df" type="xsd:unsignedShort" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="ap" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="aux" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="un" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="dp" nillable="true" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="ard" nillable="true" type="xsd:float" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="tb" nillable="true" type="xsd:float" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="bb" nillable="true" type="xsd:float" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="hl" nillable="true" type="xsd:float" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="ll" nillable="true" type="xsd:float" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="dun" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="ddp" nillable="true" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="dard" nillable="true" type="xsd:double" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="dtb" nillable="true" type="xsd:double" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="dbb" nillable="true" type="xsd:double" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="dhl" nillable="true" type="xsd:double" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="dll" nillable="true" type="xsd:double" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="sd" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="rd" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="foreground" type="eds:Color" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="background" type="eds:Color" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="PointFilter">
+        <xsd:annotation>
+          <xsd:documentation>Filters for iessRe, descRe, zdRe, idcsRe and auxRe fields are Perl regular expressions. All fields in the PointFilter are optional. If more than one filter field is set, only points matching all fields will match the whole filter.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="sid" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="iessRe" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="idcsRe" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="zdRe" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="descRe" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="auxRe" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="rt" type="eds:PointType" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="ts" type="eds:TimePeriod" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="quality" type="eds:Quality" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="stSet" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="stUnset" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="dfSet" type="xsd:unsignedShort" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="dfUnset" type="xsd:unsignedShort" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ar" type="eds:ArchivingType" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="artd" type="eds:ArchivingDeadbandType" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="sg" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="tg" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="ap" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="withoutPermission" type="xsd:boolean" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="PointNewValue">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="id" type="eds:PointId" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="value" nillable="true" type="eds:PointValue" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="quality" nillable="true" type="eds:Quality" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="duration" nillable="true" type="eds:TimeDuration" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TrendRequestItem">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="pointId" type="eds:PointId" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="DEFAULT-SHADE-PRIORITY" name="shadePriority" type="eds:ShadePriority" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TrendRequest">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" default="true" name="useAverages" type="xsd:boolean" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="period" type="eds:TimePeriod" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="pixelCount" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="items" type="eds:TrendRequestItem" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TrendValue">
+        <xsd:annotation>
+          <xsd:documentation>One trend value.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="value" type="eds:PointValue" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="quality" type="eds:Quality" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="ts" type="eds:Timestamp" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="tss" type="eds:TimeDuration" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TrendRow">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="pointId" type="eds:PointId" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="values" type="eds:TrendValue" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="average" type="eds:PointValue" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TabularRequestItem">
+        <xsd:annotation>
+          <xsd:documentation>One tabular request item. Available functions: AVG; AVG_QUAL; BETWEEN_TIME; F_INTOOVER_DT; F_INTOUNDER_DT; F_MAX_DT; F_MIN_DT; F_OVER_TIME; F_UNDER_TIME; INTG; INTG_OVER; INTG_UNDER; L_INTOOVER_DT; L_INTOUNDER_DT; L_MAX_DT; L_MIN_DT; L_OVER_TIME; L_UNDER_TIME; MAX_VALUE; MIN_VALUE; OVER_TIME; TIME; TOGGLE; TOGGLE_OVER; TOGGLE_UNDER; UNDER_TIME; VALUE. See EDS Terminal documentation chapter 3.11.1.7 "Predefined point value functions" for details.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="pointId" type="eds:PointId" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="DEFAULT-SHADE-PRIORITY" name="shadePriority" type="eds:ShadePriority" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="VALUE" name="function" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="params" type="xsd:double" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TabularRequest">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="period" type="eds:TimePeriod" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="step" type="eds:TimeDuration" />
+          <xsd:element minOccurs="1" maxOccurs="unbounded" name="items" type="eds:TabularRequestItem" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TabularValue">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="value" type="eds:PointValue" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="quality" type="eds:Quality" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="tss" type="eds:TimeDuration" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="TabularRow">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="ts" type="eds:Timestamp" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="values" type="eds:TabularValue" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ShadeSelector">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="pointId" type="eds:PointId" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="period" type="eds:TimePeriod" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ShadeValue">
+        <xsd:annotation>
+          <xsd:documentation>Represents one point shade value. If shade for time period is not defined, quality is set to POINT-QUALITY-NONE and value field is not set.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="value" type="eds:PointValue" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="quality" type="eds:Quality" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="period" type="eds:TimePeriod" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Shade">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="pointId" type="eds:PointId" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="values" type="eds:ShadeValue" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ShadeCopyRequest">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="srcPointId" type="eds:PointId" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="dstPointId" type="eds:PointId" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="period" type="eds:TimePeriod" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="EventFilter">
+        <xsd:annotation>
+          <xsd:documentation>IessRe and messageRe are Perl regular expressions. PointTypes field should contain letters "A", "B", "P", "D" and/or "I" discriminating point type. Tg field should be a string containing a list of group numbers, separated with semicolons. Zds is a list of source names. If more than one filter field is set, only events matching ALL fields will match the whole filter.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="period" type="eds:TimePeriod" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="category" type="eds:EventCategory" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="rt" type="eds:PointType" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="priority" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="tg" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="zd" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="iessRe" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="messageRe" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="pointId" type="eds:PointId" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="Event">
+        <xsd:annotation>
+          <xsd:documentation>Stores information about a single event. See EDS Terminal documentation chapter 3.10 "Events" for details.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="category" type="eds:EventCategory" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="type" type="eds:EventType" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="priority" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="message" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="pointId" type="eds:PointId" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="floatValue" type="xsd:double" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="intValue" type="xsd:long" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="st" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="ts" type="eds:Timestamp" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="tss" type="eds:TimeDuration" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="aux" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="foreground" type="eds:Color" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="background" type="eds:Color" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportConfigFilter">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="objectFilter" type="eds:ObjectFilter" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="REPORT-OUTPUT-TYPE-UNKNOWN" name="outputType" type="eds:ReportOutputType" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="REPORT-EXECUTION-CONDITION-UNKNOWN" name="executionCondition" type="eds:ReportExecutionCondition" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportConfig">
+        <xsd:annotation>
+          <xsd:documentation>Report configuration. See EDS Terminal documentation chapter 3.12.3 "Configuring a report definition" for details.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="id" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="reportDefinitionSource" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="reportDefinitionFile" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="referenceTimeShift" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="runDelay" type="eds:TimeDuration" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="timeMaskExpression" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="eventsExpression" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="inputValues" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskFileTxt" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskFileRdf" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskFileEdf" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskFileHtml" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskFilePdf" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskFileCsv" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskDatabaseRdf" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskDatabaseEdf" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskDatabaseHtml" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportConfigDefinition">
+        <xsd:annotation>
+          <xsd:documentation>Report config attributes that can be modified.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="referenceTimeShift" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="runDelay" type="eds:TimeDuration" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="timeMaskExpression" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="eventsExpression" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="inputValues" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskFileTxt" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskFileRdf" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskFileEdf" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskFileHtml" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskFilePdf" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskFileCsv" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskDatabaseRdf" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskDatabaseEdf" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="outputMaskDatabaseHtml" nillable="true" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportValue">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" name="boolean" nillable="true" type="xsd:boolean" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="number" nillable="true" type="xsd:double" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="packed" nillable="true" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="string" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="timestamp" nillable="true" type="eds:Timestamp" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="point" nillable="true" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="QUALITY-GOOD" name="quality" type="eds:Quality" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportArgument">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="value" type="eds:ReportValue" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="GlobalReportRequest">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="reportConfigId" type="xsd:unsignedInt" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="dtRef" type="eds:Timestamp" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="args" type="eds:ReportArgument" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportDefinitionCell">
+        <xsd:annotation>
+          <xsd:documentation>Single report definition cell. Content field should always contain at least one character. Otherwise cell may be disregarded in SOAP serialization. Empty cells can be represented by a single space character. All time expressions must be in seconds relative to @DT_REF value.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="content" type="xsd:string" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="showQuality" nillable="true" type="xsd:boolean" />
+          <xsd:element minOccurs="0" maxOccurs="1" name="precision" nillable="true" type="xsd:unsignedByte" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportDefinitionRow">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="cells" type="eds:ReportDefinitionCell" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportDefinition">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="1" default="false" name="localTime" type="xsd:boolean" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="false" name="showDstTransition" type="xsd:boolean" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="true" name="showQualities" type="xsd:boolean" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="6" name="precisions" type="xsd:unsignedByte" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="REPORT-ADDRESSING-TYPE-A1" name="addressingType" type="eds:ReportAddressingType" />
+          <xsd:element minOccurs="0" maxOccurs="1" default="DEFAULT-SHADE-PRIORITY" name="shadesPriority" type="eds:ShadePriority" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="rows" type="eds:ReportDefinitionRow" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="CustomReportRequest">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="rdf" type="eds:ReportDefinition" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="dtRef" type="eds:Timestamp" />
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="args" type="eds:ReportArgument" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="ReportResultRow">
+        <xsd:sequence>
+          <xsd:element minOccurs="0" maxOccurs="unbounded" name="cells" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="DiagramResolution">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="width" type="xsd:unsignedShort" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="height" type="xsd:unsignedShort" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="DiagramPosition">
+        <xsd:annotation>
+          <xsd:documentation>Represents relative position on diagram where [0.0, 0.0] is a top left diagram coordinate and [1.0, 1.0] is a bottom right diagram corner.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="x" type="xsd:double" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="y" type="xsd:double" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="DiagramArea">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="topLeft" type="eds:DiagramPosition" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="bottomRight" type="eds:DiagramPosition" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="LicenseParameter">
+        <xsd:annotation>
+          <xsd:documentation>represents part of EDS license in form of (key, value) string pair.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+          <xsd:element minOccurs="1" maxOccurs="1" name="value" type="xsd:string" />
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:element name="authenticate">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="username" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="password" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="authenticateResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authenticated" type="xsd:boolean" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="login">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="username" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="password" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="type" nillable="true" type="eds:ClientType" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="loginResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="logout">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="VoidResponse">
+        <xsd:complexType>
+          <xsd:sequence />
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ping">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getTechnologicalGroups">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="GroupsResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="groups" type="eds:Group" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getSecurityGroups">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getUserSecurityGroups">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getServerTime">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getServerTimeResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="time" type="eds:Timestamp" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="zone" type="eds:TimeDuration" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="offset" type="eds:TimeDuration" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getServerStatus">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getServerStatusResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="startTime" type="eds:Timestamp" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="soapConnectionCount" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="soapHttpsConnectionCount" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="sessionCount" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestCount" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestRunningCount" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="srvConnection" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="objConnection" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="globalObjectCount" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="pendingObjectCount" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="liveDataConnectionCount" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getServerConfig">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getServerConfigResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="srvHost" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="srvPort" type="xsd:unsignedShort" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="objHost" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="objPort" type="xsd:unsignedShort" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="archHost" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="archPort" type="xsd:unsignedShort" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getObjectsMetadata">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="filter" nillable="true" type="eds:ObjectFilter" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="order" nillable="true" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" default="0" name="startIdx" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="0" maxOccurs="1" default="100" name="maxCount" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getObjectsMetadataResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="objects" type="eds:ObjectMetadata" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="matchCount" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="totalCount" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="alterObject">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" default="0" name="sourceId" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="sourceName" nillable="true" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="file" nillable="true" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="newAttributes" nillable="true" type="eds:AlterableObjectAttributes" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getObjectsSources">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="filter" nillable="true" type="eds:ObjectSourceFilter" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="order" nillable="true" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" default="0" name="startIdx" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="0" maxOccurs="1" default="100" name="maxCount" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getObjectsSourcesResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="sources" type="eds:ObjectSource" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="matchCount" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="totalCount" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="alterObjectSource">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" default="0" name="sourceId" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="sourceName" nillable="true" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="newAttributes" type="eds:AlterableObjectSourceAttributes" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getPoints">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="filter" nillable="true" type="eds:PointFilter" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="order" nillable="true" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" default="0" name="startIdx" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="0" maxOccurs="1" default="100" name="maxCount" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getPointsResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="points" type="eds:Point" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="matchCount" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="totalCount" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getPointsSources">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getPointsSourcesResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="sources" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getModifiedPoints">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" default="0" name="startIdx" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="0" maxOccurs="1" default="100" name="maxCount" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="timestamp" type="eds:Timestamp" />
+            <xsd:element minOccurs="0" maxOccurs="1" default="0" name="dbSequence" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getModifiedPointsResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="points" type="eds:Point" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="matchCount" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="totalCount" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="timestamp" type="eds:Timestamp" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="dbSequence" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="operatePoints">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="pointsNewValues" type="eds:PointNewValue" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="publishPoints">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="pointsNewValues" type="eds:PointNewValue" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="unpublishPoints">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="pointsIds" type="eds:PointId" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getRequestStatus">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getRequestStatusResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="id" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="status" type="eds:RequestStatus" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="progress" type="xsd:float" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="message" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="dropRequest">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestTrend">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="request" nillable="true" type="eds:TrendRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestTrendResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getTrend">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getTrendResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="rows" type="eds:TrendRow" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestTabular">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="request" nillable="true" type="eds:TabularRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestTabularResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getTabular">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getTabularResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="pointsIds" type="eds:PointId" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="rows" type="eds:TabularRow" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestShadesRead">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="shadesSelector" type="eds:ShadeSelector" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestShadesReadResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getShades">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getShadesResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="shades" type="eds:Shade" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestShadesWrite">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="newShades" type="eds:Shade" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestShadesWriteResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestShadesClear">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="shadesSelector" type="eds:ShadeSelector" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestShadesClearResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestShadesCopy">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="shadesToCopy" type="eds:ShadeCopyRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestShadesCopyResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestEvents">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="filter" nillable="true" type="eds:EventFilter" />
+            <xsd:element minOccurs="0" maxOccurs="1" default="100" name="maxCount" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestEventsResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getEvents">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getEventsResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="events" type="eds:Event" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="addEvents">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="newEvents" type="eds:Event" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getReportsConfigs">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="filter" nillable="true" type="eds:ReportConfigFilter" />
+            <xsd:element minOccurs="0" maxOccurs="1" default="0" name="startIdx" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="0" maxOccurs="1" default="100" name="maxCount" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getReportsConfigsResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="configs" type="eds:ReportConfig" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="matchCount" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="totalCount" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="createReportConfig">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" default="0" name="sourceId" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="sourceName" nillable="true" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="rdfFileName" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="config" type="eds:ReportConfigDefinition" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="alterReportConfig">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="configId" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="config" type="eds:ReportConfigDefinition" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="deleteReportConfig">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="configId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestGlobalReport">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="request" nillable="true" type="eds:GlobalReportRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestGlobalReportResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestCustomReport">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="request" nillable="true" type="eds:CustomReportRequest" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestCustomReportResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getCustomReport">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getCustomReportResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="rows" type="eds:ReportResultRow" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="createGlobalReport">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" default="0" name="sourceId" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="sourceName" nillable="true" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="file" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="name" nillable="true" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="rdf" type="eds:ReportDefinition" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="sg" type="xsd:unsignedByte" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="tg" type="xsd:unsignedByte" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestScriptRun">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="scriptName" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="args" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="input" nillable="true" type="xsd:base64Binary" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="requestScriptRunResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="interactWithScript">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="requestId" type="xsd:unsignedInt" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="input" nillable="true" type="xsd:base64Binary" />
+            <xsd:element minOccurs="0" maxOccurs="1" default="false" name="eof" type="xsd:boolean" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="interactWithScriptResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="output" type="xsd:base64Binary" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="errors" type="xsd:base64Binary" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="openDiagram">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="source" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="file" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="refreshRate" type="eds:TimeDuration" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="previousUrl" nillable="true" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="pointGroup" nillable="true" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="httpUrl" nillable="true" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="openDiagramResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="url" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="resizeDiagram">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="url" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="role" type="eds:DiagramRole" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="newResolution" type="eds:DiagramResolution" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="setDiagramViewport">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="url" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="role" type="eds:DiagramRole" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="viewport" type="eds:DiagramArea" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="handleDiagramClick">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="url" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="role" type="eds:DiagramRole" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="areaId" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="navigateDiagram">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="url" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="navigation" type="eds:DiagramNavigation" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="closeDiagram">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="url" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="role" nillable="true" type="eds:DiagramRole" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getGfxSrvFeatures">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="url" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getGfxSrvFeaturesResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="tagQueryKeepAlive" type="xsd:boolean" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="canSuspendSession" type="xsd:boolean" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getLicense">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="authString" type="xsd:string" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="getLicenseResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="parameters" type="eds:LicenseParameter" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </WSDL:types>
+  <WSDL:message name="authenticateRequest">
+    <WSDL:part name="parameters" element="eds:authenticate" />
+  </WSDL:message>
+  <WSDL:message name="authenticateResponse">
+    <WSDL:part name="parameters" element="eds:authenticateResponse" />
+  </WSDL:message>
+  <WSDL:message name="loginRequest">
+    <WSDL:part name="parameters" element="eds:login" />
+  </WSDL:message>
+  <WSDL:message name="loginResponse">
+    <WSDL:part name="parameters" element="eds:loginResponse" />
+  </WSDL:message>
+  <WSDL:message name="logout">
+    <WSDL:part name="parameters" element="eds:logout" />
+  </WSDL:message>
+  <WSDL:message name="VoidResponse">
+    <WSDL:part name="parameters" element="eds:VoidResponse" />
+  </WSDL:message>
+  <WSDL:message name="ping">
+    <WSDL:part name="parameters" element="eds:ping" />
+  </WSDL:message>
+  <WSDL:message name="getTechnologicalGroups">
+    <WSDL:part name="parameters" element="eds:getTechnologicalGroups" />
+  </WSDL:message>
+  <WSDL:message name="GroupsResponse">
+    <WSDL:part name="parameters" element="eds:GroupsResponse" />
+  </WSDL:message>
+  <WSDL:message name="getSecurityGroups">
+    <WSDL:part name="parameters" element="eds:getSecurityGroups" />
+  </WSDL:message>
+  <WSDL:message name="getUserSecurityGroups">
+    <WSDL:part name="parameters" element="eds:getUserSecurityGroups" />
+  </WSDL:message>
+  <WSDL:message name="getServerTime">
+    <WSDL:part name="parameters" element="eds:getServerTime" />
+  </WSDL:message>
+  <WSDL:message name="getServerTimeResponse">
+    <WSDL:part name="parameters" element="eds:getServerTimeResponse" />
+  </WSDL:message>
+  <WSDL:message name="getServerStatus">
+    <WSDL:part name="parameters" element="eds:getServerStatus" />
+  </WSDL:message>
+  <WSDL:message name="getServerStatusResponse">
+    <WSDL:part name="parameters" element="eds:getServerStatusResponse" />
+  </WSDL:message>
+  <WSDL:message name="getServerConfig">
+    <WSDL:part name="parameters" element="eds:getServerConfig" />
+  </WSDL:message>
+  <WSDL:message name="getServerConfigResponse">
+    <WSDL:part name="parameters" element="eds:getServerConfigResponse" />
+  </WSDL:message>
+  <WSDL:message name="getObjectsMetadata">
+    <WSDL:part name="parameters" element="eds:getObjectsMetadata" />
+  </WSDL:message>
+  <WSDL:message name="getObjectsMetadataResponse">
+    <WSDL:part name="parameters" element="eds:getObjectsMetadataResponse" />
+  </WSDL:message>
+  <WSDL:message name="alterObject">
+    <WSDL:part name="parameters" element="eds:alterObject" />
+  </WSDL:message>
+  <WSDL:message name="getObjectsSources">
+    <WSDL:part name="parameters" element="eds:getObjectsSources" />
+  </WSDL:message>
+  <WSDL:message name="getObjectsSourcesResponse">
+    <WSDL:part name="parameters" element="eds:getObjectsSourcesResponse" />
+  </WSDL:message>
+  <WSDL:message name="alterObjectSource">
+    <WSDL:part name="parameters" element="eds:alterObjectSource" />
+  </WSDL:message>
+  <WSDL:message name="getPoints">
+    <WSDL:part name="parameters" element="eds:getPoints" />
+  </WSDL:message>
+  <WSDL:message name="getPointsResponse">
+    <WSDL:part name="parameters" element="eds:getPointsResponse" />
+  </WSDL:message>
+  <WSDL:message name="getPointsSources">
+    <WSDL:part name="parameters" element="eds:getPointsSources" />
+  </WSDL:message>
+  <WSDL:message name="getPointsSourcesResponse">
+    <WSDL:part name="parameters" element="eds:getPointsSourcesResponse" />
+  </WSDL:message>
+  <WSDL:message name="getModifiedPoints">
+    <WSDL:part name="parameters" element="eds:getModifiedPoints" />
+  </WSDL:message>
+  <WSDL:message name="getModifiedPointsResponse">
+    <WSDL:part name="parameters" element="eds:getModifiedPointsResponse" />
+  </WSDL:message>
+  <WSDL:message name="operatePoints">
+    <WSDL:part name="parameters" element="eds:operatePoints" />
+  </WSDL:message>
+  <WSDL:message name="publishPoints">
+    <WSDL:part name="parameters" element="eds:publishPoints" />
+  </WSDL:message>
+  <WSDL:message name="unpublishPoints">
+    <WSDL:part name="parameters" element="eds:unpublishPoints" />
+  </WSDL:message>
+  <WSDL:message name="getRequestStatus">
+    <WSDL:part name="parameters" element="eds:getRequestStatus" />
+  </WSDL:message>
+  <WSDL:message name="getRequestStatusResponse">
+    <WSDL:part name="parameters" element="eds:getRequestStatusResponse" />
+  </WSDL:message>
+  <WSDL:message name="dropRequest">
+    <WSDL:part name="parameters" element="eds:dropRequest" />
+  </WSDL:message>
+  <WSDL:message name="requestTrendRequest">
+    <WSDL:part name="parameters" element="eds:requestTrend" />
+  </WSDL:message>
+  <WSDL:message name="requestTrendResponse">
+    <WSDL:part name="parameters" element="eds:requestTrendResponse" />
+  </WSDL:message>
+  <WSDL:message name="getTrend">
+    <WSDL:part name="parameters" element="eds:getTrend" />
+  </WSDL:message>
+  <WSDL:message name="getTrendResponse">
+    <WSDL:part name="parameters" element="eds:getTrendResponse" />
+  </WSDL:message>
+  <WSDL:message name="requestTabularRequest">
+    <WSDL:part name="parameters" element="eds:requestTabular" />
+  </WSDL:message>
+  <WSDL:message name="requestTabularResponse">
+    <WSDL:part name="parameters" element="eds:requestTabularResponse" />
+  </WSDL:message>
+  <WSDL:message name="getTabular">
+    <WSDL:part name="parameters" element="eds:getTabular" />
+  </WSDL:message>
+  <WSDL:message name="getTabularResponse">
+    <WSDL:part name="parameters" element="eds:getTabularResponse" />
+  </WSDL:message>
+  <WSDL:message name="requestShadesReadRequest">
+    <WSDL:part name="parameters" element="eds:requestShadesRead" />
+  </WSDL:message>
+  <WSDL:message name="requestShadesReadResponse">
+    <WSDL:part name="parameters" element="eds:requestShadesReadResponse" />
+  </WSDL:message>
+  <WSDL:message name="getShades">
+    <WSDL:part name="parameters" element="eds:getShades" />
+  </WSDL:message>
+  <WSDL:message name="getShadesResponse">
+    <WSDL:part name="parameters" element="eds:getShadesResponse" />
+  </WSDL:message>
+  <WSDL:message name="requestShadesWriteRequest">
+    <WSDL:part name="parameters" element="eds:requestShadesWrite" />
+  </WSDL:message>
+  <WSDL:message name="requestShadesWriteResponse">
+    <WSDL:part name="parameters" element="eds:requestShadesWriteResponse" />
+  </WSDL:message>
+  <WSDL:message name="requestShadesClearRequest">
+    <WSDL:part name="parameters" element="eds:requestShadesClear" />
+  </WSDL:message>
+  <WSDL:message name="requestShadesClearResponse">
+    <WSDL:part name="parameters" element="eds:requestShadesClearResponse" />
+  </WSDL:message>
+  <WSDL:message name="requestShadesCopyRequest">
+    <WSDL:part name="parameters" element="eds:requestShadesCopy" />
+  </WSDL:message>
+  <WSDL:message name="requestShadesCopyResponse">
+    <WSDL:part name="parameters" element="eds:requestShadesCopyResponse" />
+  </WSDL:message>
+  <WSDL:message name="requestEventsRequest">
+    <WSDL:part name="parameters" element="eds:requestEvents" />
+  </WSDL:message>
+  <WSDL:message name="requestEventsResponse">
+    <WSDL:part name="parameters" element="eds:requestEventsResponse" />
+  </WSDL:message>
+  <WSDL:message name="getEvents">
+    <WSDL:part name="parameters" element="eds:getEvents" />
+  </WSDL:message>
+  <WSDL:message name="getEventsResponse">
+    <WSDL:part name="parameters" element="eds:getEventsResponse" />
+  </WSDL:message>
+  <WSDL:message name="addEvents">
+    <WSDL:part name="parameters" element="eds:addEvents" />
+  </WSDL:message>
+  <WSDL:message name="getReportsConfigs">
+    <WSDL:part name="parameters" element="eds:getReportsConfigs" />
+  </WSDL:message>
+  <WSDL:message name="getReportsConfigsResponse">
+    <WSDL:part name="parameters" element="eds:getReportsConfigsResponse" />
+  </WSDL:message>
+  <WSDL:message name="createReportConfig">
+    <WSDL:part name="parameters" element="eds:createReportConfig" />
+  </WSDL:message>
+  <WSDL:message name="alterReportConfig">
+    <WSDL:part name="parameters" element="eds:alterReportConfig" />
+  </WSDL:message>
+  <WSDL:message name="deleteReportConfig">
+    <WSDL:part name="parameters" element="eds:deleteReportConfig" />
+  </WSDL:message>
+  <WSDL:message name="requestGlobalReportRequest">
+    <WSDL:part name="parameters" element="eds:requestGlobalReport" />
+  </WSDL:message>
+  <WSDL:message name="requestGlobalReportResponse">
+    <WSDL:part name="parameters" element="eds:requestGlobalReportResponse" />
+  </WSDL:message>
+  <WSDL:message name="requestCustomReportRequest">
+    <WSDL:part name="parameters" element="eds:requestCustomReport" />
+  </WSDL:message>
+  <WSDL:message name="requestCustomReportResponse">
+    <WSDL:part name="parameters" element="eds:requestCustomReportResponse" />
+  </WSDL:message>
+  <WSDL:message name="getCustomReport">
+    <WSDL:part name="parameters" element="eds:getCustomReport" />
+  </WSDL:message>
+  <WSDL:message name="getCustomReportResponse">
+    <WSDL:part name="parameters" element="eds:getCustomReportResponse" />
+  </WSDL:message>
+  <WSDL:message name="createGlobalReport">
+    <WSDL:part name="parameters" element="eds:createGlobalReport" />
+  </WSDL:message>
+  <WSDL:message name="requestScriptRunRequest">
+    <WSDL:part name="parameters" element="eds:requestScriptRun" />
+  </WSDL:message>
+  <WSDL:message name="requestScriptRunResponse">
+    <WSDL:part name="parameters" element="eds:requestScriptRunResponse" />
+  </WSDL:message>
+  <WSDL:message name="interactWithScript">
+    <WSDL:part name="parameters" element="eds:interactWithScript" />
+  </WSDL:message>
+  <WSDL:message name="interactWithScriptResponse">
+    <WSDL:part name="parameters" element="eds:interactWithScriptResponse" />
+  </WSDL:message>
+  <WSDL:message name="openDiagramRequest">
+    <WSDL:part name="parameters" element="eds:openDiagram" />
+  </WSDL:message>
+  <WSDL:message name="openDiagramResponse">
+    <WSDL:part name="parameters" element="eds:openDiagramResponse" />
+  </WSDL:message>
+  <WSDL:message name="resizeDiagram">
+    <WSDL:part name="parameters" element="eds:resizeDiagram" />
+  </WSDL:message>
+  <WSDL:message name="setDiagramViewport">
+    <WSDL:part name="parameters" element="eds:setDiagramViewport" />
+  </WSDL:message>
+  <WSDL:message name="handleDiagramClick">
+    <WSDL:part name="parameters" element="eds:handleDiagramClick" />
+  </WSDL:message>
+  <WSDL:message name="navigateDiagram">
+    <WSDL:part name="parameters" element="eds:navigateDiagram" />
+  </WSDL:message>
+  <WSDL:message name="closeDiagram">
+    <WSDL:part name="parameters" element="eds:closeDiagram" />
+  </WSDL:message>
+  <WSDL:message name="getGfxSrvFeatures">
+    <WSDL:part name="parameters" element="eds:getGfxSrvFeatures" />
+  </WSDL:message>
+  <WSDL:message name="getGfxSrvFeaturesResponse">
+    <WSDL:part name="parameters" element="eds:getGfxSrvFeaturesResponse" />
+  </WSDL:message>
+  <WSDL:message name="getLicense">
+    <WSDL:part name="parameters" element="eds:getLicense" />
+  </WSDL:message>
+  <WSDL:message name="getLicenseResponse">
+    <WSDL:part name="parameters" element="eds:getLicenseResponse" />
+  </WSDL:message>
+  <WSDL:portType name="edsPortType">
+    <WSDL:operation name="authenticate">
+      <documentation>Checks user name and password.</documentation>
+      <WSDL:input message="eds:authenticateRequest" />
+      <WSDL:output message="eds:authenticateResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="login">
+      <documentation>Tries to create new session for client.</documentation>
+      <WSDL:input message="eds:loginRequest" />
+      <WSDL:output message="eds:loginResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="logout">
+      <documentation>Destroys clent session.</documentation>
+      <WSDL:input message="eds:logout" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="ping">
+      <documentation>Revitalizes client session.</documentation>
+      <WSDL:input message="eds:ping" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getTechnologicalGroups">
+      <documentation>Returns a list of all technological groups (tg).</documentation>
+      <WSDL:input message="eds:getTechnologicalGroups" />
+      <WSDL:output message="eds:GroupsResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getSecurityGroups">
+      <documentation>Returns a list of all security groups (sg).</documentation>
+      <WSDL:input message="eds:getSecurityGroups" />
+      <WSDL:output message="eds:GroupsResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getUserSecurityGroups">
+      <documentation>Returns a list of security groups (sg) to which current user belongs.</documentation>
+      <WSDL:input message="eds:getUserSecurityGroups" />
+      <WSDL:output message="eds:GroupsResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getServerTime">
+      <documentation>Retrieves current server time.</documentation>
+      <WSDL:input message="eds:getServerTime" />
+      <WSDL:output message="eds:getServerTimeResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getServerStatus">
+      <documentation>Returns information about current server status.</documentation>
+      <WSDL:input message="eds:getServerStatus" />
+      <WSDL:output message="eds:getServerStatusResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getServerConfig">
+      <documentation>Retrieves EDS server basic configuration.</documentation>
+      <WSDL:input message="eds:getServerConfig" />
+      <WSDL:output message="eds:getServerConfigResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getObjectsMetadata">
+      <documentation>Allows querying EDS for objects matching selected criteria. It chooses all objects matching the filter, sorts them using the requested order and returns a part of the resulting list defined by startIdx and maxCount. The order parameter should be a semicolon-separated list of ObjectMetadata fields names, for example: "sourceId" or "file;-name". Adding "-" before a field name reverses the order. Full list of fields that may appear in the order parameter: sourceId, file, name, lastModified, sourceName, hasPermission.</documentation>
+      <WSDL:input message="eds:getObjectsMetadata" />
+      <WSDL:output message="eds:getObjectsMetadataResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="alterObject">
+      <documentation>Source must be specified using either sourceId or sourceName; setting both sourceId and sourceName is an error. If some attribute in newAttributes is not set then it is not changed. Objects can be deleted via HTTP DEL request.</documentation>
+      <WSDL:input message="eds:alterObject" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getObjectsSources">
+      <documentation>Returns a list of all object sources if filter is not set or all object sources matching filter. Note: point sources and object sources might be completely different, even though in many cases they have similar names. Use getPointSources() to get a list of point sources. The order parameter should be a semicolon-separated list of ObjectSource field names, in example: "id" or "kind;-name". Adding "-" before a field name reverses the order. Full list of fields that may appear in the order parameter: id, name, desc, kind, host, prefix, suffix, hasPermission.</documentation>
+      <WSDL:input message="eds:getObjectsSources" />
+      <WSDL:output message="eds:getObjectsSourcesResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="alterObjectSource">
+      <documentation>Source must be specified using either sourceId or sourceName; setting both sourceId and sourceName is an error. If some attribute in newAttributes is not set then it is not changed.</documentation>
+      <WSDL:input message="eds:alterObjectSource" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getPoints">
+      <documentation>Allows querying EDS for points matching selected criteria. It chooses all points matching the filter, sorts them using the requested order and returns a part of the result list defined by startIdx and maxCount. The order parameter should be a semicolon-separated list of Point field names, in example: "zd;iess;sid" or "aux;-sid". Adding "-" before a field name reverses the order. Full list of fields that may appear in the order parameter: sid, value, dts, tss, at, atss, quality, iess, desc, rt, zd, idcs, ar, ap, aux, un, dp, artd, ard, tb, bb, hl, ll, dun, ddp, dartd, dard, dtb, dbb, dhl, dll, sd, rd.</documentation>
+      <WSDL:input message="eds:getPoints" />
+      <WSDL:output message="eds:getPointsResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getPointsSources">
+      <documentation>Returns a list of all point sources. Note: point sources and object sources might be completely different, even though in many cases they have similar names. Use getObjectSources() to get a list of object sources.</documentation>
+      <WSDL:input message="eds:getPointsSources" />
+      <WSDL:output message="eds:getPointsSourcesResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getModifiedPoints">
+      <documentation>Returns a list of points that have been modified after specified timestamp. However, if input dbSequence is different from database sequence number in EDS, then all points from EDS are returned with disregard of the value of gptTimeStamp parameter. This method can be used to synchronize EDS points' database with the client's side. Only users belonging to admin group are authorized to use this method.</documentation>
+      <WSDL:input message="eds:getModifiedPoints" />
+      <WSDL:output message="eds:getModifiedPointsResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="operatePoints">
+      <documentation>Changes current points' values. PointNewValue::duration is ignored.</documentation>
+      <WSDL:input message="eds:operatePoints" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="publishPoints">
+      <documentation>Set values will be automatically refreshed for PointNewValue::duration time after this call.</documentation>
+      <WSDL:input message="eds:publishPoints" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="unpublishPoints">
+      <documentation>Turns off automatic refresh of points values. See publishPoints() method.</documentation>
+      <WSDL:input message="eds:unpublishPoints" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getRequestStatus">
+      <documentation>Service definition of function eds__getRequestStatus</documentation>
+      <WSDL:input message="eds:getRequestStatus" />
+      <WSDL:output message="eds:getRequestStatusResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="dropRequest">
+      <documentation>Service definition of function eds__dropRequest</documentation>
+      <WSDL:input message="eds:dropRequest" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="requestTrend">
+      <documentation>Executes graphical trend. "pixelCount" parameter is just a suggestion to ArchSrv. When requesting trend for long time range 1 pixel can correspond to e.g. 1 day, that's why trend request may return up to 5 samples per pixel (value at the start of the range, maximum, minimum, value at the end, hole marker). See also getRequestStatus() and getTrend().</documentation>
+      <WSDL:input message="eds:requestTrendRequest" />
+      <WSDL:output message="eds:requestTrendResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getTrend">
+      <documentation>Retrieves graphical trend request result. See also requestTrend() and getRequestStatus().</documentation>
+      <WSDL:input message="eds:getTrend" />
+      <WSDL:output message="eds:getTrendResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="requestTabular">
+      <documentation>Tells the server to execute tabular trend. See also getRequestStatus() and getTabular().</documentation>
+      <WSDL:input message="eds:requestTabularRequest" />
+      <WSDL:output message="eds:requestTabularResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getTabular">
+      <documentation>Retrieves tabular trend request result. See also requestTabular() and getRequestStatus().</documentation>
+      <WSDL:input message="eds:getTabular" />
+      <WSDL:output message="eds:getTabularResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="requestShadesRead">
+      <documentation>Tells the server to read points shades as defined in request argument. The returned <em>requestId</em> contains an identifier you can pass to getRequestStatus() to check current request state and later to getShades() to return requested shades.</documentation>
+      <WSDL:input message="eds:requestShadesReadRequest" />
+      <WSDL:output message="eds:requestShadesReadResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getShades">
+      <documentation>Retrieves shades read request results. See also requestShadeRead() and getRequestStatus().</documentation>
+      <WSDL:input message="eds:getShades" />
+      <WSDL:output message="eds:getShadesResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="requestShadesWrite">
+      <documentation>Tells the server to overwrite points shades. See also getRequestStatus().</documentation>
+      <WSDL:input message="eds:requestShadesWriteRequest" />
+      <WSDL:output message="eds:requestShadesWriteResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="requestShadesClear">
+      <documentation>Tells the server to clear points shades for a specific time periods. See also getRequestStatus().</documentation>
+      <WSDL:input message="eds:requestShadesClearRequest" />
+      <WSDL:output message="eds:requestShadesClearResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="requestShadesCopy">
+      <documentation>Tells the server to copy shades between points. The points must be of the same type.</documentation>
+      <WSDL:input message="eds:requestShadesCopyRequest" />
+      <WSDL:output message="eds:requestShadesCopyResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="requestEvents">
+      <documentation>Requests historical event data. All returned Events will be ordered in reverse chronological order. See also getRequestStatus() and getEvents().</documentation>
+      <WSDL:input message="eds:requestEventsRequest" />
+      <WSDL:output message="eds:requestEventsResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getEvents">
+      <documentation>Retrieves requestEvents() results.</documentation>
+      <WSDL:input message="eds:getEvents" />
+      <WSDL:output message="eds:getEventsResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="addEvents">
+      <documentation>Creates events of type EVENT-CUSTOM-MESSAGE.</documentation>
+      <WSDL:input message="eds:addEvents" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getReportsConfigs">
+      <documentation>Allows querying EDS for reports configs matching selected criteria.</documentation>
+      <WSDL:input message="eds:getReportsConfigs" />
+      <WSDL:output message="eds:getReportsConfigsResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="createReportConfig">
+      <documentation>Creates global report configuration.</documentation>
+      <WSDL:input message="eds:createReportConfig" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="alterReportConfig">
+      <documentation>Service definition of function eds__alterReportConfig</documentation>
+      <WSDL:input message="eds:alterReportConfig" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="deleteReportConfig">
+      <documentation>Deletes global report configuration.</documentation>
+      <WSDL:input message="eds:deleteReportConfig" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="requestGlobalReport">
+      <documentation>Executes global report. See EDS Terminal documentation chapter 8 "Reporting" for details. See also requestCustomReport() and getRequestStatus().</documentation>
+      <WSDL:input message="eds:requestGlobalReportRequest" />
+      <WSDL:output message="eds:requestGlobalReportResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="requestCustomReport">
+      <documentation>Executes custom report. See EDS Terminal documentation chapter 8 "Reporting" for details. See also requestGlobalReport(), getRequestStatus() and getCustomReportResult().</documentation>
+      <WSDL:input message="eds:requestCustomReportRequest" />
+      <WSDL:output message="eds:requestCustomReportResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getCustomReport">
+      <documentation>Service definition of function eds__getCustomReport</documentation>
+      <WSDL:input message="eds:getCustomReport" />
+      <WSDL:output message="eds:getCustomReportResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="createGlobalReport">
+      <documentation>Service definition of function eds__createGlobalReport</documentation>
+      <WSDL:input message="eds:createGlobalReport" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="requestScriptRun">
+      <documentation>Starts predefined script. See also interactWithScript() and getRequestStatus().</documentation>
+      <WSDL:input message="eds:requestScriptRunRequest" />
+      <WSDL:output message="eds:requestScriptRunResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="interactWithScript">
+      <documentation>Interact with script started in requestScriptRun().</documentation>
+      <WSDL:input message="eds:interactWithScript" />
+      <WSDL:output message="eds:interactWithScriptResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="openDiagram">
+      <documentation>Opens diagram on EDS graphics server. Returns root URL in form http://GFX-HOST:GFX-PORT/UUID/. This URL is also an identifier of renderer session (URI) and should be used as url parameter in every diagram method. Current tag  will be avaiable under http://GFX-HOST:GFX-PORT/UUID/tag?_=CURRENT-TIME-STAMP. CURRENT-TIME-STAMP is needed to force suppressing cache on all communication levels (HTTP client, proxies, etc...). Meta data will be avaiable on http://GFX-HOST:GFX-PORT/UUID/meta.json?tag=TAG. Main window view will be avaiable under http://GFX-HOST:GFX-PORT/UUID/main.png?tag=TAG. List of all diagram methods: openDiagram(), resizeDiagram(), setDiagramViewport(), handleDiagramClick(), navigateDiagram(), closeDiagram().</documentation>
+      <WSDL:input message="eds:openDiagramRequest" />
+      <WSDL:output message="eds:openDiagramResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="resizeDiagram">
+      <documentation>List of all diagram methods: openDiagram(), resizeDiagram(), setDiagramViewport(), handleDiagramClick(), navigateDiagram(), closeDiagram().</documentation>
+      <WSDL:input message="eds:resizeDiagram" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="setDiagramViewport">
+      <documentation>List of all diagram methods: openDiagram(), resizeDiagram(), setDiagramViewport(), handleDiagramClick(), navigateDiagram(), closeDiagram().</documentation>
+      <WSDL:input message="eds:setDiagramViewport" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="handleDiagramClick">
+      <documentation>List of all diagram methods: openDiagram(), resizeDiagram(), setDiagramViewport(), handleDiagramClick(), navigateDiagram(), closeDiagram().</documentation>
+      <WSDL:input message="eds:handleDiagramClick" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="navigateDiagram">
+      <documentation>List of all diagram methods: openDiagram(), resizeDiagram(), setDiagramViewport(), handleDiagramClick(), navigateDiagram(), closeDiagram().</documentation>
+      <WSDL:input message="eds:navigateDiagram" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="closeDiagram">
+      <documentation>List of all diagram methods: openDiagram(), resizeDiagram(), setDiagramViewport(), handleDiagramClick(), navigateDiagram(), closeDiagram().</documentation>
+      <WSDL:input message="eds:closeDiagram" />
+      <WSDL:output message="eds:VoidResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getGfxSrvFeatures">
+      <documentation>Returns features supported by connected graphics server.</documentation>
+      <WSDL:input message="eds:getGfxSrvFeatures" />
+      <WSDL:output message="eds:getGfxSrvFeaturesResponse" />
+    </WSDL:operation>
+    <WSDL:operation name="getLicense">
+      <documentation>Returns EDS server license information.</documentation>
+      <WSDL:input message="eds:getLicense" />
+      <WSDL:output message="eds:getLicenseResponse" />
+    </WSDL:operation>
+  </WSDL:portType>
+  <WSDL:binding name="eds" type="eds:edsPortType">
+    <SOAP:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <WSDL:operation name="authenticate">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="login">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="logout">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="ping">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getTechnologicalGroups">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getSecurityGroups">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getUserSecurityGroups">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getServerTime">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getServerStatus">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getServerConfig">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getObjectsMetadata">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="alterObject">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getObjectsSources">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="alterObjectSource">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getPoints">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getPointsSources">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getModifiedPoints">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="operatePoints">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="publishPoints">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="unpublishPoints">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getRequestStatus">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="dropRequest">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="requestTrend">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getTrend">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="requestTabular">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getTabular">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="requestShadesRead">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getShades">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="requestShadesWrite">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="requestShadesClear">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="requestShadesCopy">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="requestEvents">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getEvents">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="addEvents">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getReportsConfigs">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="createReportConfig">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="alterReportConfig">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="deleteReportConfig">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="requestGlobalReport">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="requestCustomReport">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getCustomReport">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="createGlobalReport">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="requestScriptRun">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="interactWithScript">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="openDiagram">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="resizeDiagram">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="setDiagramViewport">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="handleDiagramClick">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="navigateDiagram">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="closeDiagram">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getGfxSrvFeatures">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+    <WSDL:operation name="getLicense">
+      <SOAP:operation soapAction="" />
+      <WSDL:input>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:input>
+      <WSDL:output>
+        <SOAP:body use="literal" parts="parameters" />
+      </WSDL:output>
+    </WSDL:operation>
+  </WSDL:binding>
+  <WSDL:service name="eds">
+    <documentation>SOAP interface to EDS server.</documentation>
+    <WSDL:port name="eds" binding="eds:eds">
+      <SOAP:address location="http://10.7.227.12:43080/" />
+    </WSDL:port>
+  </WSDL:service>
+</WSDL:definitions>

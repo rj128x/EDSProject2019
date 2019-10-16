@@ -1,0 +1,55 @@
+﻿<Window x:Class="EDSApp.ReportWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EDSApp"
+        xmlns:edsproj="clr-namespace:EDSProj;assembly=EDSProj"
+        mc:Ignorable="d"
+        Title="ReportWindow" Height="700" Width="1100" Loaded="Window_Loaded" >
+    <Grid>
+        <Grid Margin="0,20,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="20"/>
+            </Grid.RowDefinitions>
+            <Border Height="135"  VerticalAlignment="Top">
+                <StackPanel Grid.Row="0" Grid.Column="0">
+                    <DatePicker Name="clndFrom"/>
+                    <DatePicker Name="clndTo"/>
+                    <CheckBox Name="chbMsk" Content="Московские сутки" IsChecked="False"/>
+
+                    <ComboBox Name="cmbPeriod" DisplayMemberPath="Value" SelectedValuePath="Key"/>
+
+                    <Button Content="Сформировать" Name="btnCreate" Click="btnCreate_Click"/>
+                    <Button Content="Прервать" Name="btnAbort" Click="btnAbort_Click"/>
+                </StackPanel>
+            </Border>
+            <local:SelectPointsControl x:Name="cntrlSelectPoints" Grid.Column="1" Grid.Row="0" />
+            <Grid Grid.Row="2" Grid.ColumnSpan="2" Name="grdStatus">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Column="0">
+                    <TextBlock Text="Подключение: "/>
+                    <TextBlock Text="{Binding ConnectInfo, Mode=OneWay}" Name="txtConnectInfo" Style="{StaticResource ValueText}"/>                    
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1">
+                    <TextBlock Text="Запрос: "/>
+                    <TextBlock Text="{Binding GlobalInfo, Mode=OneWay}" Name="txtGlobalInfo" Style="{StaticResource ValueText}"/>                    
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="2">                    
+                    <TextBlock Text="Состояние: "/>
+                    <TextBlock Text="{Binding ProcessInfo, Mode=OneWay}" Name="txtProcessInfo" Style="{StaticResource ValueText}"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+        
+    </Grid>
+</Window>

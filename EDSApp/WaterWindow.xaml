@@ -1,0 +1,189 @@
+﻿<Window x:Class="EDSApp.WaterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EDSApp"
+        mc:Ignorable="d"
+        Title="WaterWin" Height="400" Width="600">
+    <Grid>
+        <Grid Margin="0,20,0,0">
+            <TabControl >
+                <TabItem Header="8ч мощность">
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0">
+                            <StackPanel >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Напор"/>
+                                    <TextBox Name="txtHGES_8H" Width="50" Text="21"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="P расп ГТП-1"/>
+                                    <TextBox Name="txtPGTP1_8H" Width="50" Text="220"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="P расп ГТП-2"/>
+                                    <TextBox Name="txtPGTP2_8H" Width="50" Text="800"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Расход ФАВР"/>
+                                    <TextBox Name="txtQ_FAVR_8H" Width="50" Text="1200"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Время работы (необх)"/>
+                                    <TextBox Name="txt_TIME_8H" Width="50" Text="8"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Расход(0)"/>
+                                    <TextBox Name="txtQ0_8H" Width="50" Text="0"/>
+                                </StackPanel>
+                                <Button Name="btn8H" Content="Расчет" Click="btn8H_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" >
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="80"/>
+
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="30"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Grid.Column="0" Grid.Row="0" Text="ГТП" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" Grid.Row="0" Text="P расп" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="2" Grid.Row="0" Text="P 8ч" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="3" Grid.Row="0" Text="P пик" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="4" Grid.Row="0" Text="Расход" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+
+                                <TextBlock Grid.Column="0" Grid.Row="1" Text="ГТП-1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="0" Grid.Row="2" Text="ГТП-2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="0" Grid.Row="3" Text="ГЭС" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="0" Grid.Row="4" Text="Проверка" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                                <TextBlock Grid.Column="1" Grid.Row="1" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource Value}" Name="txt_pRasp_GTP1"/>
+                                <TextBlock Grid.Column="2" Grid.Row="1" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource Value}" Name="txt_p8h_GTP1"/>
+                                <TextBlock Grid.Column="3" Grid.Row="1" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource Value}" Name="txt_pPik_GTP1"/>
+                                <TextBlock Grid.Column="4" Grid.Row="1" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource Value}" Name="txt_q_GTP1"/>
+
+                                <TextBlock Grid.Column="1" Grid.Row="2" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource Value}" Name="txt_pRasp_GTP2"/>
+                                <TextBlock Grid.Column="2" Grid.Row="2" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource Value}" Name="txt_p8h_GTP2"/>
+                                <TextBlock Grid.Column="3" Grid.Row="2" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource Value}" Name="txt_pPik_GTP2"/>
+                                <TextBlock Grid.Column="4" Grid.Row="2" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource Value}" Name="txt_q_GTP2"/>
+
+                                <TextBlock Grid.Column="1" Grid.Row="3" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource Value}" Name="txt_pRasp_GES"/>
+                                <TextBlock Grid.Column="2" Grid.Row="3" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource Value}" Name="txt_p8h_GES"/>
+                                <TextBlock Grid.Column="3" Grid.Row="3" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource Value}" Name="txt_pPik_GES"/>
+                                <TextBlock Grid.Column="4" Grid.Row="3" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource Value}" Name="txt_q_GES"/>
+
+                                <!--<TextBlock Grid.Column="2" Grid.Row="4" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource Value}" Name="txt_p8h_GES_check"/>-->
+                                <TextBlock Grid.Column="4" Grid.Row="4" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource Value}" Name="txt_q8h_GES_check"/>
+
+                            </Grid>
+
+                        </Border>
+                    </Grid>
+
+                </TabItem>
+
+                <TabItem Header="РУСА">
+                    <Grid >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0">
+                            <StackPanel >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Напор"/>
+                                    <TextBox Name="txtHGES_RUSA" Width="50" Text="21"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Мощность"/>
+                                    <TextBox Name="txtPGES_RUSA" Width="50" Text="300"/>
+                                </StackPanel>
+                                <Button Name="btnRUSA" Content="РУСА" Click="btnRUSA_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" >
+                            <WebBrowser Name="wbResult"/>
+                        </Border>
+                    </Grid>
+                </TabItem>
+
+                <TabItem Header="Расчет мощности/расхода" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="170"/>
+                            <ColumnDefinition Width="170"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" >
+                            <StackPanel >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="ГГ№"/>
+                                    <TextBox Name="txtGG" Width="50" Text="1"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Напор"/>
+                                    <TextBox Name="txtHGG" Width="50" Text="21"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Мощность"/>
+                                    <TextBox Name="txtPGG" Width="50" Text="80"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Расход"/>
+                                    <TextBox Name="txtQGG" Width="50"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Name="btnCalcGGP" Content="Считать P" Width="70" Click="btnCalcGGP_Click"/>
+                                    <Button Name="btnCalcGGQ" Content="Считать Q" Width="70" Click="btnCalcGGQ_Click"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" >
+                            <StackPanel >
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Напор"/>
+                                    <TextBox Name="txtHGES" Width="50" Text="21"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Мощность"/>
+                                    <TextBox Name="txtPGES" Width="50" Text="300"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="100" Text="Расход"/>
+                                    <TextBox Name="txtQGES" Width="50"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Name="btnCalcGESP" Content="Считать P" Width="70" Click="btnCalcGESP_Click"/>
+                                    <Button Name="btnCalcGESQ" Content="Считать Q" Width="70" Click="btnCalcGESQ_Click"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </TabItem>
+                
+                
+            </TabControl>
+
+
+
+
+        </Grid>
+
+    </Grid>
+</Window>
