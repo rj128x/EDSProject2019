@@ -52,12 +52,14 @@ namespace EDSApp
             DateTime dt = clndDate.SelectedDate.Value;
             AVRCHMReport report = new AVRCHMReport();
             DateTime ds = dt;
-            DateTime de = dt.AddHours(24);
+            DateTime de = dt.AddHours(5);
+            if (de > DateTime.Now.AddMinutes(-10))
+                de = DateTime.Now.AddMinutes(-10);
             bool ok=await report.ReadData(ds, de);
             if (ok)
             {
                 report.ProcessData();
-                grdEvents.ItemsSource = report.Events.Values;
+                grdEvents.ItemsSource = report.Events.Values.ToList();
                 ReportResultWindow win = new ReportResultWindow();
                 win.chart.init();
                 win.chart.chart.GraphPane.XAxis.Scale.Format = "HH:mm:ss";
@@ -68,7 +70,7 @@ namespace EDSApp
                 win.chart.AddSerie("P зад ГРАРМ", report.getSerieData("SumGroupZad", ds, de), System.Drawing.Color.Green, true, false, 0, false);
                 win.chart.AddSerie("P нг", report.getSerieData("PMin", ds, de), System.Drawing.Color.Black, true, false, 0, true);
                 win.chart.AddSerie("P вг", report.getSerieData("PMax", ds, de), System.Drawing.Color.Black, true, false, 0, true);
-                win.chart.AddSerie("ГГ кол", report.getSerieData("GGCount", ds, de), System.Drawing.Color.LightBlue, true, false, 1, true);
+                win.chart.AddSerie("ГГ кол", report.getSerieData("GGCount", ds, de), System.Drawing.Color.LightBlue, true, false, 1, true);                
                 win.chart.AddSerie("нарушение", report.getSerieData("ErrorLimits15", ds, de,false), System.Drawing.Color.Red, false, true, 0, true);
                 win.chart.AddSerie("P звн", report.getSerieData("PZVN", ds, de), System.Drawing.Color.Orange, true, false, 2, false);
                 win.chart.AddSerie("P перв", report.getSerieData("PPerv", ds, de), System.Drawing.Color.Purple, true, false, 2, false);

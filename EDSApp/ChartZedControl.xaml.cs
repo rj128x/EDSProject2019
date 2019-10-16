@@ -136,7 +136,9 @@ namespace EDSApp
 		}
 
 		public ChartZedSerie AddSerie(String header, SortedList<DateTime, double> values, System.Drawing.Color color, bool line, bool symbol, int y2axisIndex = -1, bool isVisible = true) {
-			PointPairList points = new PointPairList();
+            if (values.Count == 0)
+                return null;
+            PointPairList points = new PointPairList();
 			foreach (KeyValuePair<DateTime, double> de in values) {
 				points.Add(new PointPair(new XDate(de.Key), de.Value));
 			}
@@ -145,8 +147,9 @@ namespace EDSApp
 			serie.Data = values;
 			serie.Color = color;
 			serie.IsVisible = true;
-			LineItem lineItem = chart.GraphPane.AddCurve(header, points, color, symbol ? SymbolType.Circle : SymbolType.None);
+			LineItem lineItem = chart.GraphPane.AddCurve(header, points, color, symbol ? SymbolType.Circle : SymbolType.None);            
 			serie.Item = lineItem;
+            
             lineItem.Line.Width = 2;
 
 			lineItem.Line.IsVisible = line;

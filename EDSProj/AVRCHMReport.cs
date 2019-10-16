@@ -9,7 +9,7 @@ namespace EDSProj
 {
     public class AVRCHMRecord
     {
-        public SortedList<int,double> P_GA { get; set; }
+        public SortedList<int, double> P_GA { get; set; }
         public SortedList<int, double> NA_GA { get; set; }
         public double SumGroupZad { get; set; }
         public int GGCount { get; set; }
@@ -22,6 +22,9 @@ namespace EDSProj
         public double PMin { get; set; }
         public int ErrorLimits { get; set; }
         public double ErrorLimits15 { get; set; }
+        public double ResursZagr { get; set; }
+        public double ResursRazgr { get; set; }
+        public double ErrorRezerv { get; set; }
         public AVRCHMRecord()
         {
             P_GA = new SortedList<int, double>();
@@ -31,18 +34,19 @@ namespace EDSProj
         {
             switch (desc)
             {
-                case "PPlan": return PPlan ;
-                case "PPerv": return PPerv ;
-                case "PZVN": return PZVN ;
-                case "PFakt": return PFakt ;
+                case "PPlan": return PPlan;
+                case "PPerv": return PPerv;
+                case "PZVN": return PZVN;
+                case "PFakt": return PFakt;
                 case "PMin": return PMin;
                 case "PMax": return PMax;
                 case "PPlanFull": return PPlanFull;
-                case "GGCount": return GGCount ;
+                case "GGCount": return GGCount;
                 case "SumGroupZad": return PPerv;
                 case "ErrorLimits": return ErrorLimits;
                 case "ErrorLimits15": return ErrorLimits15;
-                default: return  0 ;
+
+                default: return 0;
             }
         }
     }
@@ -102,12 +106,15 @@ namespace EDSProj
             PointsRef.Add("PPerv", AllPoints["11VT_GP00AP-119.MCR@GRARM"]);
             PointsRef.Add("PFakt", AllPoints["11VT_GP00A-136.MCR@GRARM"]);
 
+            PointsRef.Add("ResursZagr", AllPoints["11VT_GP00AP-131.MCR@GRARM"]);
+            PointsRef.Add("ResursRazgr", AllPoints["11VT_GP00AP-132.MCR@GRARM"]);
+
             PointsRef.Add("GGCount", AllPoints["11VT_GP00AP-151.MCR@GRARM"]);
 
         }
         public Dictionary<DateTime, AVRCHMRecord> Data { get; set; }
         public Dictionary<DateTime, AVRCHMReportRecord> Events { get; set; }
-        public async Task<bool> ReadData(DateTime dateStart,DateTime dateEnd)
+        public async Task<bool> ReadData(DateTime dateStart, DateTime dateEnd)
         {
 
             EDSReportPeriod period = EDSReportPeriod.sec;
@@ -115,13 +122,13 @@ namespace EDSProj
             EDSReport report = new EDSReport(dateStart, dateEnd, period);
 
             Dictionary<string, EDSReportRequestRecord> records = new Dictionary<string, EDSReportRequestRecord>();
-            foreach (KeyValuePair<string,EDSPointInfo> de in PointsRef)
+            foreach (KeyValuePair<string, EDSPointInfo> de in PointsRef)
             {
-                EDSReportRequestRecord rec=report.addRequestField(de.Value, EDSReportFunction.val);
+                EDSReportRequestRecord rec = report.addRequestField(de.Value, EDSReportFunction.val);
                 records.Add(de.Key, rec);
             }
 
-            bool ok =await report.ReadData();
+            bool ok = await report.ReadData();
 
             if (!ok)
                 return false;
@@ -129,6 +136,7 @@ namespace EDSProj
             Data = new Dictionary<DateTime, AVRCHMRecord>();
             List<double> prevPPlan = new List<double>();
             int errorLimits = 0;
+            int errorRezerv = 0;
             Events = new Dictionary<DateTime, AVRCHMReportRecord>();
             AVRCHMRecord prevRecord = null;
 
@@ -142,13 +150,15 @@ namespace EDSProj
                 rec.PPerv = dataRec[records["PPerv"].Id];
                 rec.GGCount = (int)dataRec[records["GGCount"].Id];
                 rec.SumGroupZad = dataRec[records["PZad"].Id] - rec.PZVN;
+                rec.ResursZagr = dataRec[records["ResursZagr"].Id];
+                rec.ResursRazgr = dataRec[records["ResursRazgr"].Id];
 
                 rec.PPlanFull = rec.PPlan + rec.PPerv + rec.PZVN;
                 prevPPlan.Add(rec.PPlanFull);
                 rec.PMax = prevPPlan.Max() + rec.PPlanFull * 0.01;
                 rec.PMin = prevPPlan.Min() - rec.PPlanFull * 0.01;
 
-                if (rec.PFakt>rec.PMax || rec.PFakt < rec.PMin)
+                if (rec.PFakt > rec.PMax || rec.PFakt < rec.PMin)
                 {
                     rec.ErrorLimits = errorLimits + 1;
                     if (rec.ErrorLimits > 15)
@@ -157,8 +167,38 @@ namespace EDSProj
                 }
                 else
                 {
+                    if (errorLimits > 15)
+                    {
+                        AVRCHMReportRecord repRec = new AVRCHMReportRecord();
+                        repRec.TypeRecord = "Нарушение плана";
+                        repRec.DateStart = date.AddMinutes(-3);
+                        repRec.DateEnd = date.AddMinutes(+3);
+                        repRec.Date = date;
+                        if (!Events.ContainsKey(date))
+                            Events.Add(date, repRec);
+                    }
                     rec.ErrorLimits = 0;
                     errorLimits = 0;
+                }
+
+                if ((rec.PZVN + rec.ResursZagr) < 20 || (rec.ResursRazgr - rec.PZVN) < 20)
+                {
+                    rec.ErrorRezerv = errorRezerv;
+                    errorRezerv++;
+                }
+                else
+                {
+                    errorRezerv = 0;
+                    if (errorRezerv > 0)
+                    {
+                        AVRCHMReportRecord repRec = new AVRCHMReportRecord();
+                        repRec.TypeRecord = "Нарушение резерва";
+                        repRec.DateStart = date.AddMinutes(-3);
+                        repRec.DateEnd = date.AddMinutes(+3);
+                        repRec.Date = date;
+                        if (!Events.ContainsKey(date))
+                            Events.Add(date, repRec);
+                    }
                 }
 
 
@@ -178,10 +218,11 @@ namespace EDSProj
                     repRec.TypeRecord = "Смена состава";
                     repRec.DateStart = date.AddMinutes(-3);
                     repRec.DateEnd = date.AddMinutes(+3);
-                    repRec.Date = date;                    
-                    Events.Add(date,repRec);
+                    repRec.Date = date;
+                    if (!Events.ContainsKey(date))
+                        Events.Add(date, repRec);
                 }
-
+                
                 if (Math.Abs(rec.SumGroupZad - prevRecord.SumGroupZad) > 10)
                 {
                     AVRCHMReportRecord repRec = new AVRCHMReportRecord();
@@ -189,7 +230,8 @@ namespace EDSProj
                     repRec.DateStart = date.AddMinutes(-3);
                     repRec.DateEnd = date.AddMinutes(+3);
                     repRec.Date = date;
-                    Events.Add(date,repRec);
+                    if (!Events.ContainsKey(date))
+                        Events.Add(date, repRec);
                 }
 
                 prevRecord = rec;
@@ -199,7 +241,7 @@ namespace EDSProj
         }
 
         public void ProcessData()
-        {
+        {            
             foreach (DateTime evDate in Events.Keys)
             {
                 AVRCHMReportRecord ev = Events[evDate];
@@ -207,7 +249,7 @@ namespace EDSProj
                 double maxLimitError = 0;
                 foreach (DateTime dt in Data.Keys)
                 {
-                    if (dt>ev.DateStart && dt < ev.DateEnd)
+                    if (dt > ev.DateStart && dt < ev.DateEnd)
                     {
                         if (Data[dt].ErrorLimits > maxLimitError)
                         {
@@ -224,22 +266,22 @@ namespace EDSProj
                 {
                     ev.HasError = "Нет ошибок";
                 }
-
             }
+
         }
 
 
-        public SortedList<DateTime,double> getSerieData(string desc, DateTime dateStart,DateTime dateEnd,bool add0=true)
+        public SortedList<DateTime, double> getSerieData(string desc, DateTime dateStart, DateTime dateEnd, bool add0 = true)
         {
             SortedList<DateTime, double> data = new SortedList<DateTime, double>();
 
             foreach (DateTime date in Data.Keys)
             {
-                if (date>=dateStart && date <= dateEnd)
+                if (date >= dateStart && date <= dateEnd)
                 {
                     double val = Data[date].getInfo(desc);
 
-                    if (add0 )
+                    if (add0)
                         data.Add(date, val);
                     else
                     {
