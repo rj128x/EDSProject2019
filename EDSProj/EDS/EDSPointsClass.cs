@@ -90,7 +90,8 @@ namespace EDSProj
                 types.Add(PointType.POINTTYPEPACKED);
 				types.Add(PointType.POINTTYPEDOUBLE);
                 types.Add(PointType.POINTTYPEINT64);
-				filter.rt = types.ToArray();
+                types.Add(PointType.POINTTYPEBINARY);
+                filter.rt = types.ToArray();
 
 
 
@@ -133,5 +134,71 @@ namespace EDSProj
 			return true;
 		}
 
-	}
+
+        public static async  Task<bool> getPointsArr(string iess, SortedList<string, EDSPointInfo> points)
+        {
+            try
+            {
+                if (!EDSClass.Connected)
+                    EDSClass.Connect();
+                PointFilter filter = new PointFilter();
+                List<PointType> types = new List<PointType>();
+                types.Add(PointType.POINTTYPEANALOG);
+                types.Add(PointType.POINTTYPEPACKED);
+                types.Add(PointType.POINTTYPEDOUBLE);
+                types.Add(PointType.POINTTYPEINT64);
+                types.Add(PointType.POINTTYPEBINARY);
+                filter.rt = types.ToArray();
+                filter.iessRe = iess;
+                
+
+
+                bool finish = false;
+                uint index = 0;
+                getPointsRequest req = new getPointsRequest();
+                req.authString = EDSClass.AuthStr;
+                req.filter = filter;
+                req.order = "";
+
+                EDSClass.Single.GlobalInfo = "Получение списка точек";
+                EDSClass.Single.Ready = false;
+                EDSClass.Single.ProcessCalc = true;
+                uint match = 0;
+                while (!finish)
+                {
+                    req.maxCount = 1000;
+                    req.startIdx = index;
+                    EDSClass.Single.ProcessInfo = String.Format("Точки {0} - {1} из {2}", req.startIdx, req.startIdx + req.maxCount, (match == 0 ? "?" : match.ToString()));
+                    getPointsResponse resp = await EDSClass.Client.getPointsAsync(req);
+
+                    //Point[] points = EDSClass.Client.getPoints(EDSClass.AuthStr, filter, "", index, 1000, out cnt, out total);
+                    foreach (Point point in resp.points)
+                    {
+                        try
+                        {
+                            string tg = string.Join(";", point.tg);
+                            points.Add(point.id.iess, new EDSPointInfo(point.id.iess, point.desc, tg));
+                        }
+                        catch { }
+                    }
+                    index += (uint)resp.points.Count();
+                    finish = index >= resp.matchCount;
+                    match = resp.matchCount;
+                }
+
+            }
+            catch (Exception e)
+            {
+                Logger.Info(("Ошибка при получении списка точек: " + e.ToString()));
+
+            }
+            finally
+            {
+                EDSClass.Single.Ready = true;
+                EDSClass.Single.ProcessCalc = false;
+            }
+            return true;
+        }
+
+    }
 }

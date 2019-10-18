@@ -12,9 +12,12 @@ namespace EDSProj.ModesCentre
 		public int PiramidaCode { get; set; }
 		public bool WriteIntegratedData { get; set; }
 		public bool WriteToEDS { get; set; }
+        public bool WriteToEDSMinMax { get; set; }
 		public bool Autooper { get; set; }
 		public string MCName { get; set; }
-		public string EDSPoint { get; set; }
+		public string EDSPointMin { get; set; }
+        public string EDSPointMax { get; set; }
+        public string EDSPoint { get; set; }
         public string EDSPointSmooth { get; set; }
         public string IntegratedEDSPoint { get; set; }
         

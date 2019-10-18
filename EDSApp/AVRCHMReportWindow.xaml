@@ -30,7 +30,7 @@
                         <DataGridTemplateColumn Header="Date" SortMemberPath="Date" Width="150">
                             <DataGridTemplateColumn.CellTemplate >
                                 <DataTemplate >
-                                    <TextBlock Text="{Binding Date, Mode=OneTime, StringFormat='dd.MM HH:mm:ss'}" />
+                                    <TextBlock Text="{Binding Date, Mode=OneTime}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

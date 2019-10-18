@@ -37,8 +37,16 @@ namespace EDSPBR
 			bool ok=EDSClass.ProcessQuery(reqId);
 			Console.WriteLine(ok.ToString());*/
 			
+            
 			MCSettings.init("Data/MCSettings.xml");
-			MCServerReader reader = new MCServerReader(DateTime.Now.Date);
+            
+            /*DateTime date = new DateTime(2019, 10, 01);
+            while (date <= DateTime.Now.Date)
+            {*/
+                MCServerReader reader = new MCServerReader(DateTime.Now.Date);
+             /*   date = date.AddDays(1);
+            }*/
+
             EDSClass.Disconnect();
             //Console.ReadLine();
 		}

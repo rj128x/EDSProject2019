@@ -6,7 +6,12 @@
         xmlns:local="clr-namespace:EDSApp"
         mc:Ignorable="d"
         Title="ReportResultwindow" Height="300" Width="600">
-    <Grid>
+    <Grid Name="mainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
         <local:ChartZedControl x:Name="chart"></local:ChartZedControl>
+        <local:ChartZedControl x:Name="chart2" Grid.Row="1" Visibility="Collapsed" ></local:ChartZedControl>
     </Grid>
 </Window>

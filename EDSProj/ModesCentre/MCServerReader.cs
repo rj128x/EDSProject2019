@@ -58,7 +58,6 @@ namespace EDSProj.ModesCentre
 							, TreeContent.PGObjects /*только оборудование, по которому СО публикует ПГ(включая родителей)*/
 							, false);
 
-
 				bool ok = true;
 				foreach (IGenObject obj in ts.GenTree) {
 					ok = ok && getPlan(obj);
@@ -159,6 +158,7 @@ namespace EDSProj.ModesCentre
 			DateTime dt0 = Date.Date.AddDays(1).LocalHqToSystemEx();
 			modesConnect();
 			IList<PlanValueItem> data = api.GetPlanValuesActual(dt1, dt0, obj);
+
 			bool ok = true;
 			if (data.Count > 0) {
 				Logger.Info(String.Format("Обработка ПБР для {0}({1}) [{2}]", obj.Description, obj.Id, obj.Name));
@@ -171,9 +171,9 @@ namespace EDSProj.ModesCentre
 						continue;
 					}
 					if (pbr.DataSettings != null) {
-						foreach (PlanValueItem item in data) {
+						foreach (PlanValueItem item in data) {                            
 							if (item.ObjFactor == 0) {
-								pbr.AddValue(item.DT.SystemToLocalHqEx(), item.Value);
+								pbr.AddValue(item.DT.SystemToLocalHqEx(), item.Value);                                                                
 								string pt = item.Type.ToString().Replace("ПБР", "");
 								int num = 0;
 								try {
@@ -181,7 +181,15 @@ namespace EDSProj.ModesCentre
 								} catch { }
 								NPBR = num;
 							}
-						}
+                            else if (item.ObjFactor == 1 && pbr.DataSettings.WriteToEDSMinMax)
+                            {
+                                pbr.AddMinValue(item.DT.SystemToLocalHqEx().AddHours(-1), item.Value);
+                            }
+                            else if (item.ObjFactor == 2 && pbr.DataSettings.WriteToEDSMinMax)
+                            {
+                                pbr.AddMaxValue(item.DT.SystemToLocalHqEx().AddHours(-1), item.Value);
+                            }
+                        }
 						Logger.Info(String.Format("Получено {0} записей с {1} по {2} по объекту {3}", pbr.Data.Count, dt1.SystemToLocalHqEx(), dt0.SystemToLocalHqEx(), obj.Description));
 						if (pbr.Data.Count > 10) {
 							if (!ProcessedPBRS.ContainsKey(pbr.Item))
@@ -205,7 +213,9 @@ namespace EDSProj.ModesCentre
 			return ok;
 		}
 
-		/*protected void sendAutooperData1() {
+
+
+        /*protected void sendAutooperData1() {
 			string fn = "pbr-0000" + (NPBR < 10 ? "0" : "") + NPBR.ToString() + "-" + Date.ToString("yyyyMMdd") + ".csv";
 			string body = String.Join("\r\n", AutooperData);
 			try {

@@ -126,7 +126,7 @@ namespace EDSApp
 				foreach (DateTime dt in report.ResultData.Keys) {
 					data.Add(dt, report.ResultData[dt][id]);
 				}
-				win.chart.AddSerie(request.Desc, data, ChartZedSerie.NextColor(), true, true, index++);
+				win.chart.AddSerie(request.Desc, data, ChartZedSerie.NextColor(), true, true, false, index++);
 			}
 			win.Show();
 

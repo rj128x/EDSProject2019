@@ -135,7 +135,8 @@ namespace EDSApp
 			chart.GraphPane.XAxis.Scale.Max = XDate.DateTimeToXLDate(max);
 		}
 
-		public ChartZedSerie AddSerie(String header, SortedList<DateTime, double> values, System.Drawing.Color color, bool line, bool symbol, int y2axisIndex = -1, bool isVisible = true) {
+		public ChartZedSerie AddSerie(String header, SortedList<DateTime, double> values, System.Drawing.Color color, 
+            bool line, bool symbol,bool dash=false, int y2axisIndex = -1, bool isVisible = true,double min=double.MinValue,double max=double.MaxValue) {
             if (values.Count == 0)
                 return null;
             PointPairList points = new PointPairList();
@@ -162,8 +163,11 @@ namespace EDSApp
 			serie.IsVisible = isVisible;
 			serie.Item.IsVisible = isVisible;
 			serie.Y2Index = y2axisIndex;
-
-			if (y2axisIndex > -1) {
+            serie.Item.Line.DashOn = dash ? 50 : 0;
+            serie.Item.Line.DashOff = dash ? 100 : 0;
+            if (dash)
+                lineItem.Line.Style = System.Drawing.Drawing2D.DashStyle.Dot;
+            if (y2axisIndex > -1) {
 				while (chart.GraphPane.Y2AxisList.Count() < y2axisIndex + 1) {
 					chart.GraphPane.Y2AxisList.Add(new Y2Axis());
 				}
@@ -177,8 +181,12 @@ namespace EDSApp
 				chart.GraphPane.Y2AxisList[y2axisIndex].MinorTic.IsOpposite = false;
 				chart.GraphPane.Y2AxisList[y2axisIndex].Scale.FontSpec.FontColor = color;
 				chart.GraphPane.Y2AxisList[y2axisIndex].Color = color;
+                if (min>double.MinValue)
+                    chart.GraphPane.Y2AxisList[y2axisIndex].Scale.Min = min;
+                if (max < double.MaxValue)
+                    chart.GraphPane.Y2AxisList[y2axisIndex].Scale.Max = max;
 
-				lineItem.IsY2Axis = true;
+                lineItem.IsY2Axis = true;
 				lineItem.YAxisIndex = y2axisIndex;
 
 			}

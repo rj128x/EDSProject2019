@@ -110,13 +110,13 @@ namespace EDSApp
 
 					SortedList<DateTime, double> appr = report.Approx(data);
 
-					ChartZedSerie ser=chart.AddSerie(header, appr, color, true, false,-1,false);
+					ChartZedSerie ser=chart.AddSerie(header, appr, color, true, false,false,-1,false);
 
 					
 				}
 			}
-			chart.AddSerie("LStart", dataLStart, ChartZedSerie.NextColor(), true, false, 0);
-			chart.AddSerie("LStop", dataLStop, ChartZedSerie.NextColor(), true, false, 0);
+			chart.AddSerie("LStart", dataLStart, ChartZedSerie.NextColor(), true, false,false, 0);
+			chart.AddSerie("LStop", dataLStop, ChartZedSerie.NextColor(), true, false, false, 0);
 		}
 
 
@@ -148,7 +148,7 @@ namespace EDSApp
 
 
 				}
-				chart.AddSerie(String.Format("{0}", time ? "Работа (ceк)" : "Пусков"), data, color, true, true, 0);
+				chart.AddSerie(String.Format("{0}", time ? "Работа (ceк)" : "Пусков"), data, color, true, true, false, 0);
 
 			}
 
@@ -247,14 +247,14 @@ namespace EDSApp
 					chart.AddSerie(headerRun, RunForApprox, color, false, true);
 
 					SortedList<DateTime, double> appr = report.Approx(RunForApprox);
-					ChartZedSerie ser=chart.AddSerie(headerRun, appr, color, true, false,-1,false);
+					ChartZedSerie ser=chart.AddSerie(headerRun, appr, color, true, false,false,-1,false);
 				}
 				//line.Line.IsVisible = false;
 				if (StopForApprox.Count > 1 && !isOhl) {
 					chart.AddSerie(headerStop, StopForApprox, color, false, true);
 
 					SortedList<DateTime, double> appr = report.Approx(StopForApprox);
-					ChartZedSerie ser = chart.AddSerie(headerStop, appr, color, true, false,-1,false);
+					ChartZedSerie ser = chart.AddSerie(headerStop, appr, color, true, false,false,-1,false);
 
 				}
 
@@ -276,8 +276,8 @@ namespace EDSApp
 						DataCold.Add(de.Key, de.Value.PPCold);
 					}
 				}
-				chart.AddSerie("T_Hot", DataHot, ChartZedSerie.NextColor(), true, false, 0);
-				chart.AddSerie("T_Cold", DataCold, ChartZedSerie.NextColor(), true, false, 0);
+				chart.AddSerie("T_Hot", DataHot, ChartZedSerie.NextColor(), true, false, false, 0);
+				chart.AddSerie("T_Cold", DataCold, ChartZedSerie.NextColor(), true, false, false, 0);
 			}
 		}
 

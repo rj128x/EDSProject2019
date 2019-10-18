@@ -109,7 +109,7 @@ namespace EDSProj.EDS
 					while (ds < DateEnd) {
 						if (Period == EDSReportPeriod.minute || Period == EDSReportPeriod.sec) {
 							int i0 = dates.IndexOf(ds);
-							int i1 = i0 + 10000;
+							int i1 = i0 + 15000;
 							de = i1 < dates.Count ? dates[i1] : DateEnd;
 						} else {
 							de = de.AddDays(5);

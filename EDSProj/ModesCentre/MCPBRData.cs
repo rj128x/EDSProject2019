@@ -11,22 +11,31 @@ namespace EDSProj.ModesCentre
 	public class MCPBRData
 	{
 		public SortedList<DateTime, double> Data { get; set; }
-		public SortedList<DateTime, double> DataHH { get; set; }
+        public SortedList<DateTime, double> DataMin { get; set; }
+        public SortedList<DateTime, double> DataMax { get; set; }
+        public SortedList<DateTime, double> DataHH { get; set; }
         public SortedList<DateTime, double> DataSmooth { get; set; }
         public int Item { get; set; }
 		public string PointName { get; set; }
+        public string PointNameMin { get; set; }
+        public string PointNameMax { get; set; }
+
         public string SmoothPointName { get; set; }
 		public MCSettingsRecord DataSettings;
 
 		public MCPBRData(MCSettingsRecord rec) {
 			Item = rec.PiramidaCode;
 			PointName = rec.EDSPoint;
+            PointNameMin = rec.EDSPointMin;
+            PointNameMax = rec.EDSPointMax;
             SmoothPointName = rec.EDSPointSmooth;
 			Logger.Info(rec.EDSPoint);
 			DataSettings = rec;
 
 			Data = new SortedList<DateTime, double>();
-			DataHH = new SortedList<DateTime, double>();
+            DataMin = new SortedList<DateTime, double>();
+            DataMax = new SortedList<DateTime, double>();
+            DataHH = new SortedList<DateTime, double>();
             DataSmooth = new SortedList<DateTime, double>();
 		}
 
@@ -60,7 +69,31 @@ namespace EDSProj.ModesCentre
 			}
 		}
 
-		protected SortedList<DateTime, double> createInegratedData() {
+        public void AddMinValue(DateTime date, double val)
+        {
+            try
+            {
+                DataMin.Add(date, val);
+            }
+            catch (Exception e)
+            {
+                Logger.Info("ошибка при разборе пбр мин. дубль в исходных днных " + e);
+            }
+        }
+
+        public void AddMaxValue(DateTime date, double val)
+        {
+            try
+            {
+                DataMax.Add(date, val);
+            }
+            catch (Exception e)
+            {
+                Logger.Info("ошибка при разборе пбр макс. дубль в исходных днных " + e);
+            }
+        }
+
+        protected SortedList<DateTime, double> createInegratedData() {
 			SortedList<DateTime, double> integr = new SortedList<DateTime, double>();
 			int index = 0;
 
@@ -143,7 +176,7 @@ namespace EDSProj.ModesCentre
 			return hh;
 		}
 
-		public bool writeToEDS(string pointName, SortedList<DateTime, double> data, bool data15,bool datamin) {
+		public bool writeToEDS(string pointName, SortedList<DateTime, double> data, bool data15,bool datamin,bool data60) {
 			bool ok = false;
 			try {
 				//SortedList<DateTime, double> data15 = createHH15Data();
@@ -201,7 +234,24 @@ namespace EDSProj.ModesCentre
                                 value = new PointValue() { av = (float)de.Value, avSpecified = true }
                             });
                         };
-                    } else {
+                    }
+                    else if (data60)
+                    {
+                        foreach (KeyValuePair<DateTime, double> de in data)
+                        {
+                            vals.Add(new ShadeValue()
+                            {
+                                period = new TimePeriod()
+                                {
+                                    from = new Timestamp() { second = EDSClass.toTS(de.Key.AddHours(2)) },
+                                    till = new Timestamp() { second = EDSClass.toTS(de.Key.AddHours(3)) }
+                                },
+                                quality = Quality.QUALITYGOOD,
+                                value = new PointValue() { av = (float)de.Value, avSpecified = true }
+                            });
+                        };
+                    }
+                    else {
 						double sum = 0;
 						foreach (KeyValuePair<DateTime, double> de in data) {
 							DateTime d = de.Key.AddMinutes(0);
@@ -256,18 +306,24 @@ namespace EDSProj.ModesCentre
                 SortedList<DateTime, double> smooth = createSmoothData();
 				if (!String.IsNullOrEmpty(this.PointName) && DataSettings.WriteToEDS) {
 					Logger.Info("Запись в ЕДС данных ПБР");
-					ok= ok && this.writeToEDS(this.PointName, data15, true,false);
+					ok= ok && this.writeToEDS(this.PointName, data15, true,false,false);
 				}
                 if (!String.IsNullOrEmpty(this.SmoothPointName) && DataSettings.WriteToEDS)
                 {
                     Logger.Info("Запись в ЕДС данных ПБР (сглаж)");
-                    ok = ok && this.writeToEDS(this.SmoothPointName, smooth, false, true);
+                    ok = ok && this.writeToEDS(this.SmoothPointName, smooth, false, true,false);
                 }
                 if (DataSettings.WriteIntegratedData && !String.IsNullOrEmpty(DataSettings.IntegratedEDSPoint)) {
 					SortedList<DateTime, double> integr = createInegratedData();
 					Logger.Info("Запись в ЕДС интегрированных данных");
-					ok= ok && this.writeToEDS(DataSettings.IntegratedEDSPoint, integr, false,false);
+					ok= ok && this.writeToEDS(DataSettings.IntegratedEDSPoint, integr, false,false,false);
 				}
+                if (DataSettings.WriteToEDSMinMax&&!String.IsNullOrEmpty(DataSettings.EDSPointMin) && !String.IsNullOrEmpty(DataSettings.EDSPointMax))
+                {
+                    Logger.Info("Запись в ЕДС данных ПБР (мин макс)");
+                    ok = ok && this.writeToEDS(this.PointNameMin, DataMin, false, false,true);
+                    ok = ok && this.writeToEDS(this.PointNameMax, DataMax, false, false,true);
+                }
 				return ok;
 			} catch (Exception e) {
 				Logger.Info("Ошибка при записи ПБР в базу ");
