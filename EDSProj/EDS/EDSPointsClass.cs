@@ -90,7 +90,6 @@ namespace EDSProj
                 types.Add(PointType.POINTTYPEPACKED);
 				types.Add(PointType.POINTTYPEDOUBLE);
                 types.Add(PointType.POINTTYPEINT64);
-                types.Add(PointType.POINTTYPEBINARY);
                 filter.rt = types.ToArray();
 
 

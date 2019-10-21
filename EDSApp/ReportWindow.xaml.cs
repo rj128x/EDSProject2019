@@ -115,6 +115,7 @@ namespace EDSApp
 
 
 			ReportResultWindow win = new ReportResultWindow();
+            win.chart.initControl();
 			win.chart.init();
 			SortedList<DateTime, double> data = new SortedList<DateTime, double>();
 			int index = -1;

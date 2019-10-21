@@ -12,7 +12,7 @@
     <Grid>
         <Grid Name="grdMain">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="300"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Border Grid.Column="0">
@@ -48,13 +48,20 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="Val" Width="50">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Value, StringFormat='0.00'}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </Border>
             <Border Grid.Column="1" Name="brd">
                 <WindowsFormsHost>
-                    <zd:ZedGraphControl x:Name="chart"/>
+                    <zd:ZedGraphControl x:Name="chart" />
                 </WindowsFormsHost>
             </Border>
         </Grid>
