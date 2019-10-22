@@ -93,6 +93,7 @@ namespace EDSApp
 
         public GraphPane CurrentGraphPane { get; set; }
         public bool AllYAxisIsVisible = false;
+        public Dictionary<GraphPane, LineItem> CrossHairItems;
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void NotifyChanged(string propName)
@@ -111,22 +112,28 @@ namespace EDSApp
         public DateTime MaxDate { get => _maxDate; set { _maxDate = value; NotifyChanged("MinDate"); } }
         public DateTime CursorDate { get => _cursorDate; set { _cursorDate = value; NotifyChanged("CursorDate"); } }
 
-        private double? CrossHairX = null;
+        public bool ShowCrossHair { get; set; }
         Dictionary<GraphPane, LineObj> xHairOld = new Dictionary<GraphPane, LineObj>();
 
         public ChartZedControl()
         {
             ObsSeries = new ObservableCollection<ChartZedSerie>();
-
+            
             InitializeComponent();
 
             CurrentGraphPane = chart.GraphPane;
             chart.MouseMove += Chart_MouseMove;
+
         }
 
 
+
+        private int prevX;
         private void Chart_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
+            if (!ShowCrossHair && !(e.Button == System.Windows.Forms.MouseButtons.Right))
+                return;
+
             double x, y;
             CurrentGraphPane.ReverseTransform(e.Location, out x, out y);
 
@@ -135,37 +142,34 @@ namespace EDSApp
 
             foreach (ChartZedSerie serie in ObsSeries)
             {
-
                 try
                 {
                     var d = serie.Data.First(de => de.Key >= CursorDate);
                     serie.Value = serie.Data[d.Key];
                 }
                 catch { }
+
             }
 
-
+            
+            
+            chart.Invalidate(new Region(new System.Drawing.Rectangle(chart.DisplayRectangle.Left + prevX - 5, chart.DisplayRectangle.Top, 10, chart.DisplayRectangle.Height)), false);
+            prevX = e.Location.X;
             foreach (GraphPane pane in chart.MasterPane.PaneList)
             {
-                if (CrossHairX != null)
-                {
-                    pane.GraphObjList.Remove(xHairOld[pane]);
-                }
-
-                LineObj xHair = new LineObj(x, pane.YAxis.Scale.Min, x, pane.YAxis.Scale.Max);
-
-                pane.GraphObjList.Add(xHair);
-                xHairOld[pane] = xHair;
-
+                LineItem CrossHairItem = CrossHairItems[pane];
+                CrossHairItem.Points[0].X = x;
+                CrossHairItem.Points[1].X = x;
+                CrossHairItem.Points[0].Y = pane.YAxis.Scale.Min;
+                CrossHairItem.Points[1].Y = pane.YAxis.Scale.Max;
             }
-            CrossHairX = x;
 
-
-            chart.Refresh();
+            chart.Invalidate(new Region(new System.Drawing.Rectangle(chart.DisplayRectangle.Left + e.Location.X - 5, chart.DisplayRectangle.Top, 10, chart.DisplayRectangle.Height)), false);
         }
 
         public void initControl()
         {
+            pnlButtons.DataContext = this;
             ObsSeries = new ObservableCollection<ChartZedSerie>();
             grdLegend.ItemsSource = ObsSeries;
         }
@@ -214,8 +218,29 @@ namespace EDSApp
 
         }
 
+        public void refreshCrossHair()
+        {
+            if (CrossHairItems == null)
+                CrossHairItems = new Dictionary<GraphPane, LineItem>();
+            LineItem CrossHairItem;
+            foreach (GraphPane pane in chart.MasterPane.PaneList)
+            {
+                if (!CrossHairItems.ContainsKey(pane))
+                {
+                    CrossHairItem = pane.AddCurve("ch", new double[] { 0, 0 }, new double[] { 0, 1 }, System.Drawing.Color.Black, SymbolType.None);
+                    CrossHairItems.Add(pane, CrossHairItem);
+                }
 
-       
+                CrossHairItem = CrossHairItems[pane];
+                CrossHairItem.Points[0].X = pane.XAxis.Scale.Min;
+                CrossHairItem.Points[1].X = pane.XAxis.Scale.Min;
+                CrossHairItem.Points[0].Y = pane.YAxis.Scale.Min;
+                CrossHairItem.Points[1].Y = pane.YAxis.Scale.Max;
+
+            }
+
+        }
+
 
         public void refreshDates()
         {
@@ -307,6 +332,7 @@ namespace EDSApp
 
             }
             refreshDates();
+            refreshCrossHair();
             chart.AxisChange();
             chart.Invalidate();
 

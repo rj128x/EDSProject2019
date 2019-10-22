@@ -21,10 +21,12 @@
                         <RowDefinition Height="20"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal" Grid.Column="0">
+                    <StackPanel Orientation="Horizontal" Grid.Column="0" Name="pnlButtons">
                         <Button Content="Выделить все" Name="btnSelectAll" Width="90" Click="btnSelectAll_Click"/>
                         <Button Content="Снять все" Name="btnDeselectAll" Width="90" Click="btnDeselectAll_Click"/>
+                        <TextBlock Text="{Binding CursorDate, StringFormat='dd.MM HH:mm:ss'}" Margin="30,0,0,0" FontWeight="Bold"/>
                     </StackPanel>
+                    
                     <DataGrid Grid.Row="1" Name="grdLegend" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False">
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="V" Width="20">

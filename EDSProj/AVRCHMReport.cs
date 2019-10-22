@@ -222,73 +222,72 @@ namespace EDSProj
         public void ProcessData(List<DateTime> errorDates)
         {
             Events = new List<AVRCHMReportRecord>();
-
-
-
+            
             AVRCHMReportRecord ev = new AVRCHMReportRecord();
-
-            DateTime date = errorDates.First();
-            ev.DateStart = date.AddMinutes(-2);
-            ev.DateEnd = date.AddMinutes(2);
-            Events.Add(ev);
-            foreach (DateTime dt in errorDates)
+            if (errorDates.Count > 0)
             {
-                if (ev.DateStart.AddMinutes(6) > dt.AddMinutes(2))
+                DateTime date = errorDates.First();
+                ev.DateStart = date.AddMinutes(-2);
+                ev.DateEnd = date.AddMinutes(2);
+                Events.Add(ev);
+                foreach (DateTime dt in errorDates)
                 {
-                    ev.DateEnd = dt.AddMinutes(2);
-                }
-                else
-                {
-                    ev = new AVRCHMReportRecord();
-                    Events.Add(ev);
-                    ev.DateStart = dt.AddMinutes(-2);
-                    ev.DateEnd = dt.AddMinutes(2);
-                }
-            }
-
-            foreach (AVRCHMReportRecord evn in Events)
-            {
-                evn.Date = String.Format("{0} {1}-{2}", evn.DateStart.ToString("dd.MM"), evn.DateStart.ToString("HH:mm:ss"), evn.DateEnd.ToString("HH:mm:ss"));
-                bool hasError = false;
-                double errorLimits = 0;
-                double errorRezerv = 0;
-                AVRCHMRecord prevRecord = null;
-                foreach (DateTime dt in Data.Keys)
-                {
-
-                    if (dt > evn.DateStart && dt < evn.DateEnd)
+                    if (ev.DateStart.AddMinutes(6) > dt.AddMinutes(2))
                     {
-                        AVRCHMRecord rec = Data[dt];
-                        if (rec.ErrorLimits == 0 && errorLimits > 0)
-                        {
-                            evn.HasError += String.Format("План {0}сек\r\n", errorLimits);
-
-                        }
-                        if (rec.ErrorRezerv == 0 && errorRezerv > 0)
-                        {
-                            evn.HasError += String.Format("Резерв {0}сек\r\n", errorRezerv);
-                        }
-                        if (prevRecord != null)
-                        {
-
-                            if (rec.GGCount != prevRecord.GGCount)
-                            {
-                                evn.TypeRecord += String.Format("[{0}] Смена состава \r\n", dt.ToString("HH:mm:ss"));
-                            }
-
-                            if (Math.Abs(rec.SumGroupZad - prevRecord.SumGroupZad) > 10)
-                            {
-                                evn.TypeRecord += String.Format("[{2}] Смена нагрузки {1:0} - {0:0} \r\n", rec.SumGroupZad, prevRecord.SumGroupZad, dt.ToString("HH:mm:ss"));
-                            }
-                        }
-                        prevRecord = rec;
-                        errorLimits = rec.ErrorLimits;
-                        errorRezerv = rec.ErrorRezerv;
+                        ev.DateEnd = dt.AddMinutes(2);
+                    }
+                    else
+                    {
+                        ev = new AVRCHMReportRecord();
+                        Events.Add(ev);
+                        ev.DateStart = dt.AddMinutes(-2);
+                        ev.DateEnd = dt.AddMinutes(2);
                     }
                 }
 
-            }
+                foreach (AVRCHMReportRecord evn in Events)
+                {
+                    evn.Date = String.Format("{0} {1}-{2}", evn.DateStart.ToString("dd.MM"), evn.DateStart.ToString("HH:mm:ss"), evn.DateEnd.ToString("HH:mm:ss"));
+                    bool hasError = false;
+                    double errorLimits = 0;
+                    double errorRezerv = 0;
+                    AVRCHMRecord prevRecord = null;
+                    foreach (DateTime dt in Data.Keys)
+                    {
 
+                        if (dt > evn.DateStart && dt < evn.DateEnd)
+                        {
+                            AVRCHMRecord rec = Data[dt];
+                            if (rec.ErrorLimits == 0 && errorLimits > 0)
+                            {
+                                evn.HasError += String.Format("План {0}сек\r\n", errorLimits);
+
+                            }
+                            if (rec.ErrorRezerv == 0 && errorRezerv > 0)
+                            {
+                                evn.HasError += String.Format("Резерв {0}сек\r\n", errorRezerv);
+                            }
+                            if (prevRecord != null)
+                            {
+
+                                if (rec.GGCount != prevRecord.GGCount)
+                                {
+                                    evn.TypeRecord += String.Format("[{0}] Смена состава \r\n", dt.ToString("HH:mm:ss"));
+                                }
+
+                                if (Math.Abs(rec.SumGroupZad - prevRecord.SumGroupZad) > 10)
+                                {
+                                    evn.TypeRecord += String.Format("[{2}] Смена нагрузки {1:0} - {0:0} \r\n", rec.SumGroupZad, prevRecord.SumGroupZad, dt.ToString("HH:mm:ss"));
+                                }
+                            }
+                            prevRecord = rec;
+                            errorLimits = rec.ErrorLimits;
+                            errorRezerv = rec.ErrorRezerv;
+                        }
+                    }
+
+                }
+            }
             ev = new AVRCHMReportRecord();
             ev.DateStart = DateStart;
             ev.DateEnd = DateEnd;

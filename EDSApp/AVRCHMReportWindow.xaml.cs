@@ -62,8 +62,8 @@ namespace EDSApp
             report = new AVRCHMReport();
             DateTime ds = dt;
             DateTime de = dt.AddHours(24);
-            if (de > DateTime.Now.AddMinutes(-1).AddHours(-2))
-                de = DateTime.Now.AddMinutes(-1).AddHours(-2);
+            if (de > DateTime.Now.AddMinutes(-2).AddHours(-2))
+                de = DateTime.Now.AddMinutes(-5).AddHours(-2);
             bool ok=await report.ReadData(ds, de);
             if (ok)
             {
@@ -123,12 +123,12 @@ namespace EDSApp
                 win.chart.AddSerie("ресурс+", report.getSerieData("ResursZagr", ds, de), System.Drawing.Color.GreenYellow, true, false, false, 3, false);
                 win.chart.AddSerie("ресурс-", report.getSerieData("ResursRazgr", ds, de), System.Drawing.Color.YellowGreen, true, false, false, 3, false);
                 win.chart.AddSerie("Нарушение рез", report.getSerieData("ErrorRezervGraph", ds, de, false), System.Drawing.Color.Red, false, true, false, 3, false);
-                
+                win.chart.ShowCrossHair = false;
 
 
                 if (!ev.Date.ToLower().Contains("сутки"))
                 {
-                    
+                    win.chart.ShowCrossHair = true;
                     /*win.chart2.Visibility = Visibility.Visible;
                     win.mainGrid.RowDefinitions.Last().Height = new GridLength(1, GridUnitType.Star);*/
                     win.chart.init(true, "HH:mm:ss");
