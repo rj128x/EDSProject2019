@@ -146,7 +146,7 @@ namespace EDSProj
                 rec.PMinMaket = dataRec[records["PMinMaket"].Id];
                 rec.PMaxMaket = dataRec[records["PMaxMaket"].Id];
 
-                //rec.PPlan = rec.SumGroupZad;
+                rec.PPlan = rec.PPlan;
                 
                 if (rec.PMaxMaket < 100)
                     rec.PMaxMaket = 1000;
@@ -323,6 +323,43 @@ namespace EDSProj
             return data;
         }
 
+
+        public SortedList<String,SortedList<DateTime, double>> getSeriesErrorsData(string desc, DateTime dateStart, DateTime dateEnd)
+        {
+            SortedList<String, SortedList<DateTime, double>> result = new SortedList<string, SortedList<DateTime, double>>();
+            
+            
+            SortedList<DateTime, double> data = new SortedList<DateTime, double>();
+            
+            foreach (DateTime date in Data.Keys)
+            {
+                if (date >= dateStart && date <= dateEnd)
+                {
+                    double val = Data[date].getInfo(desc);
+
+                    if (val != 0)
+                       data.Add(date, val);
+                    else
+                    {
+                        if (data.Count > 0)
+                        {
+                            result.Add("Error "+data.First().Key.ToString("HH:mm:ss"), data);
+                            data = new SortedList<DateTime, double>();
+                        }
+                    }                       
+                    
+                }
+
+            }
+            if (data.Count > 0)
+            {
+                result.Add("Error", data);
+                data = new SortedList<DateTime, double>();
+            }
+            return result;
+        }
+
+
         public async Task<Dictionary<string, SortedList<DateTime, double>>> getGaData(DateTime dateStart, DateTime dateEnd)
         {
             Dictionary<string, SortedList<DateTime, double>> result = new Dictionary<string, SortedList<DateTime, double>>();
@@ -334,11 +371,19 @@ namespace EDSProj
                 string name = String.Format("11VT_GG{0}{1}AP-031.MCR@GRARM", gg < 10 ? "0" : "", gg);
                 report.addRequestField(AllPoints[name], EDSReportFunction.val);
                 name = String.Format("11VT_GG{0}{1}AP-040.MCR@GRARM", gg < 10 ? "0" : "", gg);
+                //name = String.Format("11VT_GG{0}{1}AP-043.MCR@GRARM", gg < 10 ? "0" : "", gg);
                 report.addRequestField(AllPoints[name], EDSReportFunction.val);
+
+                /*name = String.Format("11VT_GG{0}{1}AP-502.MCR@GRARM", gg < 10 ? "0" : "", gg);
+                report.addRequestField(AllPoints[name], EDSReportFunction.val);
+                name = String.Format("11VT_GG{0}{1}AP-501.MCR@GRARM", gg < 10 ? "0" : "", gg);
+                report.addRequestField(AllPoints[name], EDSReportFunction.val);*/
+
                 name = String.Format("11VT_BS{0}{1}D-001.MCR@GRARM", gg < 10 ? "0" : "", gg);
                 report.addRequestField(AllPoints[name], EDSReportFunction.val);
 
             }
+
             bool ok = await report.ReadData();
             if (!ok)
                 return new Dictionary<string, SortedList<DateTime, double>>();

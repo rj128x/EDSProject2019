@@ -103,10 +103,24 @@ namespace EDSApp
                 ReportResultWindow win = new ReportResultWindow();
                 win.Title = ev.Date;
                 win.chart.initControl();
-                win.chart.init(false, "HH:mm:ss");
+                win.chart.init(true, "HH:mm:ss");
                 win.chart.AllYAxisIsVisible = true;
                 DateTime ds = ev.DateStart;
                 DateTime de = ev.DateEnd;
+
+                SortedList<String, SortedList<DateTime, double>> errors = report.getSeriesErrorsData("ErrorLimits15", ds, de);
+                foreach (KeyValuePair<String, SortedList<DateTime, double>> rec in errors)
+                {
+                    win.chart.AddSerie("План "+rec.Key, rec.Value, System.Drawing.Color.Red, true, false, false, 0, true);
+                }
+
+                bool HasErrorReserv = false;
+                errors = report.getSeriesErrorsData("ErrorRezervGraph", ds, de);
+                foreach (KeyValuePair<String, SortedList<DateTime, double>> rec in errors)
+                {
+                    HasErrorReserv = true;
+                    win.chart.AddSerie("Резерв "+rec.Key, rec.Value, System.Drawing.Color.OrangeRed, true, false, false, 3, true);
+                }
 
 
                 win.chart.AddSerie("P план", report.getSerieData("PPlan", ds, de), System.Drawing.Color.Pink, true, false, true, 0, false);
@@ -116,15 +130,16 @@ namespace EDSApp
                 win.chart.AddSerie("P нг", report.getSerieData("PMin", ds, de), System.Drawing.Color.Black, true, false, false, 0, true);
                 win.chart.AddSerie("P вг", report.getSerieData("PMax", ds, de), System.Drawing.Color.Black, true, false, false, 0, true);
                 win.chart.AddSerie("ГГ кол", report.getSerieData("GGCount", ds, de), System.Drawing.Color.LightBlue, true, false, false, 1, true, 0, 20);
-                win.chart.AddSerie("нарушение", report.getSerieData("ErrorLimits15", ds, de, false), System.Drawing.Color.Red, false, true, false, 0, true);
+                //win.chart.AddSerie("нарушение", report.getSerieData("ErrorLimits15", ds, de, false), System.Drawing.Color.Red, false, true, false, 0, true);
 
                 win.chart.AddSerie("P перв", report.getSerieData("PPerv", ds, de), System.Drawing.Color.Purple, true, false, false, 2, false);
                 win.chart.AddSerie("P звн", report.getSerieData("PZVN", ds, de), System.Drawing.Color.Orange, true, false, false, 2, false);
-                win.chart.AddSerie("ресурс+", report.getSerieData("ResursZagr", ds, de), System.Drawing.Color.GreenYellow, true, false, false, 3, false);
-                win.chart.AddSerie("ресурс-", report.getSerieData("ResursRazgr", ds, de), System.Drawing.Color.YellowGreen, true, false, false, 3, false);
-                win.chart.AddSerie("Нарушение рез", report.getSerieData("ErrorRezervGraph", ds, de, false), System.Drawing.Color.Red, false, true, false, 3, false);
+                win.chart.AddSerie("ресурс+", report.getSerieData("ResursZagr", ds, de), System.Drawing.Color.GreenYellow, true, false, false, 3, HasErrorReserv);
+                win.chart.AddSerie("ресурс-", report.getSerieData("ResursRazgr", ds, de), System.Drawing.Color.YellowGreen, true, false, false, 3, HasErrorReserv);
+                //win.chart.AddSerie("Нарушение рез", report.getSerieData("ErrorRezervGraph", ds, de, false), System.Drawing.Color.Red, false, true, false, 3, false);
                 win.chart.ShowCrossHair = false;
 
+                
 
                 if (!ev.Date.ToLower().Contains("сутки"))
                 {
@@ -140,7 +155,7 @@ namespace EDSApp
                         bool isVG = key.Contains("ВГ");
                         SortedList<DateTime, double> data = series[key];
                         if (!isVG && data.Values.Max() > 10 || isVG && data.Values.Min() != data.Values.Max())
-                            win.chart.AddSerie(key, data, color, true, false, key.Contains("Задание"), isVG ? 3 : 0, !isVG, isVG ? 0 : double.MinValue, isVG ? 20 : double.MaxValue);
+                            win.chart.AddSerie(key, data, color, true, false, key.Contains("Задание"), isVG ? 0 : 3, !isVG, isVG ? 0 : double.MinValue, isVG ? 20 : double.MaxValue);
 
                         color = isVG ? ChartZedSerie.NextColor() : color;
                     }

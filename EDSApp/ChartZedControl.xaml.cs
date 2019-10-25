@@ -89,7 +89,7 @@ namespace EDSApp
     /// </summary>
     public partial class ChartZedControl : UserControl, INotifyPropertyChanged
     {
-
+        public ZedGraphControl chart;
 
         public GraphPane CurrentGraphPane { get; set; }
         public bool AllYAxisIsVisible = false;
@@ -117,12 +117,12 @@ namespace EDSApp
 
         public ChartZedControl()
         {
+
             ObsSeries = new ObservableCollection<ChartZedSerie>();
-            
+
             InitializeComponent();
 
-            CurrentGraphPane = chart.GraphPane;
-            chart.MouseMove += Chart_MouseMove;
+
 
         }
 
@@ -131,8 +131,8 @@ namespace EDSApp
         private int prevX;
         private void Chart_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (!ShowCrossHair && !(e.Button == System.Windows.Forms.MouseButtons.Right))
-                return;
+
+
 
             double x, y;
             CurrentGraphPane.ReverseTransform(e.Location, out x, out y);
@@ -142,43 +142,40 @@ namespace EDSApp
 
             foreach (ChartZedSerie serie in ObsSeries)
             {
-                try
+                if (serie.Data.Keys.Min() < CursorDate && CursorDate < serie.Data.Keys.Max())
                 {
                     var d = serie.Data.First(de => de.Key >= CursorDate);
                     serie.Value = serie.Data[d.Key];
                 }
-                catch { }
 
             }
 
-            
-            
-            chart.Invalidate(new Region(new System.Drawing.Rectangle(chart.DisplayRectangle.Left + prevX - 5, chart.DisplayRectangle.Top, 10, chart.DisplayRectangle.Height)), false);
-            prevX = e.Location.X;
-            foreach (GraphPane pane in chart.MasterPane.PaneList)
-            {
-                LineItem CrossHairItem = CrossHairItems[pane];
-                CrossHairItem.Points[0].X = x;
-                CrossHairItem.Points[1].X = x;
-                CrossHairItem.Points[0].Y = pane.YAxis.Scale.Min;
-                CrossHairItem.Points[1].Y = pane.YAxis.Scale.Max;
-            }
 
-            chart.Invalidate(new Region(new System.Drawing.Rectangle(chart.DisplayRectangle.Left + e.Location.X - 5, chart.DisplayRectangle.Top, 10, chart.DisplayRectangle.Height)), false);
+
         }
 
         public void initControl()
         {
+            chart = chartControl.Chart;
+
+            chart.MasterPane.PaneList.Clear();
             pnlButtons.DataContext = this;
             ObsSeries = new ObservableCollection<ChartZedSerie>();
             grdLegend.ItemsSource = ObsSeries;
+            CurrentGraphPane = chart.GraphPane;
+            chart.MouseMove += Chart_MouseMove;
+
         }
 
 
         public void init(bool newGraphPane = false, string xFormat = "dd.MM")
         {
-
+            if (chart == null)
+                initControl();
             GraphPane graphPane = CurrentGraphPane;
+            if (graphPane == null)
+                graphPane = chart.GraphPane;
+
             if (newGraphPane)
             {
                 graphPane = new GraphPane();
@@ -218,28 +215,7 @@ namespace EDSApp
 
         }
 
-        public void refreshCrossHair()
-        {
-            if (CrossHairItems == null)
-                CrossHairItems = new Dictionary<GraphPane, LineItem>();
-            LineItem CrossHairItem;
-            foreach (GraphPane pane in chart.MasterPane.PaneList)
-            {
-                if (!CrossHairItems.ContainsKey(pane))
-                {
-                    CrossHairItem = pane.AddCurve("ch", new double[] { 0, 0 }, new double[] { 0, 1 }, System.Drawing.Color.Black, SymbolType.None);
-                    CrossHairItems.Add(pane, CrossHairItem);
-                }
 
-                CrossHairItem = CrossHairItems[pane];
-                CrossHairItem.Points[0].X = pane.XAxis.Scale.Min;
-                CrossHairItem.Points[1].X = pane.XAxis.Scale.Min;
-                CrossHairItem.Points[0].Y = pane.YAxis.Scale.Min;
-                CrossHairItem.Points[1].Y = pane.YAxis.Scale.Max;
-
-            }
-
-        }
 
 
         public void refreshDates()
@@ -263,6 +239,7 @@ namespace EDSApp
         public ChartZedSerie AddSerie(String header, SortedList<DateTime, double> values, System.Drawing.Color color,
             bool line, bool symbol, bool dash = false, int y2axisIndex = -1, bool isVisible = true, double min = double.MinValue, double max = double.MaxValue)
         {
+            //y2axisIndex += 1;
             if (values.Count == 0)
                 return null;
             GraphPane graphPane = CurrentGraphPane;
@@ -332,13 +309,68 @@ namespace EDSApp
 
             }
             refreshDates();
-            refreshCrossHair();
+            chart.AxisChange();
+
+            chart.Invalidate();
+            return serie;
+        }
+
+        public ChartZedSerie AddPointSerie(String header, List<double> xValues, List<double> yValues, System.Drawing.Color color, bool line, bool symbol, int y2axisIndex = -1, bool isVisible = true)
+        {
+            GraphPane graphPane = CurrentGraphPane;
+            PointPairList points = new PointPairList();
+            int i = 0;
+            foreach (double x in xValues)
+            {
+                points.Add(new PointPair(x, yValues[i]));
+                i++;
+            }
+
+            ChartZedSerie serie = new ChartZedSerie();
+            serie.Header = header;
+            //serie.Data = values;
+            serie.Color = color;
+            serie.IsVisible = true;
+            LineItem lineItem = graphPane.AddCurve(header, points, color, symbol ? SymbolType.Circle : SymbolType.None);
+            serie.Item = lineItem;
+
+            lineItem.Line.IsVisible = line;
+            if (symbol)
+            {
+                lineItem.Symbol.Size = 1.5f;
+                lineItem.Symbol.Fill = new Fill(color);
+            }
+            ObsSeries.Add(serie);
+            serie.IsVisible = isVisible;
+            serie.Item.IsVisible = isVisible;
+            serie.Y2Index = y2axisIndex;
+
+            if (y2axisIndex > -1)
+            {
+                while (graphPane.Y2AxisList.Count() < y2axisIndex + 1)
+                {
+                    graphPane.Y2AxisList.Add(new Y2Axis());
+                }
+                graphPane.Y2AxisList[y2axisIndex].Title.IsVisible = false;
+                graphPane.Y2AxisList[y2axisIndex].Scale.FontSpec.Size = 5;
+                graphPane.Y2AxisList[y2axisIndex].Scale.IsLabelsInside = true;
+                graphPane.Y2AxisList[y2axisIndex].Scale.IsUseTenPower = false;
+                graphPane.Y2AxisList[y2axisIndex].IsVisible = true;
+                graphPane.Y2AxisList[y2axisIndex].Scale.FontSpec.Angle = (float)(-Math.PI / 2.0);
+                graphPane.Y2AxisList[y2axisIndex].MajorTic.IsOpposite = false;
+                graphPane.Y2AxisList[y2axisIndex].MinorTic.IsOpposite = false;
+                graphPane.Y2AxisList[y2axisIndex].Scale.FontSpec.FontColor = color;
+                graphPane.Y2AxisList[y2axisIndex].Color = color;
+
+                lineItem.IsY2Axis = true;
+                lineItem.YAxisIndex = y2axisIndex;
+
+            }
             chart.AxisChange();
             chart.Invalidate();
 
             return serie;
         }
-
 
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
@@ -373,6 +405,7 @@ namespace EDSApp
                 }
             }
             chart.AxisChange();
+
             chart.Invalidate();
         }
 
@@ -399,7 +432,9 @@ namespace EDSApp
             SetAll(false);
         }
 
+        private void Grid_MouseMove(object sender, MouseEventArgs e)
+        {
 
-
+        }
     }
 }

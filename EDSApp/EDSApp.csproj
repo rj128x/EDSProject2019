@@ -166,6 +166,11 @@
       <Project>{794ec6df-678b-48aa-9071-967725ea2b64}</Project>
       <Name>EDSProj</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ZedControl\ZedControl.csproj">
+      <Project>{a213899f-fc30-4501-b606-e82925794e67}</Project>
+      <Name>ZedControl</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
