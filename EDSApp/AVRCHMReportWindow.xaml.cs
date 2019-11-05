@@ -62,7 +62,7 @@ namespace EDSApp
             report = new AVRCHMReport();
             DateTime ds = dt;
             DateTime de = dt.AddHours(24);
-            if (de > DateTime.Now.AddMinutes(-2).AddHours(-2))
+            if (de > DateTime.Now.AddMinutes(-5).AddHours(-2))
                 de = DateTime.Now.AddMinutes(-5).AddHours(-2);
             bool ok=await report.ReadData(ds, de);
             if (ok)
@@ -165,7 +165,9 @@ namespace EDSApp
 
                 win.Show();
             }
-            catch { }
+            catch {
+                Logger.Info(e.ToString());
+            }
         }
     }
 }

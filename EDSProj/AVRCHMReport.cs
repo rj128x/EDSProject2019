@@ -166,13 +166,17 @@ namespace EDSProj
                         if (rec.ErrorLimits > 15)
                             rec.ErrorLimits15 = rec.PFakt;
                         errorLimits++;
-                    }
-                    else
-                    {
                         if (errorLimits > 15)
                         {
                             errorDates.Add(dtMSK);
                         }
+                    }
+                    else
+                    {
+                        /*if (errorLimits > 15)
+                        {
+                            errorDates.Add(dtMSK);
+                        }*/
                         rec.ErrorLimits = 0;
                         errorLimits = 0;
                     }
@@ -186,14 +190,16 @@ namespace EDSProj
                         rec.ErrorRezerv = errorRezerv;
                         errorRezerv++;
                         rec.ErrorRezervGraph = errRazgr ? rec.ResursRazgr : rec.ResursZagr;
+                        errorDates.Add(dtMSK);
                     }
                     else
                     {
-                        errorRezerv = 0;
-                        if (errorRezerv > 0)
+                        /*if (errorRezerv > 0)
                         {
                             errorDates.Add(dtMSK);
-                        }
+                        }*/
+                        errorRezerv = 0;
+                        
                     }
 
                     
@@ -208,13 +214,14 @@ namespace EDSProj
                         errorDates.Add(dtMSK);
                     }
                 }
+
                 prevRecord = rec;
                 
             }
-            if (errorLimits > 15 || errorRezerv > 0)
+            /*if (errorLimits > 15 || errorRezerv > 0)
             {
-                errorDates.Add(DateEnd);
-            }
+                errorDates.Add(DateEnd.AddHours(-2));
+            }*/
             ProcessData(errorDates);
             return true;
         }
@@ -255,15 +262,15 @@ namespace EDSProj
                     foreach (DateTime dt in Data.Keys)
                     {
 
-                        if (dt > evn.DateStart && dt < evn.DateEnd)
+                        if (dt > evn.DateStart && dt < evn.DateEnd||dt==evn.DateEnd)
                         {
                             AVRCHMRecord rec = Data[dt];
-                            if (rec.ErrorLimits == 0 && errorLimits > 0)
+                            if (rec.ErrorLimits == 0 && errorLimits > 0 || dt == evn.DateEnd&&rec.ErrorLimits>0)
                             {
                                 evn.HasError += String.Format("План {0}сек\r\n", errorLimits);
 
                             }
-                            if (rec.ErrorRezerv == 0 && errorRezerv > 0)
+                            if (rec.ErrorRezerv == 0 && errorRezerv > 0 ||dt==evn.DateEnd&&rec.ErrorRezerv>0)
                             {
                                 evn.HasError += String.Format("Резерв {0}сек\r\n", errorRezerv);
                             }

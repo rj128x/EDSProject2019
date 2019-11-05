@@ -148,7 +148,9 @@ namespace EDSProj.EDS
 								if (request.Function == EDSReportFunction.vyrab && Period == EDSReportPeriod.day) {
 									val *= 24;
 								}
-								ResultData[dt][resId] = val;
+                                //if (ResultData.ContainsKey(dt))
+                                    ResultData[dt][resId] = val;
+
 							}
 						}
 
