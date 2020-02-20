@@ -64,20 +64,30 @@ namespace EDSApp
             DateTime de = dt.AddHours(24);
             if (de > DateTime.Now.AddMinutes(-5).AddHours(-2))
                 de = DateTime.Now.AddMinutes(-5).AddHours(-2);
-            bool ok=await report.ReadData(ds, de);
+            int winSize = Int32.Parse(txtTWin.Text);
+            int tPlanMax = Int32.Parse(txtTPlan.Text);
+            int zvn = Int32.Parse(txtZVN.Text);
+            bool ok=await report.ReadData(ds, de,zvn,tPlanMax,winSize);
             if (ok)
             {
                 grdEvents.ItemsSource = report.Events.ToList();
                 currentDate = dt;
-            }
-
-
-            
+            }                    
 		
 
 		}
 
-		private void btnAbort_Click(object sender, RoutedEventArgs e) {
+        private void btnRecalc_Click(object sender, RoutedEventArgs e)
+        {
+            int winSize = Int32.Parse(txtTWin.Text);
+            int tPlanMax = Int32.Parse(txtTPlan.Text);
+            int zvn = Int32.Parse(txtZVN.Text);
+            report.checkErrors(zvn, tPlanMax, winSize);
+            grdEvents.ItemsSource = report.Events.ToList();
+                        
+        }
+
+        private void btnAbort_Click(object sender, RoutedEventArgs e) {
 			EDSClass.Single.Abort();
 		}
 
@@ -169,6 +179,8 @@ namespace EDSApp
                 Logger.Info(e.ToString());
             }
         }
+
+       
     }
 }
 

@@ -39,7 +39,7 @@
 
 
             </Grid>
-            <TabControl Grid.Column="1">
+            <TabControl Grid.Column="1" Name="tcData">
                 <TabItem Header="Час" Name="tabHour">
                     <TabControl >
                         <TabItem Header="График" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="54">
@@ -47,9 +47,11 @@
                         </TabItem>
 
                         <TabItem Header="Данные" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="54">
-                            <DataGrid  Name="grdData"  AutoGenerateColumns="False" CanUserResizeColumns="True">
+                            <DataGrid  Name="grdData"  AutoGenerateColumns="False" CanUserResizeColumns="True"  >
                                 <DataGrid.Columns >
-                                    <DataGridTextColumn Header="Дата" Binding="{Binding Date,StringFormat='dd.MM.yyyy HH:mm:ss'}" ></DataGridTextColumn>
+
+                                    <DataGridTextColumn Header="Дата" Binding="{Binding Date,StringFormat='dd.MM.yyyy HH:mm:ss'}"  ></DataGridTextColumn>
+
                                     <DataGridTextColumn Header="Частота [об]" Binding="{Binding F_ob,StringFormat='0.0000'}" ></DataGridTextColumn>
                                     <DataGridTextColumn Header="Частота [Гц]" Binding="{Binding F_gc,StringFormat='0.0000'}" ></DataGridTextColumn>
                                     <DataGridTextColumn Header="Pфакт" Binding="{Binding P_fakt,StringFormat='0.0000'}" ></DataGridTextColumn>
@@ -71,8 +73,10 @@
                 <TabItem Header="Сутки" Name="tabDay">
                     <TabControl>
                         <TabItem Header="Расчет" Name="tabGridData">
-                            <DataGrid  Name="grdDayData" AutoGenerateColumns="False" CanUserResizeColumns="True">
+                            <DataGrid  Name="grdDayData" AutoGenerateColumns="False" CanUserResizeColumns="True" MouseDoubleClick="grdDayData_MouseDoubleClick"
+                                       SelectionMode="Single" SelectionUnit="FullRow" IsReadOnly="True">
                                 <DataGrid.Columns>
+                                    
                                     <DataGridTextColumn Header="Дата" Binding="{Binding Date}" ></DataGridTextColumn>
                                     <DataGridTextColumn Header="Файл" Binding="{Binding FileName}" ></DataGridTextColumn>
                                     <DataGridTextColumn Header="P[>100]" Binding="{Binding cntPower}" ></DataGridTextColumn>

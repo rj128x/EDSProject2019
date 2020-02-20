@@ -82,7 +82,7 @@ namespace AISImport
                 }
             }
             else {
-                AIS_OLD ais = new AIS_OLD();
+                AIS_NEW ais = new AIS_NEW();
                 ais.readPoints();
                 while (date < dateEnd)
                 {

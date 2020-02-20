@@ -56,6 +56,7 @@ namespace NPRCHApp
         private static Action EmptyDelegate = delegate () { };
         public int DiffHour = 0;
         protected string statusText;
+        Dictionary<string, DateTime> FTPData = new Dictionary<string, DateTime>();
         public string StatusText {
             get { return statusText; }
             set {
@@ -126,7 +127,7 @@ namespace NPRCHApp
         private bool LoadFiles()
         {
             DateTime date = clndDate.SelectedDate.Value;
-            Dictionary<string,DateTime> FTPData = new Dictionary<string, DateTime>();
+            FTPData = new Dictionary<string, DateTime>();
             DiffHour = Int32.Parse(txtDiffHour.Text);
 
             List<RecordHour> hoursData = new List<RecordHour>();
@@ -139,11 +140,13 @@ namespace NPRCHApp
                     StatusText = "Загрузка " + hour.ToString();
                     DateTime dt = date.AddHours(hour);
                     bool ok = FTPClass.CheckFile(dt.AddHours(-DiffHour), de.Key);
-                    FTPData.Add(String.Format("ГГ{3} {0} [{1} UTC] {2}", dt.ToString("dd.MM HH"), dt.AddHours(-DiffHour).ToString("dd.MM HH"), ok,de.Key),dt);
+                    string header = String.Format("ГГ{3} {0} [{1} UTC] {2}", dt.ToString("dd.MM HH"), dt.AddHours(-DiffHour).ToString("dd.MM HH"), ok, de.Key);
+                    FTPData.Add(header,dt);
                     if (ok)
                     {
                         StatusText = "Обработка " + hour.ToString();
                         RecordHour rh = new RecordHour(de.Value);
+                        rh.Header = header;
                         rh.processFile(dt, DiffHour, false);
                         hoursData.Add(rh);
                         prev = rh;
@@ -152,7 +155,7 @@ namespace NPRCHApp
                 System.Threading.Thread.Sleep(10);
             }
             //hoursData.Last().NoReactComment = "";
-            //hoursData.Last().calcReact(RecordHour.DataSDay,false);
+            //hoursData.Last().calcReact(RecordHour.DataSDay["10"],false);
             //RecDay.calcRHO();
             // StatusText = RecDay.RHO.ToString();
             lbHours.ItemsSource = FTPData;
@@ -178,6 +181,20 @@ namespace NPRCHApp
 
             catch { }
         }
+
+        private void grdDayData_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            try
+            {
+                RecordHour rh = (RecordHour)grdDayData.SelectedValue;
+                lbHours.Focus();                
+                lbHours.SelectedIndex = FTPData.Keys.ToList().IndexOf(rh.Header);
+                lbHours_MouseDoubleClick(lbHours, e);
+                e.Handled = true;
+            }
+            catch { }
+        }
+
 
         private void loadDayData(DateTime date,string block)
         {
@@ -373,5 +390,7 @@ namespace NPRCHApp
 
 
         }
+
+
     }
 }

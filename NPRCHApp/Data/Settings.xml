@@ -8,6 +8,7 @@
   <FTPUser>nprch_i_votges</FTPUser>
   <FTPPassword>V0t#1Nt</FTPPassword>
   <FTPFolder></FTPFolder>
+  <!--<BlocksString>10~100~35~100~48;04~115~40~115~44;</BlocksString>-->
   <BlocksString>10~100~35~100~48;</BlocksString>
 
 </Settings>

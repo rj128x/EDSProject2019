@@ -9,9 +9,9 @@ web=EdsWebApi()
 web.connect()
 web.logger.debug('lalalala')
 
-ds=datetime.datetime(2019,6,1)
-de=datetime.datetime(2019,6,17)
-#tag='50VT_CB5331DM-201.UNIT0@SCADA'
+ds=datetime.datetime(2020,1,18)
+de=datetime.datetime(2020,2,17)
+#tag='25VT_EA5010DM-103.UNIT0@SCADA'
 
 
 def getData(tag,tagVal):
@@ -37,22 +37,19 @@ def getData(tag,tagVal):
                 dt=dt2        
         while dt<de:#Дальше в цикле определяем все сработки точки аналогично п 1
           dt1=web.getDateChange(dt,de,tag,'F_INTOOVER_DT',[0.5])
-          val1=web.getVal(dt1,tagVal)
+          #val1=web.getVal(dt1,tagVal)
           if dt1<de:
             ln2=dt1.timestamp()-dt2.timestamp()
             dt2=web.getDateChange(dt1,de,tag,'F_INTOUNDER_DT',[0.5])
-            val2=web.getVal(dt2,tagVal)
+            #val2=web.getVal(dt2,tagVal)
             ln=dt2.timestamp()-dt1.timestamp()
             ln=ln
-            record={'start':dt1,'end':dt2,'len2':ln2,'len':ln,'val1':val1,'val2':val2}
+            record={'start':dt1,'end':dt2,'len2':ln2,'len':ln}
             data.append(record)
             if ln>0:
-                web.outString(tag,'{start};{end};{len:.0f};{val1:.0f};{val2:.0f};{len2:.0f}'.format(**record))#Выводим строку в файл   
+                web.outString(tag,'{start};{end};{len:.0f};'.format(**record))#Выводим строку в файл   
             dt=dt2+datetime.timedelta(seconds=1)
           else:
             break
 
-#getData('07VT_DS01DI-01.MCR@GRARM','07VT_DS00AI-01.MCR@GRARM')
-#getData('07VT_DS02DI-01.MCR@GRARM','07VT_DS00AI-01.MCR@GRARM')
-getData('04VT_DS01DI-01.MCR@GRARM','04VT_DS00AI-01.MCR@GRARM')
-getData('04VT_DS02DI-01.MCR@GRARM','04VT_DS00AI-01.MCR@GRARM')
+getData('53VT_MU5300DM-201.UNIT0@SCADA','')

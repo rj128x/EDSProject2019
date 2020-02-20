@@ -98,7 +98,103 @@ namespace EDSProj
         public List<AVRCHMReportRecord> Events { get; set; }
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
-        public async Task<bool> ReadData(DateTime dateStart, DateTime dateEnd)
+        public int ZVNMax { get; set; }
+        public int TPlanMax { get; set; }
+        public int WinSize { get; set; }
+
+        public void checkErrors(int zvnMax, int tPlanMax, int winSize)
+        {
+            ZVNMax = zvnMax;
+            TPlanMax = tPlanMax;
+            WinSize = winSize;
+
+            List<double> prevPPlan = new List<double>();
+            int errorLimits = 0;
+            int errorRezerv = 0;
+            AVRCHMRecord prevRecord = null;
+
+            List<DateTime> errorDates = new List<DateTime>();
+            List<DateTime> eventDates = new List<DateTime>();
+
+
+            foreach (KeyValuePair<DateTime,AVRCHMRecord> de in Data)
+            {
+                AVRCHMRecord rec = de.Value;
+                DateTime dtMSK = de.Key;
+                rec.ErrorLimits15 = 0;
+                rec.ErrorLimits = 0;
+                rec.ErrorRezerv = 0;
+                rec.ErrorRezervGraph = 0;
+
+                rec.PPlan = rec.PPlan;
+
+                if (rec.PMaxMaket < 100)
+                    rec.PMaxMaket = 1000;
+
+                rec.PPlanFull = rec.PPlan + rec.PPerv + rec.PZVN;
+                prevPPlan.Add(rec.PPlanFull);
+                rec.PMax = prevPPlan.Max() + rec.PMaxMaket * 0.01;
+                rec.PMin = prevPPlan.Min() - rec.PMaxMaket * 0.01;
+                if (prevPPlan.Count > WinSize)
+                    prevPPlan.RemoveAt(0);
+
+                if (dtMSK > DateStart && dtMSK < DateEnd)
+                {
+                    if (rec.PFakt > rec.PMax || rec.PFakt < rec.PMin)
+                    {
+                        rec.ErrorLimits = errorLimits + 1;
+                        if (rec.ErrorLimits > TPlanMax)
+                            rec.ErrorLimits15 = rec.PFakt;
+                        errorLimits++;
+                        if (errorLimits >= TPlanMax)
+                        {
+                            errorDates.Add(dtMSK);
+                        }
+                    }
+                    else
+                    {
+                        errorLimits = 0;
+                    }
+
+
+                    bool errZagr = (rec.PZVN + rec.ResursZagr) < ZVNMax - 0.01 * rec.PMaxMaket;
+                    bool errRazgr = (rec.ResursRazgr - rec.PZVN) < ZVNMax - 0.01 * rec.PMaxMaket;
+
+                    if (errRazgr || errZagr)
+                    {
+                        errorRezerv++;
+                        rec.ErrorRezerv = errorRezerv;                        
+                        rec.ErrorRezervGraph = errRazgr ? rec.ResursRazgr+0.001 : rec.ResursZagr+0.001;
+                        errorDates.Add(dtMSK);
+                    }
+                    else
+                    {
+                        errorRezerv = 0;
+                    }
+
+
+
+                    if (rec.GGCount != prevRecord.GGCount)
+                    {
+                        errorDates.Add(dtMSK);
+                    }
+
+                    if (Math.Abs(rec.SumGroupZad - prevRecord.SumGroupZad) > 10)
+                    {
+                        errorDates.Add(dtMSK);
+                    }
+                }
+
+                prevRecord = rec;
+
+            }
+            ProcessData(errorDates);
+
+
+
+            
+        }
+        public async Task<bool> ReadData(DateTime dateStart, DateTime dateEnd,int zvnMax,int tPlanMax,int winSize)
         {
             DateStart = dateStart;
             DateEnd = dateEnd;
@@ -119,13 +215,7 @@ namespace EDSProj
                 return false;
 
             Data = new Dictionary<DateTime, AVRCHMRecord>();
-            List<double> prevPPlan = new List<double>();
-            int errorLimits = 0;
-            int errorRezerv = 0;
-            AVRCHMRecord prevRecord = null;
 
-            List<DateTime> errorDates = new List<DateTime>();
-            List<DateTime> eventDates = new List<DateTime>();
             report.ResultData.Remove(report.ResultData.Keys.Last());
             DateTime dtMSK = report.ResultData.Keys.First().AddHours(-2);
             foreach (DateTime date in report.ResultData.Keys)
@@ -146,83 +236,8 @@ namespace EDSProj
                 rec.PMinMaket = dataRec[records["PMinMaket"].Id];
                 rec.PMaxMaket = dataRec[records["PMaxMaket"].Id];
 
-                rec.PPlan = rec.PPlan;
-                
-                if (rec.PMaxMaket < 100)
-                    rec.PMaxMaket = 1000;
-
-                rec.PPlanFull = rec.PPlan + rec.PPerv + rec.PZVN;
-                prevPPlan.Add(rec.PPlanFull);
-                rec.PMax = prevPPlan.Max() + rec.PMaxMaket * 0.01;
-                rec.PMin = prevPPlan.Min() - rec.PMaxMaket * 0.01;
-                if (prevPPlan.Count > 15)
-                    prevPPlan.RemoveAt(0);
-
-                if (dtMSK > DateStart && dtMSK < DateEnd)
-                {
-                    if (rec.PFakt > rec.PMax || rec.PFakt < rec.PMin)
-                    {
-                        rec.ErrorLimits = errorLimits + 1;
-                        if (rec.ErrorLimits > 15)
-                            rec.ErrorLimits15 = rec.PFakt;
-                        errorLimits++;
-                        if (errorLimits > 15)
-                        {
-                            errorDates.Add(dtMSK);
-                        }
-                    }
-                    else
-                    {
-                        /*if (errorLimits > 15)
-                        {
-                            errorDates.Add(dtMSK);
-                        }*/
-                        rec.ErrorLimits = 0;
-                        errorLimits = 0;
-                    }
-
-
-                    bool errZagr = (rec.PZVN + rec.ResursZagr) < 20 - 0.01 * rec.PMaxMaket;
-                    bool errRazgr = (rec.ResursRazgr - rec.PZVN) < 20 - 0.01 * rec.PMaxMaket;
-
-                    if (errRazgr || errZagr)
-                    {
-                        rec.ErrorRezerv = errorRezerv;
-                        errorRezerv++;
-                        rec.ErrorRezervGraph = errRazgr ? rec.ResursRazgr : rec.ResursZagr;
-                        errorDates.Add(dtMSK);
-                    }
-                    else
-                    {
-                        /*if (errorRezerv > 0)
-                        {
-                            errorDates.Add(dtMSK);
-                        }*/
-                        errorRezerv = 0;
-                        
-                    }
-
-                    
-
-                    if (rec.GGCount != prevRecord.GGCount)
-                    {
-                        errorDates.Add(dtMSK);
-                    }
-
-                    if (Math.Abs(rec.SumGroupZad - prevRecord.SumGroupZad) > 10)
-                    {
-                        errorDates.Add(dtMSK);
-                    }
-                }
-
-                prevRecord = rec;
-                
             }
-            /*if (errorLimits > 15 || errorRezerv > 0)
-            {
-                errorDates.Add(DateEnd.AddHours(-2));
-            }*/
-            ProcessData(errorDates);
+            checkErrors(zvnMax, tPlanMax, winSize);
             return true;
         }
 
@@ -239,7 +254,7 @@ namespace EDSProj
                 Events.Add(ev);
                 foreach (DateTime dt in errorDates)
                 {
-                    if (ev.DateStart.AddMinutes(6) > dt.AddMinutes(2))
+                    if (ev.DateStart.AddMinutes(6) >= dt.AddMinutes(2))
                     {
                         ev.DateEnd = dt.AddMinutes(2);
                     }
@@ -262,7 +277,7 @@ namespace EDSProj
                     foreach (DateTime dt in Data.Keys)
                     {
 
-                        if (dt > evn.DateStart && dt < evn.DateEnd||dt==evn.DateEnd)
+                        if (dt > evn.DateStart && dt <= evn.DateEnd)
                         {
                             AVRCHMRecord rec = Data[dt];
                             if (rec.ErrorLimits == 0 && errorLimits > 0 || dt == evn.DateEnd&&rec.ErrorLimits>0)
@@ -378,7 +393,9 @@ namespace EDSProj
                 string name = String.Format("11VT_GG{0}{1}AP-031.MCR@GRARM", gg < 10 ? "0" : "", gg);
                 report.addRequestField(AllPoints[name], EDSReportFunction.val);
                 name = String.Format("11VT_GG{0}{1}AP-040.MCR@GRARM", gg < 10 ? "0" : "", gg);
-                //name = String.Format("11VT_GG{0}{1}AP-043.MCR@GRARM", gg < 10 ? "0" : "", gg);
+                report.addRequestField(AllPoints[name], EDSReportFunction.val);
+
+                name = String.Format("11VT_GG{0}{1}AP-043.MCR@GRARM", gg < 10 ? "0" : "", gg);
                 report.addRequestField(AllPoints[name], EDSReportFunction.val);
 
                 /*name = String.Format("11VT_GG{0}{1}AP-502.MCR@GRARM", gg < 10 ? "0" : "", gg);

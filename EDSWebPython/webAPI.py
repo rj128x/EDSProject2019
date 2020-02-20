@@ -187,11 +187,16 @@ class EdsWebApi():
 			if len(vals)>0:
                                 #Нужен первый и единственный столбец
 				try:
+					#print("0")
 					val=vals[0]['value'][0]
-					dt1=datetime.datetime.fromtimestamp(val)#Получаем требуемую дату
-					print(dt1)
+					#print(val)
+					#print("1")
+					dt1=datetime.datetime.fromtimestamp(val)#Получаем требуемую дату					
+					#print(dt1)
+					#print("2")
+					
 					#if dt1==dateStart:#Если дата не входит в требуемый интервал, значит функция не срабатывала, возвращаем конец интервала
-					#	return dt1+datetime.timedelta(1)						
+					#return dt1						
 					return dt1
 				except Exception:
 					#print("3")
@@ -250,13 +255,17 @@ class EdsWebApi():
                 #Функция для анализа любого изменения передаваемого тэга
                 #Возвращает минимальную из двух дат - изменение значения вниз и вверх от valInit
 		#print('{0}-{1} {2}'.format(dateStart,dateEnd,valInit))
+
 		dt1=self.getDateChange(dateStart,dateEnd,tag,"F_INTOOVER_DT",[valInit+0.1])
-		#print(dt1)
-		dt2=self.getDateChange(dateStart,dateEnd,tag,"F_INTOUNDER_DT",[valInit-0.1])
-		#print(dt2)
+		
+		dt2=self.getDateChange(dateStart,dateEnd,tag,"F_INTOUNDER_DT",[valInit-0.1])		
+		
+		
 		dt=dt1
-		if dt2<dt1:
+		if dt2<dt1 :
 			dt=dt2
+		if dt==dateStart:
+			dt=dt+datetime.timedelta(seconds=1)
 		return dt
 
 	def eds_qualityToLetter(self, eds_quality):

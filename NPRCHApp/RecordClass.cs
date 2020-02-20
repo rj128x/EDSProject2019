@@ -12,6 +12,7 @@ namespace NPRCHApp
     {
 
         public static Dictionary<string, List<Record>> DataSDay;
+        public string Header { get; set; }
         public Random rand = new Random();
         public static int FileIndex = 0;
         public static double funcRegr(List<double> X, List<double> Y, double o1, double o2, double p)
@@ -633,8 +634,8 @@ namespace NPRCHApp
             List<double> Msub = new List<double>();
             for (int i = 0; i < n; i++)
             {
-                int i1 = i;
-                int i2 = i1 + dt ;
+                int i1 = i+1;
+                int i2 = i1 + dt;
                 if (i1 < 0)
                     i1 = 0;
                 if (i2 >= n)
@@ -643,7 +644,7 @@ namespace NPRCHApp
                 Msub.Clear();
                 if (i2 < n)
                 {
-                    for (int ii = i1; ii <= i2; ii++)
+                    for (int ii = i1; ii < i2; ii++)
                     {
                         double m = Math.Abs(XdxAvg[i] - YdyAvg[ii]);
                         Msub.Add(m);
@@ -652,7 +653,7 @@ namespace NPRCHApp
                         continue;
                     double mMin = Msub.Min();
 
-                    if ((mMin >= 0.0155) && (Math.Abs(XdxAvg[i]) >= 0.0069))
+                    if ((mMin >= 0.016) && (Math.Abs(XdxAvg[i]) >= 0.007))
                     {
                         NoReactArr[i] = 1;
                         Marr.Add(mMin);
@@ -886,6 +887,7 @@ namespace NPRCHApp
 
         public void calcKoleb(List<Record> dataS, bool fillData)
         {
+            return;
             string name = "out_" + this.Date.Replace(":", "_");
             //OutputData.InitOutput(name);
             List<double> P = new List<double>();
@@ -963,7 +965,7 @@ namespace NPRCHApp
             }
 
             KolebComment = "";
-
+            int cnt = 0;
             foreach (int otrIndex in KeysDict)
             {
                 Otrez = DictO[otrIndex];
@@ -979,78 +981,43 @@ namespace NPRCHApp
                     TR[otrIndex * winStep + i] = T;
                     RR[otrIndex * winStep + i] = R;
                 }
-                /*if (otrIndex > 0 && otrIndex < 330)
-                {
-                    OutputData.writeToOutput(name, String.Format("o;") + s1);
-                    OutputData.writeToOutput(name, String.Join(";", DictP[otrIndex]));
-                    OutputData.writeToOutput(name, String.Join(";", DictF[otrIndex]));
-                    int t1 = 0;
-                    double r1 = 0;
 
-                    string s2 = calcAKF(FOtrez, ref t1, ref r1);
-
-                    double RF = calcAKFLag(FOtrez, T);
-                    OutputData.writeToOutput(name, String.Format("f;") + s2);
-                }*/
 
                 if (R >= 0.6 && T >= 5 && T < 100)
                 {
+                    KolebComment += String.Format("[{0:0.00}]", R);
                     int t1 = 0;
                     double r1 = 0;
 
                     string s2 = calcAKF(FOtrez, ref t1, ref r1);
 
-                    double RF = calcAKFLag(FOtrez, T);
+                    //double RF = calcAKFLag(FOtrez, T);
 
+                    int start = -1;
+                    int end = -1;
 
-                    if (RF >100)
+                    foreach (int oi in KeysDict)
                     {
-                        KolebComment += String.Format(" {0}:{1} (T={2}) [{3:0.00}]", (otrIndex * winStep) / 60, (otrIndex * winStep) % 60, T, R);
-                    }
-                    else
-                    {
-                        int start = -1;
-                        int startJ = -1;
-                        int end = -1;
-                        double nper = 0;
-                        List<double> NPERS = new List<double>();
-                        List<double> RRR = new List<double>();
-
-                        for (int j = 0; j < KeysDict.Count; j++)
+                        double RP = calcAKFLag(DictO[oi], T);
+                        double RF = calcAKFLag(DictF[oi], T);
+                        if (RP>0.6 && RF>0.5  && oi!=KeysDict.Last())
                         {
-                            double r0 = calcAKFLag(DictO[j], T);
-                            RRR.Add(r0); 
-
-                            if (r0 >= 0.6 && start < 0)
+                            if (start == -1)
+                                start = oi*winStep;
+                        }
+                        else
+                        {
+                            if (start != -1)
                             {
-                                start = j * winStep;
-                                startJ = j;
-                            }
-                            else if ((r0 < 0.6 && start >= 0) || (j == KeysDict.Count - 1 && start >= 0))
-                            {
-                                end = (j ) * (winStep) + winWid-winStep;
-                                nper = (double)(end - start) / (double)(T);
-                               // nper = (j-startJ) / (double)T;
-                                NPERS.Add(nper);
-
+                                end = (oi-1) * winStep + winWid;
+                                double len = (end - start) / T;
+                                KolebComment += String.Format("[{0:0.00}]", len);
                                 start = -1;
-
                             }
                         }
-                        
-                        if (NPERS.Count() > 0 && NPERS.Max() > 5)
-                        {
-                            KolebComment += String.Format(" {0}:{1} (T={2}) [{3:0.0}]", (otrIndex * winStep) / 60, (otrIndex * winStep) % 60, T, NPERS.Max());
-                            OutputData.writeToOutput(name, String.Format("o;") + s1);
-                            OutputData.writeToOutput(name, "RRR;" + String.Join(";", RRR));
-                            //OutputData.writeToOutput(name, String.Join(";", DictP[otrIndex]));
-                            //OutputData.writeToOutput(name, String.Join(";", DictF[otrIndex]));
-                        }
+
                     }
-
-
-
-
+                    
                 }
             }
 
@@ -1317,7 +1284,7 @@ namespace NPRCHApp
             //RHO = calcRHO(dataS);
             calcReact(dataS, fillData);
             NoAutoComment = calcNoAuto(dataS);
-            //calcKoleb(dataS, fillData);
+            calcKoleb(dataS, fillData);
 
         }
         public Dictionary<DateTime, Record> getData()

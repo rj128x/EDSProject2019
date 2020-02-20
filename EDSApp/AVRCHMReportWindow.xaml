@@ -17,13 +17,35 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="20"/>
             </Grid.RowDefinitions>
-            <Border Height="220"  VerticalAlignment="Top">
-                <StackPanel Grid.Row="0" Grid.Column="0">
-                    <Calendar Name="clndDate"/>
-                    <Button Content="Сформировать" Name="btnCreate" Click="btnCreate_Click"/>
-                    <Button Content="Прервать" Name="btnAbort" Click="btnAbort_Click"/>
-                </StackPanel>
-            </Border>
+            <StackPanel>
+
+                <Border Height="230"  VerticalAlignment="Top">
+                    <StackPanel Grid.Row="0" Grid.Column="0">
+                        <Calendar Name="clndDate"/>
+                        <Button Content="Сформировать" Name="btnCreate" Click="btnCreate_Click" Height="25"/>
+                        <Button Content="Прервать" Name="btnAbort" Click="btnAbort_Click" Height="25"/>
+
+                    </StackPanel>
+                </Border>
+
+                <Border Height="100"  VerticalAlignment="Top">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="ЗВН Макс" FontSize="15" Width="120"/>
+                            <TextBox Text="20" FontSize="15" Width="30" TextAlignment="Right" Name="txtZVN"></TextBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="T план Макс" FontSize="15" Width="120"/>
+                            <TextBox Text="15" FontSize="15" Width="30" TextAlignment="Right" Name="txtTPlan"></TextBox>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="T Окно" FontSize="15" Width="120"/>
+                            <TextBox Text="15" FontSize="15" Width="30" TextAlignment="Right" Name="txtTWin"></TextBox>
+                        </StackPanel>
+                        <Button Content="Пересчитать" Name="btnRecalc" Click="btnRecalc_Click" Height="25"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
             <Grid Grid.Column="1" Grid.Row="0" >
                 <DataGrid Name="grdEvents" Grid.Row="1" CanUserAddRows="False" MouseDoubleClick="grdEvents_MouseDoubleClick" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" SelectionMode="Single" SelectionUnit="FullRow">
                     <DataGrid.Columns >
