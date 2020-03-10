@@ -10,7 +10,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace EDSProj
 {
-	public enum EDSReportPeriod { sec, minute, hour, day, month }
+	public enum EDSReportPeriod { sec, minute, hour, day, month,minute5,minute10,minute15,minute30 }
 	public enum EDSReportFunction { avg, max, min, val, vyrab }
 	public class TechGroupInfo
 	{
@@ -228,8 +228,12 @@ namespace EDSProj
 			ReportPeriods.Add(EDSReportPeriod.hour, "Час");
 			ReportPeriods.Add(EDSReportPeriod.day, "Сутки");
 			ReportPeriods.Add(EDSReportPeriod.month, "Месяц");
+            ReportPeriods.Add(EDSReportPeriod.minute5, "5 минут");
+            ReportPeriods.Add(EDSReportPeriod.minute10, "10 минут");
+            ReportPeriods.Add(EDSReportPeriod.minute15, "15 минут");
+            ReportPeriods.Add(EDSReportPeriod.minute30, "30 минут");
 
-			ReportFunctions = new Dictionary<EDSReportFunction, string>();
+            ReportFunctions = new Dictionary<EDSReportFunction, string>();
 			ReportFunctions.Add(EDSReportFunction.avg, "Среднее");
 			ReportFunctions.Add(EDSReportFunction.vyrab, "Выработка");
 			ReportFunctions.Add(EDSReportFunction.min, "Минимум");
@@ -268,7 +272,19 @@ namespace EDSProj
 				case EDSReportPeriod.minute:
 					res = 60;
 					break;
-				case EDSReportPeriod.hour:
+                case EDSReportPeriod.minute5:
+                    res = 60*5;
+                    break;
+                case EDSReportPeriod.minute10:
+                    res = 60 * 10;
+                    break;
+                case EDSReportPeriod.minute15:
+                    res = 60 * 15;
+                    break;
+                case EDSReportPeriod.minute30:
+                    res = 60 * 30;
+                    break;
+                case EDSReportPeriod.hour:
 					res = 3600;
 					break;
 				case EDSReportPeriod.day:

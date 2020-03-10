@@ -116,7 +116,7 @@ namespace EDSApp
 
 			ReportResultWindow win = new ReportResultWindow();
             win.chart.initControl();
-			win.chart.init();
+			win.chart.init(true,"dd.MM HH:mm:ss");
 			SortedList<DateTime, double> data = new SortedList<DateTime, double>();
 			int index = -1;
 			foreach (KeyValuePair<string, EDSReportRequestRecord> de in report.RequestData) {

@@ -60,7 +60,7 @@ namespace EDSApp
 
             DateTime dt = clndDate.SelectedDate.Value;
             report = new AVRCHMReport();
-            DateTime ds = dt;
+            DateTime ds = dt.AddHours(0);
             DateTime de = dt.AddHours(24);
             if (de > DateTime.Now.AddMinutes(-5).AddHours(-2))
                 de = DateTime.Now.AddMinutes(-5).AddHours(-2);
@@ -137,8 +137,8 @@ namespace EDSApp
                 win.chart.AddSerie("P факт", report.getSerieData("PFakt", ds, de), System.Drawing.Color.Blue, true, false, false, 0, true);
                 win.chart.AddSerie("P зад сум", report.getSerieData("PPlanFull", ds, de), System.Drawing.Color.Coral, true, false, false, 0, true);
                 win.chart.AddSerie("P зад ГРАРМ", report.getSerieData("SumGroupZad", ds, de), System.Drawing.Color.Green, true, false, true, 0, false);
-                win.chart.AddSerie("P нг", report.getSerieData("PMin", ds, de), System.Drawing.Color.Black, true, false, false, 0, true);
-                win.chart.AddSerie("P вг", report.getSerieData("PMax", ds, de), System.Drawing.Color.Black, true, false, false, 0, true);
+                win.chart.AddSerie("P нг", report.getSerieData("PMin", ds, de), System.Drawing.Color.Gray, true, false, false, 0, true);
+                win.chart.AddSerie("P вг", report.getSerieData("PMax", ds, de), System.Drawing.Color.Gray, true, false, false, 0, true);
                 win.chart.AddSerie("ГГ кол", report.getSerieData("GGCount", ds, de), System.Drawing.Color.LightBlue, true, false, false, 1, true, 0, 20);
                 //win.chart.AddSerie("нарушение", report.getSerieData("ErrorLimits15", ds, de, false), System.Drawing.Color.Red, false, true, false, 0, true);
 
@@ -147,13 +147,12 @@ namespace EDSApp
                 win.chart.AddSerie("ресурс+", report.getSerieData("ResursZagr", ds, de), System.Drawing.Color.GreenYellow, true, false, false, 3, HasErrorReserv);
                 win.chart.AddSerie("ресурс-", report.getSerieData("ResursRazgr", ds, de), System.Drawing.Color.YellowGreen, true, false, false, 3, HasErrorReserv);
                 //win.chart.AddSerie("Нарушение рез", report.getSerieData("ErrorRezervGraph", ds, de, false), System.Drawing.Color.Red, false, true, false, 3, false);
-                win.chart.ShowCrossHair = false;
+
 
                 
 
                 if (!ev.Date.ToLower().Contains("сутки"))
                 {
-                    win.chart.ShowCrossHair = true;
                     /*win.chart2.Visibility = Visibility.Visible;
                     win.mainGrid.RowDefinitions.Last().Height = new GridLength(1, GridUnitType.Star);*/
                     win.chart.init(true, "HH:mm:ss");

@@ -51,5 +51,12 @@ namespace EDSApp
             win.Show();
             this.Close();
         }
+
+        private void buttonDiad_Click(object sender, RoutedEventArgs e)
+        {
+            DiagWindow win = new DiagWindow();
+            win.Show();
+            this.Close();
+        }
     }
 }

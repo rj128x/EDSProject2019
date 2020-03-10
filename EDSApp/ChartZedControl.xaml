@@ -16,24 +16,61 @@
                 <ColumnDefinition Width="300"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Border Grid.Column="0">
-                <Grid >
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="20"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal" Grid.Column="0" Name="pnlButtons">
-                        <Button Content="Выделить все" Name="btnSelectAll" Width="90" Click="btnSelectAll_Click"/>
-                        <Button Content="Снять все" Name="btnDeselectAll" Width="90" Click="btnDeselectAll_Click"/>
-                        <TextBlock Text="{Binding CursorDate, StringFormat='dd.MM HH:mm:ss'}" Margin="30,0,0,0" FontWeight="Bold"/>
-                    </StackPanel>
-                    
-                    <DataGrid Grid.Row="1" Name="grdLegend" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False">
+            <StackPanel  Grid.Column="0">
+                <Border >
+                    <Grid >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Grid.Column="0" Name="pnlButtons">
+                            <Button Content="Выделить все" Name="btnSelectAll" Width="90" Click="btnSelectAll_Click"/>
+                            <Button Content="Снять все" Name="btnDeselectAll" Width="90" Click="btnDeselectAll_Click"/>
+                            <TextBlock Text="{Binding CursorDate, StringFormat='dd.MM HH:mm:ss'}" Margin="30,0,0,0" FontWeight="Bold"/>
+                        </StackPanel>
+
+                        <DataGrid Grid.Row="1" Name="grdLegend" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn Header="V" Width="20">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding IsVisible, Mode=TwoWay}" Click="CheckBox_Click" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="" Width="15">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Background="{Binding FillBrush}" Width="20" Height="20"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Параметр" Width="*">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Header}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Val" Width="50">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Value, StringFormat='0.00'}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+                <Border >
+                    <DataGrid Grid.Row="1" Name="grdYAxis"  AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" CanUserAddRows="False"  
+                              >
                         <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="V" Width="20">
+                            <DataGridTemplateColumn Header="M" Width="20">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <CheckBox IsChecked="{Binding IsVisible, Mode=TwoWay}" Click="CheckBox_Click" />
+                                        <CheckBox IsChecked="{Binding IsNotAuto, Mode=TwoWay, UpdateSourceTrigger='PropertyChanged'}" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -44,24 +81,31 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Параметр" Width="*">
+                            <DataGridTemplateColumn Header="N оси" Width="*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <TextBlock Text="{Binding Header}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="Val" Width="50">
+                            <DataGridTemplateColumn Header="MinVal" Width="50">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding Value, StringFormat='0.00'}"/>
+                                        <TextBox Text="{Binding MinVal, Mode=TwoWay, StringFormat='0.00', UpdateSourceTrigger='PropertyChanged'}"  IsEnabled="{Binding IsNotAuto}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="MaxVal" Width="50" >
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{Binding MaxVal,Mode=TwoWay, StringFormat='0.00', UpdateSourceTrigger='PropertyChanged'}" IsEnabled="{Binding IsNotAuto}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                </Grid>
-            </Border>
+                </Border>
+            </StackPanel>
             <Border Grid.Column="1" Name="brd">
                 <WindowsFormsHost>
                     <zdw:ZedControl x:Name="chartControl" />

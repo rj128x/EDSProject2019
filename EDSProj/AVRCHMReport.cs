@@ -358,8 +358,9 @@ namespace EDSProj
                 if (date >= dateStart && date <= dateEnd)
                 {
                     double val = Data[date].getInfo(desc);
+                    data.Add(date, val == 0 ? Double.PositiveInfinity : val);
 
-                    if (val != 0)
+                    /*if (val != 0)
                        data.Add(date, val);
                     else
                     {
@@ -368,12 +369,13 @@ namespace EDSProj
                             result.Add("Error "+data.First().Key.ToString("HH:mm:ss"), data);
                             data = new SortedList<DateTime, double>();
                         }
-                    }                       
+                    }        */               
                     
                 }
+                
 
             }
-            if (data.Count > 0)
+            if (data.Count > 0 && data.Values.Min()!=Double.PositiveInfinity) 
             {
                 result.Add("Error", data);
                 data = new SortedList<DateTime, double>();

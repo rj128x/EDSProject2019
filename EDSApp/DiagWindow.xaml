@@ -8,123 +8,101 @@
         xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         xmlns:zd="clr-namespace:ZedGraph;assembly=ZedGraph"
-        Title="DiagWindow" Height="600" Width="800">
+        Title="DiagWindow" Height="400" Width="600" >
     <Grid>
         <Grid Margin="0,20,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TabControl Grid.Column="0" Grid.Row="1">
-                <TabItem Header="Дренажные насосы">
+                <TabItem Header="ГП объем масла">
                     <Grid>
                         <Grid.RowDefinitions >
-                            <RowDefinition Height="30"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Border Grid.Row="0">
-                            <StackPanel Orientation="Horizontal">
-                                <CheckBox Content="Делить по мощности" Name="chbDNSplitPower" IsChecked="False"  VerticalAlignment="Center"/>
-                                <TextBox Text="10" Name="txtDNSplitPower"/>
-                                <Button Content="Сформировать" Name="drenClick" Click="drenClick_Click"/>
-                            </StackPanel>
-                        </Border>
-                        <Border Grid.Row="1">
-                            <TabControl Grid.Row="1">
+                            <Grid>
+                                <Border Width="350" HorizontalAlignment="Left">
+                                    <StackPanel Orientation="Vertical" Width="350" HorizontalAlignment="Left">
+                                        <StackPanel Orientation="Horizontal" >
+                                            <TextBlock Text="Датч уровня (1,2, 0-сред)" Width="250"></TextBlock>
+                                            <TextBox Text="0" Width="40" Name="txtDatch"/>                                            
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" >
+                                            <TextBlock Text="Усреднять данные датчиков уровня за " Width="250"></TextBlock>
+                                            <TextBox Text="0" Width="40" Name="txtAvgUrov"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Коррекция уровня на раб машине" Width="250"></TextBlock>
+                                            <TextBox Text="33" Width="40" Name="txtLVLcor"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Игнорировать после пуска/останова (минут)" Width="250"></TextBlock>
+                                            <TextBox Text="20" Width="40" Name="txtMinutes"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="V0" Width="250"></TextBlock>
+                                            <TextBox Text="1.4" Width="40" Name="txtV0"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="V_1mm" Width="250"></TextBlock>
+                                            <TextBox Text="0.02" Width="40" Name="txtV1mm"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Tкоэф" Width="250"></TextBlock>
+                                            <TextBox Text="0.0007" Width="40" Name="txtTkoef"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Tbaz" Width="250"></TextBlock>
+                                            <TextBox Text="20" Width="40" Name="txtTbaz"/>
+                                        </StackPanel>
+                                        <Button Content="Сформировать" Name="btnCreate" Click="btnCreate_Click" Height="26" VerticalAlignment="Bottom"/>
+                                        <Button Name="btnRecalc" Click="btnRecalc_Click" Content="Пересчитать" Height="26"/>                                        
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
 
-                                <TabItem Header="Длительность работы">
-                                    <local:ChartZedControl x:Name="DNTimeWork"/>
-                                </TabItem>
-                                <TabItem Header="Работа в сутки">
-                                    <local:ChartZedControl x:Name="DNTimeDay"/>
-                                </TabItem>
-                                <TabItem Header="Пусков в сутки">
-                                    <local:ChartZedControl x:Name="DNPuskDay"/>
-                                </TabItem>
-                            </TabControl>
+
 
                         </Border>
-                    </Grid>
-                </TabItem>
 
-                <TabItem Header="Насосы МНУ">
-                    <Grid>
-                        <Grid.RowDefinitions >
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Border Grid.Row="0">
-                            <StackPanel Orientation="Horizontal">
-                                <CheckBox Content="Делить по мощности" Name="chbMNUSplitPower" IsChecked="False"  VerticalAlignment="Center"/>
-                                <TextBox Text="10" Name="txtMNUSplitPower"/>
-                                <Button Content="Сформировать" Name="mnuClick" Click="mnuClick_Click"/>
-                            </StackPanel>
-                        </Border>
-                        <Border Grid.Row="1">
-                            <TabControl Grid.Row="1">
-                                <TabItem Header="Длительность работы">
-                                    <local:ChartZedControl x:Name="MNUTimeWork"/>
-                                </TabItem>
-                                <TabItem Header="Работа в сутки">
-                                    <local:ChartZedControl x:Name="MNUTimeDay"/>
-                                </TabItem>
-                                <TabItem Header="Пусков в сутки">
-                                    <local:ChartZedControl x:Name="MNUPuskDay"/>
-                                </TabItem>
-                                <TabItem Header="ЛН Работа в сутки">
-                                    <local:ChartZedControl x:Name="LNTimeDay"/>
-                                </TabItem>
-                                <TabItem Header="ЛН Пусков в сутки">
-                                    <local:ChartZedControl x:Name="LNPuskDay"/>
-                                </TabItem>
-                            </TabControl>
-                        </Border>
-                    </Grid>
-
-                </TabItem>
-                <TabItem Header="ГП/ПП">
-                    <Grid>
-                        <Grid.RowDefinitions >
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Border Grid.Row="0">
-                            <StackPanel Orientation="Horizontal">
-                                <CheckBox Content="Делить по гор. маслу" Name="chbOilSplitHot" IsChecked="False"  VerticalAlignment="Center" />
-                                <CheckBox Content="Делить по хол. маслу" Name="chbOilSplitCold" IsChecked="False"  VerticalAlignment="Center" />
-                                <TextBox Text="10" Name="txtOilSplitTemp"/>
-                                <Button Content="Сформировать" Name="oilClick" Click="oilClick_Click"/>
-                            </StackPanel>
-                        </Border>
-                        <Border Grid.Row="1">
-                            <TabControl Grid.Row="1">
-                                <TabItem Header="ГП Масло">
-                                    <local:ChartZedControl x:Name="GPLevel"/>
-                                </TabItem>
-                                <TabItem Header="ПП Масло">
-                                    <local:ChartZedControl x:Name="PPLevel"/>
-                                </TabItem>
-                                <TabItem Header="ГП Охлаждение">
-                                    <local:ChartZedControl x:Name="GPOhl"/>
-                                </TabItem>
-                                <TabItem Header="ПП Охлаждение">
-                                    <local:ChartZedControl x:Name="PPOhl"/>
-                                </TabItem>
-
-                            </TabControl>
-                        </Border>
                     </Grid>
                 </TabItem>
             </TabControl>
-            <Border Height="30" Width="200" HorizontalAlignment="Left">
+            <Border Height="30" Width="350" HorizontalAlignment="Left">
                 <StackPanel  Orientation="Horizontal">
-                    <DatePicker Name="clndFrom"/>
-                    <DatePicker Name="clndTo"/>
+                    <DatePicker Name="clndFrom" SelectedDateChanged="clndFrom_SelectedDateChanged"/>
+                    <DatePicker Name="clndTo" SelectedDateChanged="clndFrom_SelectedDateChanged"/>
+                    <TextBlock Text="GG (04/05/07)"></TextBlock>
+                    <TextBox Text="05" Name="txtGG" Width="30" TextChanged="txtGG_TextChanged"/>
+
                 </StackPanel>
             </Border>
+            <Grid Grid.Row="2"  Name="grdStatus">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Column="0">
+                    <TextBlock Text="Подключение: "/>
+                    <TextBlock Text="{Binding ConnectInfo, Mode=OneWay}" Name="txtConnectInfo" Style="{StaticResource ValueText}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1">
+                    <TextBlock Text="Запрос: "/>
+                    <TextBlock Text="{Binding GlobalInfo, Mode=OneWay}" Name="txtGlobalInfo" Style="{StaticResource ValueText}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="2">
+                    <TextBlock Text="Состояние: "/>
+                    <TextBlock Text="{Binding ProcessInfo, Mode=OneWay}" Name="txtProcessInfo" Style="{StaticResource ValueText}"/>
+                </StackPanel>
+            </Grid>
         </Grid>
+        
     </Grid>
 </Window>

@@ -70,11 +70,7 @@
     <Compile Include="AIS\AIS_NEW.cs" />
     <Compile Include="AIS\AIS_OLD.cs" />
     <Compile Include="AVRCHMReport.cs" />
-    <Compile Include="DiagnosticsOld\PumpDiagnostics.cs" />
-    <Compile Include="DiagnosticsOld\PumpFileReader.cs" />
-    <Compile Include="DiagnosticsOld\ReportOutputFile.cs" />
-    <Compile Include="DiagnosticsOld\SvodFileReader.cs" />
-    <Compile Include="Diagnostics\NasosData.cs" />
+    <Compile Include="Diagnostics\DiadOilClass.cs" />
     <Compile Include="EDS\EDSClass.cs" />
     <Compile Include="EDS\EDSPointsClass.cs" />
     <Compile Include="EDS\EDSReport.cs" />
@@ -286,6 +282,7 @@
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\EDSWebService\" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

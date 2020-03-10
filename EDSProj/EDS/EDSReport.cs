@@ -70,7 +70,19 @@ namespace EDSProj.EDS
 					case EDSReportPeriod.minute:
 						de = date.AddMinutes(1);
 						break;
-					case EDSReportPeriod.hour:
+                    case EDSReportPeriod.minute5:
+                        de = date.AddMinutes(5);
+                        break;
+                    case EDSReportPeriod.minute10:
+                        de = date.AddMinutes(10);
+                        break;
+                    case EDSReportPeriod.minute15:
+                        de = date.AddMinutes(15);
+                        break;
+                    case EDSReportPeriod.minute30:
+                        de = date.AddMinutes(30);
+                        break;
+                    case EDSReportPeriod.hour:
 						de = date.AddHours(1);
 						break;
 					case EDSReportPeriod.day:
@@ -107,7 +119,7 @@ namespace EDSProj.EDS
 					DateTime ds = DateStart.AddHours(0);
 					DateTime de = DateStart.AddHours(1);
 					while (ds < DateEnd) {
-						if (Period == EDSReportPeriod.minute || Period == EDSReportPeriod.sec) {
+						if (Period == EDSReportPeriod.minute || Period == EDSReportPeriod.sec||Period==EDSReportPeriod.minute5||Period==EDSReportPeriod.minute10) {
 							int i0 = dates.IndexOf(ds);
 							int i1 = i0 + 15000;
 							de = i1 < dates.Count ? dates[i1] : DateEnd;
