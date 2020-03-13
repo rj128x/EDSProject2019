@@ -2,22 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using ZedGraph;
 
-namespace EDSApp
+namespace ChartZedControl
 {
     public class ChartZedYAxis : INotifyPropertyChanged
     {
@@ -241,7 +232,7 @@ namespace EDSApp
 
                     foreach (ChartZedSerie serie in ObsSeries)
                     {
-                        if (serie.Data.Count>0&& serie.Data.Keys.Min() < CursorDate && CursorDate < serie.Data.Keys.Max())
+                        if (serie.Data.Count > 0 && serie.Data.Keys.Min() < CursorDate && CursorDate < serie.Data.Keys.Max())
                         {
                             var d = serie.Data.First(de => de.Key >= CursorDate);
                             serie.Value = serie.Data[d.Key];
@@ -293,6 +284,7 @@ namespace EDSApp
 
             //chart.MouseMove += Chart_MouseMove;
             chartControl.ChartMouseMoveFunction = ChartMouseMoveFunction;
+            
         }
 
 
@@ -500,13 +492,13 @@ namespace EDSApp
             {
                 foreach (LineItem item in serie.AllItems)
                 {
-                    if (serie.Y2Index > -1)                        
+                    if (serie.Y2Index > -1)
                     {
 
                         item.YAxisIndex = serie.Y2Index;
                         item.IsY2Axis = true;
                     }
-                    
+
                 }
             }
             refreshXScale();
@@ -671,7 +663,7 @@ namespace EDSApp
             serie.Item.IsVisible = serie.IsVisible;
             serie.AllItems = new List<LineItem>();
             serie.AllItems.Add(lineItem);
-            serie.DataPoints = data;          
+            serie.DataPoints = data;
 
 
         }
@@ -687,10 +679,10 @@ namespace EDSApp
             ObsSeries.Add(serie);
             serie.Header = header;
             serie.Color = color;
-            serie.IsVisible = isVisible;           
-            serie.Pane = graphPane;            
+            serie.IsVisible = isVisible;
+            serie.Pane = graphPane;
             serie.Y2Index = y2axisIndex;
-            UpdatePointSerieData(header, data);            
+            UpdatePointSerieData(header, data);
 
             if (y2axisIndex == -1)
             {
@@ -748,7 +740,8 @@ namespace EDSApp
                 ser.IsVisible = chb.IsChecked.Value;
                 foreach (GraphPane pane in chart.MasterPane.PaneList)
                     refresh(pane);
-            }            catch            {            }
+            }
+            catch { }
         }
 
         public void RefreshAll()

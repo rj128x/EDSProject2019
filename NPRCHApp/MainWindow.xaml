@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NPRCHApp"
+        xmlns:zed="clr-namespace:ChartZedControl;assembly=ChartZedControl"
+        
         mc:Ignorable="d"
         Title="MainWindow" Height="900" Width="1500">
     <Grid>
@@ -43,7 +45,7 @@
                 <TabItem Header="Час" Name="tabHour">
                     <TabControl >
                         <TabItem Header="График" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="54">
-                            <local:ChartZedControl x:Name="chart"></local:ChartZedControl>
+                            <zed:ChartZedControl x:Name="chart"></zed:ChartZedControl>
                         </TabItem>
 
                         <TabItem Header="Данные" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="54">
@@ -107,7 +109,7 @@
                                     <TextBlock FontSize="20" Text="" Name="txtStatizm" Margin="20,0,0,0"/>
                                     <TextBlock FontSize="20" Text="" Name="txtStatizm2" Margin="20,0,0,0"/>
                                 </StackPanel>
-                                <local:ChartZedControl x:Name="chartStatizm" Grid.Row="1"/>
+                                <zed:ChartZedControl x:Name="chartStatizm" Grid.Row="1"/>
 
                             </Grid>
                         </TabItem>

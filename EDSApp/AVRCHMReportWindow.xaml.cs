@@ -1,4 +1,5 @@
-﻿using EDSProj;
+﻿using ChartZedControl;
+using EDSProj;
 using EDSProj.EDS;
 using EDSProj.EDSWebService;
 using System;
@@ -17,7 +18,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using ZedGraph;
+
 
 namespace EDSApp
 {

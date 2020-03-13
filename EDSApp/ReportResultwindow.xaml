@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EDSApp"
+        xmlns:zed="clr-namespace:ChartZedControl;assembly=ChartZedControl"
         mc:Ignorable="d"
         Title="ReportResultwindow" Height="800" Width="1500">
     <Grid Name="mainGrid">
@@ -11,6 +12,6 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <local:ChartZedControl x:Name="chart"></local:ChartZedControl>
+        <zed:ChartZedControl x:Name="chart"/>
     </Grid>
 </Window>

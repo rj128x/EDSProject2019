@@ -15,7 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using ZedGraph;
+
 
 namespace NPRCHApp
 {
@@ -77,7 +77,7 @@ namespace NPRCHApp
             statusBar.DataContext = this;
         }
 
-        public void prepareChart(ZedGraphControl chart)
+        /*public void prepareChart(ZedGraphControl chart)
         {
             chart.GraphPane.CurveList.Clear();
             chart.GraphPane.XAxis.Type = AxisType.Date;
@@ -99,7 +99,7 @@ namespace NPRCHApp
             chart.GraphPane.Title.IsVisible = false;
             chart.GraphPane.XAxis.Scale.Format = "0.00";
 
-        }
+        }*/
 
         private void btnLoad_Click(object sender, RoutedEventArgs e)
         {
@@ -243,7 +243,7 @@ namespace NPRCHApp
 
             chart.initControl();
             chart.init(true, "HH:mm:ss");
-            chart.ShowCrossHair = true;
+            //chart.ShowCrossHair = true;
             chart.AllYAxisIsVisible = true;
 
             //prepareChart(chart.chart);
@@ -311,13 +311,13 @@ namespace NPRCHApp
                 txtStatizm2.Text = "";
 
 
-            chartStatizm.initControl(false);
+            chartStatizm.initControl();
             chartStatizm.init(true,"0.00",true);
-            prepareChartDouble(chartStatizm.chart);
+            //prepareChartDouble(chartStatizm.chart);
 
 
-            List<double> xx = new List<double>();
-            List<double> xy = new List<double>();
+            //List<double> xx = new List<double>();
+            SortedList<double, double> xy = new SortedList<double, double>();
             SortedList<double, double> list_Y = new SortedList<double, double>();
             SortedList<double, double> list_Y2 = new SortedList<double, double>();
 
@@ -327,8 +327,9 @@ namespace NPRCHApp
             foreach (Record rec in RecordHour.DataSDay[block])
             {
                 double d = rec.F_gc - 50;
-                xx.Add(rec.F_gc - 50);
-                xy.Add(rec.P_fakt - rec.P_zvn - rec.P_plan);
+
+                 //xy.Add(rec.F_gc - 50, rec.P_fakt - rec.P_zvn - rec.P_plan);
+
 
                 if (d < minF)
                     minF = d;
@@ -378,11 +379,11 @@ namespace NPRCHApp
             chart.CurrentGraphPane.XAxis.Scale.MinAuto = false;
             chart.CurrentGraphPane.XAxis.Scale.MaxAuto = false;*/
 
-            chartStatizm.AddPointSerie("Calc", list_Y.Keys.ToList(), list_Y.Values.ToList(), System.Drawing.Color.Red, true, true);
+            chartStatizm.AddPointSerie("Calc", list_Y, System.Drawing.Color.Red, true, true);
 
             if (calcSecond)
-                chartStatizm.AddPointSerie("Calc2", list_Y2.Keys.ToList(), list_Y2.Values.ToList(), System.Drawing.Color.Pink, true, true);
-            chartStatizm.AddPointSerie("Fakt", xx, xy, System.Drawing.Color.Blue, false, true);
+                chartStatizm.AddPointSerie("Calc2", list_Y2, System.Drawing.Color.Pink, true, true);
+            chartStatizm.AddPointSerie("Fakt",  xy, System.Drawing.Color.Blue, false, true);
             
 
 

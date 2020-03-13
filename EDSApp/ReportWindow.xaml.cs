@@ -1,4 +1,5 @@
-﻿using EDSProj;
+﻿using ChartZedControl;
+using EDSProj;
 using EDSProj.EDS;
 using EDSProj.EDSWebService;
 using System;

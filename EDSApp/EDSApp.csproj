@@ -81,18 +81,12 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsFormsIntegration" />
-    <Reference Include="ZedGraph">
-      <HintPath>..\libs\zed\ZedGraph.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ChartZedControl.xaml.cs">
-      <DependentUpon>ChartZedControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Converters\LogicNotConverter.cs">
       <CustomToolNamespace>EDSApp.Converters</CustomToolNamespace>
     </Compile>
@@ -116,10 +110,6 @@
     <Compile Include="WaterWindow.xaml.cs">
       <DependentUpon>WaterWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="ChartZedControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="DiagWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -191,14 +181,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ChartZedControl\ChartZedControl.csproj">
+      <Project>{e899099b-e685-40d1-b53a-f0683f2fb87f}</Project>
+      <Name>ChartZedControl</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EDSProj\EDSProj.csproj">
       <Project>{794ec6df-678b-48aa-9071-967725ea2b64}</Project>
       <Name>EDSProj</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ZedControl\ZedControl.csproj">
-      <Project>{a213899f-fc30-4501-b606-e82925794e67}</Project>
-      <Name>ZedControl</Name>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

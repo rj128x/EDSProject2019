@@ -1,22 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using ZedGraph;
+﻿using System.Windows.Forms;
 
 
 namespace ZedControl
 {
-    public partial class ZedControl: UserControl
+    public partial class ZedControlWin: UserControl
     {
         public int curX = 0;
         public int curY = 0;
-        public ZedControl()
+        public ZedControlWin()
         {
             InitializeComponent();
             init();
