@@ -51,6 +51,7 @@
             this.zedGraphControl1.ScrollMinY2 = 0D;
             this.zedGraphControl1.Size = new System.Drawing.Size(800, 450);
             this.zedGraphControl1.TabIndex = 1;
+            this.zedGraphControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.zedGraphControl1_MouseMove);
             // 
             // pictureBox1
             // 

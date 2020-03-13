@@ -22,7 +22,9 @@ namespace ZedControl
             init();
         }
 
+        public delegate void ChartMouseMoveDelegate(MouseEventArgs e);
 
+        public ChartMouseMoveDelegate ChartMouseMoveFunction;
 
         public ZedGraph.ZedGraphControl Chart {
             get {
@@ -34,32 +36,28 @@ namespace ZedControl
 
         public void init()
         {
-            Chart.MouseMove += Chart_MouseMove;
+            //Chart.MouseMove += Chart_MouseMove;
             zedGraphControl1.Invalidate();
         }
 
-        Graphics gr;
-        private void Chart_MouseMove(object sender, MouseEventArgs e)
+
+        private void zedGraphControl1_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.None && Math.Abs(curX - e.X) > 2)
+            if (e.Button == MouseButtons.None )
             {
                 pictureBox1.Left = e.X;
                 pictureBox2.Left = e.X;
-                
-                
-                curX = e.X;
-            }
-            if (e.Button == MouseButtons.None && Math.Abs(curY - e.Y) > 10) {
+
                 pictureBox1.Top = 0;
                 pictureBox1.Height = e.Y - 10;
 
                 pictureBox2.Top = e.Y + 10;
                 pictureBox2.Height = Height - e.Y - 10;
-                
-                curY = e.Y;
+
+
+                if (ChartMouseMoveFunction!=null)
+                    ChartMouseMoveFunction(e);
             }
-
         }
-
     }
 }

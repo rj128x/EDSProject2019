@@ -112,12 +112,32 @@ namespace EDSApp
             Colors.Add(System.Drawing.Color.Gray);
         }
         public static int indexColor = 0;
+        public bool IsSymbol { get; set; }
+        public bool IsDash { get; set; }
 
         public static System.Drawing.Color NextColor()
         {
             return Colors[indexColor++ % Colors.Count];
         }
         public string Header { get; set; }
+
+        protected string _yAxHeader;
+        public string YAxHeader {
+            get => _yAxHeader; set {
+                _yAxHeader = value;
+                NotifyChanged("YAxHeader");
+            }
+        }
+
+        protected System.Windows.Media.Brush _yAxColor;
+        public System.Windows.Media.Brush YAxColor {
+            get => _yAxColor; set {
+                _yAxColor = value;
+                NotifyChanged("YAxColor");
+            }
+        }
+
+
         public LineItem Item { get; set; }
         public List<LineItem> AllItems { get; set; }
         public GraphPane Pane { get; set; }
@@ -196,17 +216,16 @@ namespace EDSApp
             ObsSeries = new ObservableCollection<ChartZedSerie>();
             ObsYAxis = new ObservableCollection<ChartZedYAxis>();
             BGColor = System.Drawing.Color.Black;
-            FontColor = System.Drawing.Color.Orange ;
+            FontColor = System.Drawing.Color.Orange;
 
             InitializeComponent();
-            
+
 
         }
 
 
 
-        private int prevX;
-        private void Chart_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        protected void ChartMouseMoveFunction(System.Windows.Forms.MouseEventArgs e)
         {
             try
             {
@@ -222,10 +241,14 @@ namespace EDSApp
 
                     foreach (ChartZedSerie serie in ObsSeries)
                     {
-                        if (serie.Data.Keys.Min() < CursorDate && CursorDate < serie.Data.Keys.Max())
+                        if (serie.Data.Count>0&& serie.Data.Keys.Min() < CursorDate && CursorDate < serie.Data.Keys.Max())
                         {
                             var d = serie.Data.First(de => de.Key >= CursorDate);
                             serie.Value = serie.Data[d.Key];
+                        }
+                        else
+                        {
+                            serie.Value = Double.PositiveInfinity;
                         }
 
                     }
@@ -236,19 +259,20 @@ namespace EDSApp
 
                     foreach (ChartZedSerie serie in ObsSeries)
                     {
-                        if (serie.DataPoints.Keys.Min() < CursorX && CursorX < serie.DataPoints.Keys.Max())
+                        if (serie.DataPoints.Count > 0 && serie.DataPoints.Keys.Min() < CursorX && CursorX < serie.DataPoints.Keys.Max())
                         {
                             var d = serie.DataPoints.First(de => de.Key >= CursorX);
                             serie.Value = serie.DataPoints[d.Key];
+                        }
+                        else
+                        {
+                            serie.Value = Double.PositiveInfinity;
                         }
 
                     }
                 }
             }
             catch { }
-
-
-
         }
 
         public void initControl()
@@ -266,7 +290,9 @@ namespace EDSApp
 
 
             CurrentGraphPane = chart.GraphPane;
-            chart.MouseMove += Chart_MouseMove;
+
+            //chart.MouseMove += Chart_MouseMove;
+            chartControl.ChartMouseMoveFunction = ChartMouseMoveFunction;
         }
 
 
@@ -275,7 +301,7 @@ namespace EDSApp
             if (chart == null)
             {
                 initControl();
-                
+
             }
             GraphPane graphPane = CurrentGraphPane;
             if (graphPane == null)
@@ -299,7 +325,7 @@ namespace EDSApp
             graphPane.XAxis.Type = isDoubleXAxis ? AxisType.Linear : AxisType.Date;
             graphPane.XAxis.Scale.Format = xFormat;
             graphPane.XAxis.Title.IsVisible = false;
-            graphPane.XAxis.Scale.FontSpec.FontColor = FontColor;            
+            graphPane.XAxis.Scale.FontSpec.FontColor = FontColor;
             //graphPane.YAxis.Title.IsVisible = false;
             /*graphPane.YAxis.Scale.FontSpec.Size = 9;
             graphPane.YAxis.Scale.FontSpec.IsBold = true;
@@ -309,7 +335,8 @@ namespace EDSApp
             graphPane.YAxis.MajorTic.IsOpposite = false;*/
             initAxis(graphPane.YAxis);
             graphPane.YAxis.MajorGrid.Color = System.Drawing.Color.DarkGray;
-            
+            graphPane.YAxis.MajorGrid.IsZeroLine = false;
+
 
 
             graphPane.Title.IsVisible = false;
@@ -319,6 +346,7 @@ namespace EDSApp
 
             graphPane.XAxis.Scale.FontSpec.Size = 10;
             graphPane.XAxis.MajorGrid.IsVisible = true;
+            graphPane.XAxis.MajorGrid.Color = System.Drawing.Color.Gray;
 
             chart.IsSynchronizeXAxes = true;
 
@@ -343,10 +371,14 @@ namespace EDSApp
                 DateTime max = DateTime.MinValue;
                 foreach (ChartZedSerie ser in ObsSeries)
                 {
-                    DateTime minD = ser.Data.Keys.Min();
-                    DateTime maxD = ser.Data.Keys.Max();
-                    min = min > minD ? minD : min;
-                    max = max < maxD ? maxD : max;
+                    try
+                    {
+                        DateTime minD = ser.Data.Keys.Min();
+                        DateTime maxD = ser.Data.Keys.Max();
+                        min = min > minD ? minD : min;
+                        max = max < maxD ? maxD : max;
+                    }
+                    catch { }
                 }
                 foreach (GraphPane pane in chart.MasterPane.PaneList)
                 {
@@ -360,10 +392,14 @@ namespace EDSApp
                 Double max = Double.MinValue;
                 foreach (ChartZedSerie ser in ObsSeries)
                 {
-                    Double minD = ser.DataPoints.Keys.Min();
-                    Double maxD = ser.DataPoints.Keys.Max();
-                    min = min > minD ? minD : min;
-                    max = max < maxD ? maxD : max;
+                    try
+                    {
+                        Double minD = ser.DataPoints.Keys.Min();
+                        Double maxD = ser.DataPoints.Keys.Max();
+                        min = min > minD ? minD : min;
+                        max = max < maxD ? maxD : max;
+                    }
+                    catch { }
                 }
                 foreach (GraphPane pane in chart.MasterPane.PaneList)
                 {
@@ -386,6 +422,8 @@ namespace EDSApp
             return vis;
         }
 
+
+
         public void refreshYAxisGrid()
         {
             ObsYAxis.Clear();
@@ -393,7 +431,7 @@ namespace EDSApp
             foreach (GraphPane pane in chart.MasterPane.PaneList)
             {
                 paneIndex++;
-                for (int y2 = -1; y2 < pane.Y2AxisList.Count;y2++)
+                for (int y2 = -1; y2 < pane.Y2AxisList.Count; y2++)
                 {
                     Axis yAx = y2 == -1 ? pane.YAxis as Axis : pane.Y2AxisList[y2];
                     bool vis = IsVisibleYAxis(pane, y2);
@@ -408,20 +446,31 @@ namespace EDSApp
                         ax.MaxVal = yAx.Scale.Max;
                         ax.Header = String.Format("{0}-{1}", paneIndex, y2 + 2);
                         yAx.Title.Text = ax.Header;
-                        
+
                         yAx.Title.IsVisible = true;
                         yAx.Title.FontSpec.Size = 10;
                         //yAx.Scale.FontSpec.Angle = (float)(-Math.PI / 2.0); ;
 
-                        
+
                         ObsYAxis.Add(ax);
 
                     }
+                    foreach (ChartZedSerie ser in ObsSeries)
+                    {
+                        if ((ser.Y2Index == y2) && (ser.Pane == pane))
+                        {
+
+                            ser.YAxColor = ser.IsVisible ? new SolidColorBrush(System.Windows.Media.Color.FromArgb(yAx.Color.A, yAx.Color.R, yAx.Color.G, yAx.Color.B)) :
+                                new SolidColorBrush(System.Windows.Media.Colors.White);
+                            ser.YAxHeader = ser.IsVisible ? String.Format("{0}-{1}", paneIndex, y2 + 2) : "-";
+
+                        }
+                    }
                     yAx.Title.FontSpec.FontColor = vis ? yAx.Color : BGColor;
-
                 }
-
             }
+
+
         }
 
 
@@ -433,10 +482,10 @@ namespace EDSApp
             newAx.Scale.IsLabelsInside = newAx is Y2Axis;
             newAx.Scale.IsUseTenPower = false;
             newAx.IsVisible = true;
-            newAx.Scale.FontSpec.Angle = newAx is Y2Axis? (float)(-Math.PI / 2.0):0;
+            newAx.Scale.FontSpec.Angle = newAx is Y2Axis ? (float)(-Math.PI / 2.0) : 0;
             newAx.MajorTic.IsOpposite = false;
             newAx.MinorTic.IsOpposite = false;
-
+            newAx.MajorGrid.IsZeroLine = false;
             newAx.Scale.FontSpec.FontColor = BGColor;
             newAx.MajorTic.Color = BGColor;
             newAx.MinorTic.Color = BGColor;
@@ -445,6 +494,80 @@ namespace EDSApp
 
         }
 
+        public void updateSeries()
+        {
+            foreach (ChartZedSerie serie in ObsSeries)
+            {
+                foreach (LineItem item in serie.AllItems)
+                {
+                    if (serie.Y2Index > -1)                        
+                    {
+
+                        item.YAxisIndex = serie.Y2Index;
+                        item.IsY2Axis = true;
+                    }
+                    
+                }
+            }
+            refreshXScale();
+            refreshYAxisGrid();
+            foreach (GraphPane pane in chart.MasterPane.PaneList)
+            {
+                refresh(pane);
+            }
+        }
+
+        public void UpdateSerieData(String header, SortedList<DateTime, double> values)
+        {
+            ChartZedSerie serie = ObsSeries.First(ser => ser.Header == header);
+            GraphPane graphPane = serie.Pane;
+            PointPairList points = new PointPairList();
+
+            if (serie.AllItems != null)
+                foreach (LineItem item in serie.AllItems)
+                    graphPane.CurveList.Remove(item);
+            serie.AllItems = new List<LineItem>();
+            if (values.Count != 0)
+            {
+                foreach (KeyValuePair<DateTime, double> de in values)
+                {
+                    if ((de.Value == Double.PositiveInfinity || de.Key == values.Keys.Last()) && points.Count > 0)
+                    {
+                        LineItem item = graphPane.AddCurve(header, points, serie.Color, serie.IsSymbol ? SymbolType.Circle : SymbolType.None);
+                        item.Line.Width = 2;
+
+                        if (serie.IsSymbol)
+                        {
+                            item.Symbol.Size = 3f;
+                            item.Symbol.Fill = new Fill(serie.Color);
+                        }
+
+                        item.IsVisible = serie.IsVisible;
+                        item.Line.DashOn = serie.IsDash ? 50 : 0;
+                        item.Line.DashOff = serie.IsDash ? 100 : 0;
+                        if (serie.IsDash)
+                            item.Line.Style = System.Drawing.Drawing2D.DashStyle.Dot;
+
+                        serie.AllItems.Add(item);
+                        points = new PointPairList();
+                    }
+                    else
+                    {
+                        if (de.Value != double.PositiveInfinity)
+                            points.Add(new PointPair(new XDate(de.Key), de.Value));
+                    }
+                }
+            }
+            else
+            {
+                LineItem item = graphPane.AddCurve(header, points, serie.Color, serie.IsSymbol ? SymbolType.Circle : SymbolType.None);
+                item.IsVisible = false;
+                serie.AllItems.Add(item);
+            }
+            serie.Item = serie.AllItems.First();
+            serie.Data = values;
+
+        }
 
         public ChartZedSerie AddSerie(String header, SortedList<DateTime, double> values, System.Drawing.Color color,
             bool line, bool symbol, bool dash = false, int y2axisIndex = -1, bool isVisible = true, double min = double.MinValue, double max = double.MaxValue)
@@ -457,64 +580,27 @@ namespace EDSApp
             GraphPane graphPane = CurrentGraphPane;
 
             ChartZedSerie serie = new ChartZedSerie();
-
-            serie.AllItems = new List<LineItem>();
-
-            PointPairList points = new PointPairList();
-            foreach (KeyValuePair<DateTime, double> de in values)
-            {
-                if ((de.Value == Double.PositiveInfinity || de.Key == values.Keys.Last()) && points.Count > 0)
-                {
-                    LineItem item = graphPane.AddCurve(header, points, color, symbol ? SymbolType.Circle : SymbolType.None);
-                    item.Line.Width = 2;
-
-                    item.Line.IsVisible = line;
-                    if (symbol)
-                    {
-                        item.Symbol.Size = 3f;
-                        item.Symbol.Fill = new Fill(color);
-
-                    }
-
-                    item.IsVisible = isVisible;
-
-                    item.Line.DashOn = dash ? 50 : 0;
-                    item.Line.DashOff = dash ? 100 : 0;
-                    if (dash)
-                        item.Line.Style = System.Drawing.Drawing2D.DashStyle.Dot;
-
-                    serie.AllItems.Add(item);
-                    points = new PointPairList();
-                }
-                else
-                {
-                    if (de.Value != double.PositiveInfinity)
-                        points.Add(new PointPair(new XDate(de.Key), de.Value));
-                }
-            }
-
-            serie.Header = header;
-            serie.Data = values;
             serie.Color = color;
-            serie.IsVisible = true;
-            //LineItem lineItem = graphPane.AddCurve(header, points, color, symbol ? SymbolType.Circle : SymbolType.None);
-
-
-            serie.Item = serie.AllItems.First();
-            serie.Pane = graphPane;
             serie.IsVisible = isVisible;
+            serie.IsDash = dash;
+            serie.IsSymbol = symbol;
+            serie.Pane = graphPane;
+            serie.Header = header;
             serie.Y2Index = y2axisIndex;
 
             ObsSeries.Add(serie);
+
+            UpdateSerieData(header, values);
+
 
 
             if (y2axisIndex == -1)
             {
                 initAxis(graphPane.YAxis);
                 graphPane.YAxis.Color = color;
-                
+
                 graphPane.YAxis.MajorTic.Color = color;
-                
+
                 graphPane.YAxis.MinorTic.Color = color;
 
 
@@ -535,7 +621,7 @@ namespace EDSApp
                 newAx.Scale.FontSpec.FontColor = color;
                 newAx.MajorTic.Color = color;
                 newAx.MinorTic.Color = color;
-                
+
                 if (min > double.MinValue)
                     newAx.Scale.Min = min;
                 if (max < double.MaxValue)
@@ -554,13 +640,17 @@ namespace EDSApp
             return serie;
         }
 
-        public ChartZedSerie AddPointSerie(String header, SortedList<double, double> data,
-            System.Drawing.Color color, bool line, bool symbol, int y2axisIndex = -1, bool isVisible = true)
+        public void UpdatePointSerieData(String header, SortedList<double, double> data)
         {
-            if (!isDoubleXAxis)
-                return null;
-            GraphPane graphPane = CurrentGraphPane;
+            ChartZedSerie serie = ObsSeries.First(ser => ser.Header == header);
+            GraphPane graphPane = serie.Pane;
             PointPairList points = new PointPairList();
+
+            if (serie.AllItems != null)
+                foreach (LineItem item in serie.AllItems)
+                    graphPane.CurveList.Remove(item);
+            serie.AllItems = new List<LineItem>();
+
             int i = 0;
             foreach (double x in data.Keys)
             {
@@ -569,34 +659,44 @@ namespace EDSApp
                 i++;
             }
 
-            ChartZedSerie serie = new ChartZedSerie();
-            serie.Header = header;
-            //serie.Data = values;
-            serie.Color = color;
-            serie.IsVisible = true;
-            LineItem lineItem = graphPane.AddCurve(header, points, color, symbol ? SymbolType.Circle : SymbolType.None);
+            LineItem lineItem = graphPane.AddCurve(header, points, serie.Color, serie.IsSymbol ? SymbolType.Circle : SymbolType.None);
             serie.Item = lineItem;
-            serie.Pane = graphPane;
 
-            lineItem.Line.IsVisible = line;
-            if (symbol)
+            //lineItem.Line.IsVisible = serie.IsVisible;
+            if (serie.IsSymbol)
             {
                 lineItem.Symbol.Size = 1.5f;
-                lineItem.Symbol.Fill = new Fill(color);
+                lineItem.Symbol.Fill = new Fill(serie.Color);
             }
-            ObsSeries.Add(serie);
-            serie.IsVisible = isVisible;
-            serie.Item.IsVisible = isVisible;
+            serie.Item.IsVisible = serie.IsVisible;
             serie.AllItems = new List<LineItem>();
             serie.AllItems.Add(lineItem);
+            serie.DataPoints = data;          
+
+
+        }
+
+        public ChartZedSerie AddPointSerie(String header, SortedList<double, double> data,
+            System.Drawing.Color color, bool line, bool symbol, int y2axisIndex = -1, bool isVisible = true)
+        {
+            if (!isDoubleXAxis)
+                return null;
+            GraphPane graphPane = CurrentGraphPane;
+
+            ChartZedSerie serie = new ChartZedSerie();
+            ObsSeries.Add(serie);
+            serie.Header = header;
+            serie.Color = color;
+            serie.IsVisible = isVisible;           
+            serie.Pane = graphPane;            
             serie.Y2Index = y2axisIndex;
-            serie.DataPoints = data;
+            UpdatePointSerieData(header, data);            
 
             if (y2axisIndex == -1)
             {
                 initAxis(graphPane.YAxis);
                 graphPane.YAxis.Color = color;
-                
+
             }
             if (y2axisIndex > -1)
             {
@@ -614,7 +714,7 @@ namespace EDSApp
                 newAx.Scale.FontSpec.FontColor = color;
                 newAx.MajorTic.Color = color;
                 newAx.MinorTic.Color = color;
-               
+
 
                 foreach (LineItem item in serie.AllItems)
                 {
@@ -622,27 +722,6 @@ namespace EDSApp
                     item.YAxisIndex = y2axisIndex;
                 }
 
-
-
-                /*
-
-                while (graphPane.Y2AxisList.Count() < y2axisIndex + 1)
-                {
-                    graphPane.Y2AxisList.Add(new Y2Axis());
-                }
-                graphPane.Y2AxisList[y2axisIndex].Title.IsVisible = false;
-                graphPane.Y2AxisList[y2axisIndex].Scale.FontSpec.Size = 5;
-                graphPane.Y2AxisList[y2axisIndex].Scale.IsLabelsInside = true;
-                graphPane.Y2AxisList[y2axisIndex].Scale.IsUseTenPower = false;
-                graphPane.Y2AxisList[y2axisIndex].IsVisible = true;
-                graphPane.Y2AxisList[y2axisIndex].Scale.FontSpec.Angle = (float)(-Math.PI / 2.0);
-                graphPane.Y2AxisList[y2axisIndex].MajorTic.IsOpposite = false;
-                graphPane.Y2AxisList[y2axisIndex].MinorTic.IsOpposite = false;
-                graphPane.Y2AxisList[y2axisIndex].Scale.FontSpec.FontColor = System.Drawing.Color.Black;
-                graphPane.Y2AxisList[y2axisIndex].Color = color;
-
-                lineItem.IsY2Axis = true;
-                lineItem.YAxisIndex = y2axisIndex;*/
 
             }
             refreshXScale();
@@ -669,10 +748,7 @@ namespace EDSApp
                 ser.IsVisible = chb.IsChecked.Value;
                 foreach (GraphPane pane in chart.MasterPane.PaneList)
                     refresh(pane);
-            }
-            catch
-            {
-            }
+            }            catch            {            }
         }
 
         public void RefreshAll()
@@ -680,7 +756,6 @@ namespace EDSApp
             foreach (GraphPane graphPane in chart.MasterPane.PaneList)
             {
                 graphPane.AxisChange();
-
 
             }
             chart.Invalidate();
@@ -692,8 +767,8 @@ namespace EDSApp
             bool vis = false;
             for (int i = -1; i < graphPane.Y2AxisList.Count; i++)
             {
-                vis = IsVisibleYAxis(graphPane,i);
-                
+                vis = IsVisibleYAxis(graphPane, i);
+
 
                 if (!AllYAxisIsVisible)
                 {
@@ -711,9 +786,10 @@ namespace EDSApp
 
 
             refreshYAxisGrid();
-            graphPane.AxisChange();
 
+            graphPane.AxisChange();
             chart.Invalidate();
+
         }
 
         private void SetAll(bool visible)
@@ -741,11 +817,6 @@ namespace EDSApp
         private void btnDeselectAll_Click(object sender, RoutedEventArgs e)
         {
             SetAll(false);
-        }
-
-        private void Grid_MouseMove(object sender, MouseEventArgs e)
-        {
-
         }
 
     }
