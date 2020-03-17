@@ -377,10 +377,9 @@ namespace EDSApp
             winRegul.chart.AddSerie("V NA", CurrentDiagOilRegul.serieV_NA, System.Drawing.Color.GreenYellow, true, false, true, -1, true);
             winRegul.chart.AddSerie("V RK", CurrentDiagOilRegul.serieV_RK, System.Drawing.Color.Pink, true, false, true, -1, true);
             winRegul.chart.AddSerie("V LB", CurrentDiagOilRegul.serieV_LB, System.Drawing.Color.Orange, true, false, true, -1, true);
-            winRegul.chart.CurrentGraphPane.LineType = ZedGraph.LineType.Stack;
-            /*winRegul.chart.AddSerie("F", CurrentDiagOilRegul.serieF, System.Drawing.Color.Red, true, false, true, -1, true, 0, 200);
+            
 
-            winRegul.chart.AddSerie("МНУ", CurrentDiagOilRegul.serieD_MNU, System.Drawing.Color.Orange, true, false, true, 0, false);
+            /*winRegul.chart.AddSerie("МНУ", CurrentDiagOilRegul.serieD_MNU, System.Drawing.Color.Orange, true, false, true, 0, false);
             winRegul.chart.AddSerie("ЛА", CurrentDiagOilRegul.serieD_LA, System.Drawing.Color.DeepPink, true, false, true, 0, false);
 
             winRegul.chart.AddSerie("L AGA", CurrentDiagOilRegul.serieL_AGA, System.Drawing.Color.LightBlue, true, false, true, 1, true);
@@ -395,8 +394,9 @@ namespace EDSApp
 
 
             winRegul.chart.init(true, "dd.MM HH");
-            winRegul.chart.AddSerie("V", CurrentDiagOilRegul.serieV, System.Drawing.Color.LightBlue, true, false, true, 0, true);
-
+            winRegul.chart.AddSerie("V", CurrentDiagOilRegul.serieV, System.Drawing.Color.LightBlue, true, false, true, -1, true);
+            winRegul.chart.AddSerie("F", CurrentDiagOilRegul.serieF, System.Drawing.Color.Red, true, false, true, 0, true, 0, 200);
+            winRegul.chart.AddSerie("T", CurrentDiagOilRegul.serieT_SB, System.Drawing.Color.LightGreen, true, false, true, 1, true);
 
             winRegul.Title = caption;
             winRegul.Show();
