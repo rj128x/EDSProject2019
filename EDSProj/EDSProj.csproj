@@ -58,6 +58,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -70,7 +71,11 @@
     <Compile Include="AIS\AIS_NEW.cs" />
     <Compile Include="AIS\AIS_OLD.cs" />
     <Compile Include="AVRCHMReport.cs" />
+    <Compile Include="Diagnostics\DiadOilRegulClass.cs" />
     <Compile Include="Diagnostics\DiadOilClass.cs" />
+    <Compile Include="Diagnostics\DiadOilPPClass.cs" />
+    <Compile Include="Diagnostics\DiadOilGPClass.cs" />
+    <Compile Include="Diagnostics\MathFunc.cs" />
     <Compile Include="EDS\EDSClass.cs" />
     <Compile Include="EDS\EDSPointsClass.cs" />
     <Compile Include="EDS\EDSReport.cs" />

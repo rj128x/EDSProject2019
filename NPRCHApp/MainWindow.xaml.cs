@@ -316,8 +316,8 @@ namespace NPRCHApp
             //prepareChartDouble(chartStatizm.chart);
 
 
-            //List<double> xx = new List<double>();
-            SortedList<double, double> xy = new SortedList<double, double>();
+            List<double> xx = new List<double>();
+            List<double> xy = new List<double>();
             SortedList<double, double> list_Y = new SortedList<double, double>();
             SortedList<double, double> list_Y2 = new SortedList<double, double>();
 
@@ -328,7 +328,8 @@ namespace NPRCHApp
             {
                 double d = rec.F_gc - 50;
 
-                 //xy.Add(rec.F_gc - 50, rec.P_fakt - rec.P_zvn - rec.P_plan);
+                xx.Add(rec.F_gc - 50);
+                 xy.Add( rec.P_fakt - rec.P_zvn - rec.P_plan);
 
 
                 if (d < minF)
@@ -383,7 +384,7 @@ namespace NPRCHApp
 
             if (calcSecond)
                 chartStatizm.AddPointSerie("Calc2", list_Y2, System.Drawing.Color.Pink, true, true);
-            chartStatizm.AddPointSerie("Fakt",  xy, System.Drawing.Color.Blue, false, true);
+            chartStatizm.AddMixPointSerie("Fakt",  xx,xy, System.Drawing.Color.LightBlue, false, true);
             
 
 

@@ -8,7 +8,7 @@
         xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
         xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
 
-        Title="DiagWindow" Height="400" Width="600" >
+        Title="DiagWindow" Height="600" Width="1200" Closing="Window_Closing" >
     <Grid>
         <Grid Margin="0,20,0,0">
             <Grid.RowDefinitions>
@@ -20,70 +20,219 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <TabControl Grid.Column="0" Grid.Row="1">
-                <TabItem Header="ГП объем масла">
+                <TabItem Header="ГП/ПП объем масла">
                     <Grid>
                         <Grid.RowDefinitions >
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <Border Grid.Row="0">
-                            <Grid>
-                                <Border Width="350" HorizontalAlignment="Left" Name="brdSettings">
-                                    <StackPanel Orientation="Vertical" Width="350" HorizontalAlignment="Left">
-                                        <StackPanel Orientation="Horizontal" >
-                                            <TextBlock Text="Датч уровня (1,2, 0-сред)" Width="250"></TextBlock>
-                                            <TextBox Text="{Binding datch, Mode=TwoWay}" Width="40" Name="txtDatch"/>                                            
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal" >
-                                            <TextBlock Text="Усреднять данные датчиков уровня за " Width="250"></TextBlock>
-                                            <TextBox Text="{Binding lMinutes, Mode=TwoWay}" Width="40" Name="txtAvgUrov"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Коррекция уровня на раб машине" Width="250"></TextBlock>
-                                            <TextBox Text="{Binding LDiff, Mode=TwoWay, StringFormat='0.00'}" Width="40" Name="txtLVLcor"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Игнорировать после пуска/останова (минут)" Width="250"></TextBlock>
-                                            <TextBox Text="{Binding fMinutes, Mode=TwoWay}" Width="40" Name="txtMinutes"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="V0" Width="250"></TextBlock>
-                                            <TextBox Text="{Binding V0, Mode=TwoWay, StringFormat='0.00'}" Width="40" Name="txtV0"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="V_1mm" Width="250"></TextBlock>
-                                            <TextBox Text="{Binding V1mm, Mode=TwoWay, StringFormat='0.00'}" Width="40" Name="txtV1mm"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Tкоэф" Width="250"></TextBlock>
-                                            <TextBox Text="{Binding Tkoef, Mode=TwoWay, StringFormat='0.00000'}" Width="40" Name="txtTkoef"/>
-                                        </StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Tbaz" Width="250"></TextBlock>
-                                            <TextBox Text="{Binding Tbaz, Mode=TwoWay, StringFormat='0.00'}" Width="40" Name="txtTbaz"/>
-                                        </StackPanel>
-                                        <Button Content="Сформировать" Name="btnCreate" Click="btnCreate_Click" Height="26" VerticalAlignment="Bottom"/>
-                                        <Button Name="btnRecalc" Click="btnRecalc_Click" Content="Пересчитать" Height="26"/>                                        
-                                    </StackPanel>
-                                </Border>
-                            </Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="400"/>
+                            <ColumnDefinition Width="400"/>
+                            <ColumnDefinition Width="400"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Width="350" HorizontalAlignment="Left" Name="brdGPSettings" Grid.Column="0">
+                            <StackPanel Orientation="Vertical" Width="350" HorizontalAlignment="Left">
+                                <StackPanel Orientation="Horizontal" >
+                                    <TextBlock Text="Датч уровня (1,2, 0-сред)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding datch, Mode=TwoWay}" Width="40" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" >
+                                    <TextBlock Text="Усреднять данные датчиков уровня за " Width="250"></TextBlock>
+                                    <TextBox Text="{Binding lMinutes, Mode=TwoWay}" Width="40" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Коррекция уровня на раб машине" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding LDiff, Mode=TwoWay, StringFormat='0.00'}" Width="40"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Игнорировать после пуска/останова (минут)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding fMinutes, Mode=TwoWay}" Width="40" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="V0" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding V0, Mode=TwoWay, StringFormat='0.00'}" Width="40" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="V_1mm" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding V1mm, Mode=TwoWay, StringFormat='0.00'}" Width="40" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Tкоэф" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding Tkoef, Mode=TwoWay, StringFormat='0.00000'}" Width="40"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Tbaz" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding Tbaz, Mode=TwoWay, StringFormat='0.00'}" Width="40" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" >
+                                    <TextBlock Text="Усреднять данные объема уровня за " Width="250"></TextBlock>
+                                    <TextBox Text="{Binding vMinutes, Mode=TwoWay}" Width="40"/>
+                                </StackPanel>
+                                <Button Content="Сформировать" Name="btnCreate" Click="btnCreate_Click" Height="26" VerticalAlignment="Bottom"/>
+                                <Button Name="btnRecalc" Click="btnRecalc_Click" Content="Пересчитать" Height="26"/>
+                            </StackPanel>
+
+                        </Border>
+                        <Border Width="350" HorizontalAlignment="Left" Name="brdPPSettings" Grid.Column="1">
+                            <StackPanel Orientation="Vertical" Width="350" HorizontalAlignment="Left">
+                                <StackPanel Orientation="Horizontal" >
+                                    <TextBlock Text="Датч уровня (1,2, 0-сред)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding datch, Mode=TwoWay}" Width="40" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" >
+                                    <TextBlock Text="Усреднять данные датчиков уровня за " Width="250"></TextBlock>
+                                    <TextBox Text="{Binding lMinutes, Mode=TwoWay}" Width="40"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Коррекция уровня на раб машине" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding LDiff, Mode=TwoWay, StringFormat='0.00'}" Width="40" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Игнорировать после пуска/останова (минут)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding fMinutes, Mode=TwoWay}" Width="40" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="V0" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding V0, Mode=TwoWay, StringFormat='0.00'}" Width="40" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="V_1mm" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding V1mm, Mode=TwoWay, StringFormat='0.00'}" Width="40"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Tкоэф" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding Tkoef, Mode=TwoWay, StringFormat='0.00000'}" Width="40" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Tbaz" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding Tbaz, Mode=TwoWay, StringFormat='0.00'}" Width="40" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" >
+                                    <TextBlock Text="Усреднять данные объема уровня за " Width="250"></TextBlock>
+                                    <TextBox Text="{Binding vMinutes, Mode=TwoWay}" Width="40"/>
+                                </StackPanel>                               
+                                
+                                <Button Content="Сформировать" Name="btnCreatePP" Click="btnCreatePP_Click" Height="26" VerticalAlignment="Bottom"/>                                
+                                <Button Name="btnRecalcPP" Click="btnRecalcPP_Click" Content="Пересчитать" Height="26"/>
+                            </StackPanel>
+
+                        </Border>
+
+                        <Border Width="350" HorizontalAlignment="Left" Name="brdRegulSettings" Grid.Column="2">
+                            <StackPanel Orientation="Vertical" Width="350" HorizontalAlignment="Left">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Игнорировать после пуска/останова (минут)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding fMinutes, Mode=TwoWay}" Width="60" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="V0 Трубы (л)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding V_TB, Mode=TwoWay, StringFormat='0.#####'}" Width="60" />
+                                </StackPanel>
+                                
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="V0 ОГА (л)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding V0_OGA, Mode=TwoWay, StringFormat='0.#####'}" Width="60" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="V_1mm ОГА (л)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding V1mm_OGA, Mode=TwoWay, StringFormat='0.#####'}" Width="60"/>
+                                </StackPanel>
+                                
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="V0 АГА (л)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding V0_AGA, Mode=TwoWay, StringFormat='0.#####'}" Width="60" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="V_1mm АГА (л)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding V1mm_AGA, Mode=TwoWay, StringFormat='0.#####'}" Width="60"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="V0 СБ (л)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding V0_SB, Mode=TwoWay, StringFormat='0.#####'}" Width="60" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="V_1mm СБ (л)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding V1mm_SB, Mode=TwoWay, StringFormat='0.#####'}" Width="60"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="V0 ЛБ (л)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding V0_LB, Mode=TwoWay, StringFormat='0.#####'}" Width="60" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="V_1mm ЛБ (л)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding V1mm_LB, Mode=TwoWay, StringFormat='0.#####'}" Width="60"/>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="V0 откр НА (л)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding V0_Opn_NA, Mode=TwoWay, StringFormat='0.#####'}" Width="60" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="V0 закр НА (л)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding V0_Cls_NA, Mode=TwoWay, StringFormat='0.#####'}" Width="60" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Ход НА (мм)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding HodNA, Mode=TwoWay, StringFormat='0'}" Width="60" />
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="V0 откр РК (л)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding V0_Opn_RK, Mode=TwoWay, StringFormat='0.#####'}" Width="60" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="V0 закр РК (л)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding V0_Cls_RK, Mode=TwoWay, StringFormat='0.#####'}" Width="60" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Ход РК (мм)" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding HodRK, Mode=TwoWay, StringFormat='0'}" Width="60" />
+                                </StackPanel>
 
 
+
+
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Tкоэф" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding Tkoef, Mode=TwoWay, StringFormat='0.00000'}" Width="60" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Tbaz" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding Tbaz, Mode=TwoWay, StringFormat='0.00'}" Width="60" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="T в машзале" Width="250"></TextBlock>
+                                    <TextBox Text="{Binding TMZ, Mode=TwoWay, StringFormat='0.00'}" Width="60" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" >
+                                    <TextBlock Text="Усреднять данные объема уровня за " Width="250"></TextBlock>
+                                    <TextBox Text="{Binding vMinutes, Mode=TwoWay}" Width="60"/>
+                                </StackPanel>
+
+                                <Button Content="Сформировать" Name="btnCreateRegul" Click="btnCreateRegul_Click" Height="26" VerticalAlignment="Bottom"/>
+                                <Button Name="btnRecalcRegul" Click="btnRecalcRegul_Click" Content="Пересчитать" Height="26"/>
+                            </StackPanel>
 
                         </Border>
 
                     </Grid>
                 </TabItem>
             </TabControl>
-            <Border Height="30" Width="350" HorizontalAlignment="Left">
+            <Border Height="30" Width="500" HorizontalAlignment="Left">
                 <StackPanel  Orientation="Horizontal">
                     <TextBlock Text="с"></TextBlock>
-                    
+
                     <TextBox Text="{Binding DateStart, Mode=TwoWay}" Width="100"/>
                     <TextBlock Text="до"></TextBlock>
                     <TextBox Text="{Binding DateEnd, Mode=TwoWay}" Width="100"/>
 
                     <TextBlock Text="GG (04/05/07)"></TextBlock>
                     <TextBox Text="05" Name="txtGG" Width="30" TextChanged="txtGG_TextChanged"/>
+                    <CheckBox Content="Формировать текст" Name="chbCreateReport" IsChecked="False"/>
 
                 </StackPanel>
             </Border>
@@ -107,6 +256,6 @@
                 </StackPanel>
             </Grid>
         </Grid>
-        
+
     </Grid>
 </Window>

@@ -726,6 +726,95 @@ namespace ChartZedControl
         }
 
 
+        public ChartZedSerie AddMixPointSerie(String header, List<double>xx, List<double>xy,
+           System.Drawing.Color color, bool line, bool symbol, int y2axisIndex = -1, bool isVisible = true)
+        {
+            if (!isDoubleXAxis)
+                return null;
+            GraphPane graphPane = CurrentGraphPane;
+
+            ChartZedSerie serie = new ChartZedSerie();
+            ObsSeries.Add(serie);
+            serie.Header = header;
+            serie.Color = color;
+            serie.IsVisible = isVisible;
+            serie.Pane = graphPane;
+            serie.Y2Index = y2axisIndex;
+            serie.IsSymbol = symbol;
+
+
+            PointPairList points = new PointPairList();
+
+           
+
+            int i = 0;
+            foreach (double x in xx)
+            {
+                points.Add(new PointPair(x, xy[i]));
+
+                i++;
+            }
+
+            LineItem lineItem = graphPane.AddCurve(header, points, serie.Color, serie.IsSymbol ? SymbolType.Circle : SymbolType.None);
+            serie.Item = lineItem;
+
+            lineItem.Line.IsVisible = line;
+            if (serie.IsSymbol)
+            {
+                lineItem.Symbol.Size = 1.5f;
+                lineItem.Symbol.Fill = new Fill(serie.Color);
+            }
+            serie.Item.IsVisible = serie.IsVisible;
+            serie.AllItems = new List<LineItem>();
+            serie.AllItems.Add(lineItem);
+            serie.DataPoints = new SortedList<double,double>();
+
+
+
+
+
+            if (y2axisIndex == -1)
+            {
+                initAxis(graphPane.YAxis);
+                graphPane.YAxis.Color = color;
+
+            }
+            if (y2axisIndex > -1)
+            {
+                Y2Axis newAx;
+                while (graphPane.Y2AxisList.Count() < y2axisIndex + 1)
+                {
+                    newAx = new Y2Axis();
+                    initAxis(newAx);
+                    graphPane.Y2AxisList.Add(newAx);
+                }
+                newAx = graphPane.Y2AxisList[y2axisIndex];
+                initAxis(newAx);
+
+                newAx.Color = color;
+                newAx.Scale.FontSpec.FontColor = color;
+                newAx.MajorTic.Color = color;
+                newAx.MinorTic.Color = color;
+
+
+                foreach (LineItem item in serie.AllItems)
+                {
+                    item.IsY2Axis = true;
+                    item.YAxisIndex = y2axisIndex;
+                }
+
+
+            }
+            refreshXScale();
+
+            refreshYAxisGrid();
+            refresh(graphPane);
+
+            return serie;
+
+        }
+
+
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
             try

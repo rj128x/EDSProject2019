@@ -92,7 +92,8 @@ namespace EDSApp
 				header += String.Format("<th width='100'>{0}</th>", rec.Desc);
 			}
 
-			TextWriter tW = new StreamWriter("out.html");
+            string fn = System.IO.Path.GetTempPath() + "/out.html";
+            TextWriter tW = new StreamWriter(fn);
 
 			String txt = string.Format(@"<html>
 				<head>
@@ -112,7 +113,7 @@ namespace EDSApp
 			tW.WriteLine("</table></html>");
 			tW.Close();
 
-			Process.Start("out.html");
+			Process.Start(fn);
 
 
 			ReportResultWindow win = new ReportResultWindow();
