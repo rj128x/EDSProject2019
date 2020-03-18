@@ -39,6 +39,22 @@ namespace EDSProj.Diagnostics
             }
             return new double[] { a, b, sumSign };
         }
-    
+
+        public static void CreateAvgSerie(SortedList<double, double> serie, int step)
+        {
+            List<double> otr = new List<double>();
+            List<double> keys = serie.Keys.ToList();
+            foreach (double x in keys)
+            {
+                otr.Add(serie[x]);
+                serie[x] = otr.Average();
+                if (otr.Count==step)
+                {
+                    otr.RemoveAt(0);
+                }
+            }
+
+        }
+
     }
 }

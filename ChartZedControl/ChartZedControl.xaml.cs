@@ -130,7 +130,7 @@ namespace ChartZedControl
 
 
         public LineItem Item { get; set; }
-        public List<LineItem> AllItems { get; set; }
+        //public List<LineItem> AllItems { get; set; }
         public GraphPane Pane { get; set; }
 
         public int Y2Index { get; set; }
@@ -284,7 +284,7 @@ namespace ChartZedControl
 
             //chart.MouseMove += Chart_MouseMove;
             chartControl.ChartMouseMoveFunction = ChartMouseMoveFunction;
-            
+
         }
 
 
@@ -306,6 +306,7 @@ namespace ChartZedControl
                 chart.MasterPane.Add(graphPane);
 
             }
+            graphPane.IsIgnoreMissing = false;
             isDoubleXAxis = pointChart;
             chart.MasterPane.SetLayout(chart.CreateGraphics(), PaneLayout.SingleColumn);
 
@@ -483,22 +484,35 @@ namespace ChartZedControl
             newAx.MinorTic.Color = BGColor;
             newAx.Color = BGColor;
 
+        }
 
+        public void setY2AxisCount(GraphPane graphPane, int cnt)
+        {
+
+                initAxis(graphPane.YAxis);
+
+
+            if (cnt > -1)
+            {
+                Y2Axis newAx;
+                while (graphPane.Y2AxisList.Count() < cnt)
+                {
+                    newAx = new Y2Axis();
+                    initAxis(newAx);
+                    graphPane.Y2AxisList.Add(newAx);
+                }       
+            }
         }
 
         public void updateSeries()
         {
             foreach (ChartZedSerie serie in ObsSeries)
             {
-                foreach (LineItem item in serie.AllItems)
+
+                if (serie.Y2Index > -1)
                 {
-                    if (serie.Y2Index > -1)
-                    {
-
-                        item.YAxisIndex = serie.Y2Index;
-                        item.IsY2Axis = true;
-                    }
-
+                    serie.Item.YAxisIndex = serie.Y2Index;
+                    serie.Item.IsY2Axis = true;
                 }
             }
             refreshXScale();
@@ -514,52 +528,41 @@ namespace ChartZedControl
             ChartZedSerie serie = ObsSeries.First(ser => ser.Header == header);
             GraphPane graphPane = serie.Pane;
             PointPairList points = new PointPairList();
+            if (serie.Item != null)
+                graphPane.CurveList.Remove(serie.Item);
 
-            if (serie.AllItems != null)
-                foreach (LineItem item in serie.AllItems)
-                    graphPane.CurveList.Remove(item);
-            serie.AllItems = new List<LineItem>();
-            if (values.Count != 0)
+            foreach (KeyValuePair<DateTime, double> de in values)
             {
-                foreach (KeyValuePair<DateTime, double> de in values)
-                {
-                    if ((de.Value == Double.PositiveInfinity || de.Key == values.Keys.Last()) && points.Count > 0)
-                    {
-                        LineItem item = graphPane.AddCurve(header, points, serie.Color, serie.IsSymbol ? SymbolType.Circle : SymbolType.None);
-                        item.Line.Width = 2;
+                if (de.Value != double.PositiveInfinity && de.Value != double.NegativeInfinity)
+                    points.Add(new PointPair(new XDate(de.Key), de.Value));
+                else
 
-                        if (serie.IsSymbol)
-                        {
-                            item.Symbol.Size = 3f;
-                            item.Symbol.Fill = new Fill(serie.Color);
-                        }
+                    points.Add(new PointPair(new XDate(de.Key), PointPair.Missing));
 
-                        item.IsVisible = serie.IsVisible;
-                        item.Line.DashOn = serie.IsDash ? 50 : 0;
-                        item.Line.DashOff = serie.IsDash ? 100 : 0;
-                        if (serie.IsDash)
-                            item.Line.Style = System.Drawing.Drawing2D.DashStyle.Dot;
-
-                        serie.AllItems.Add(item);
-                        points = new PointPairList();
-                    }
-                    else
-                    {
-                        if (de.Value != double.PositiveInfinity)
-                            points.Add(new PointPair(new XDate(de.Key), de.Value));
-                    }
-                }
             }
-            else
+            LineItem item = graphPane.AddCurve(header, points, serie.Color, serie.IsSymbol ? SymbolType.Circle : SymbolType.None);
+            item.Line.Width = 2;
+            
+            if (serie.IsSymbol)
             {
-                LineItem item = graphPane.AddCurve(header, points, serie.Color, serie.IsSymbol ? SymbolType.Circle : SymbolType.None);
-                item.IsVisible = false;
-                serie.AllItems.Add(item);
+                item.Symbol.Size = 3f;
+                item.Symbol.Fill = new Fill(serie.Color);
             }
-            serie.Item = serie.AllItems.First();
+
+            item.IsVisible = serie.IsVisible;
+            item.Line.DashOn = serie.IsDash ? 50 : 0;
+            item.Line.DashOff = serie.IsDash ? 100 : 0;
+            if (serie.IsDash)
+                item.Line.Style = System.Drawing.Drawing2D.DashStyle.Dot;
+
+            serie.Item = item;
             serie.Data = values;
 
+            
         }
+
+        
+
 
         public ChartZedSerie AddSerie(String header, SortedList<DateTime, double> values, System.Drawing.Color color,
             bool line, bool symbol, bool dash = false, int y2axisIndex = -1, bool isVisible = true, double min = double.MinValue, double max = double.MaxValue)
@@ -619,11 +622,11 @@ namespace ChartZedControl
                 if (max < double.MaxValue)
                     newAx.Scale.Max = max;
 
-                foreach (LineItem item in serie.AllItems)
-                {
-                    item.IsY2Axis = true;
-                    item.YAxisIndex = y2axisIndex;
-                }
+                serie.Item.IsY2Axis = true;
+                serie.Item.YAxisIndex = y2axisIndex;
+
+
+
 
             }
             refreshXScale();
@@ -638,10 +641,8 @@ namespace ChartZedControl
             GraphPane graphPane = serie.Pane;
             PointPairList points = new PointPairList();
 
-            if (serie.AllItems != null)
-                foreach (LineItem item in serie.AllItems)
-                    graphPane.CurveList.Remove(item);
-            serie.AllItems = new List<LineItem>();
+            if (serie.Item != null)
+                graphPane.CurveList.Remove(serie.Item);
 
             int i = 0;
             foreach (double x in data.Keys)
@@ -661,8 +662,7 @@ namespace ChartZedControl
                 lineItem.Symbol.Fill = new Fill(serie.Color);
             }
             serie.Item.IsVisible = serie.IsVisible;
-            serie.AllItems = new List<LineItem>();
-            serie.AllItems.Add(lineItem);
+
             serie.DataPoints = data;
 
 
@@ -708,11 +708,10 @@ namespace ChartZedControl
                 newAx.MinorTic.Color = color;
 
 
-                foreach (LineItem item in serie.AllItems)
-                {
-                    item.IsY2Axis = true;
-                    item.YAxisIndex = y2axisIndex;
-                }
+
+                serie.Item.IsY2Axis = true;
+                serie.Item.YAxisIndex = y2axisIndex;
+
 
 
             }
@@ -726,7 +725,7 @@ namespace ChartZedControl
         }
 
 
-        public ChartZedSerie AddMixPointSerie(String header, List<double>xx, List<double>xy,
+        public ChartZedSerie AddMixPointSerie(String header, List<double> xx, List<double> xy,
            System.Drawing.Color color, bool line, bool symbol, int y2axisIndex = -1, bool isVisible = true)
         {
             if (!isDoubleXAxis)
@@ -745,7 +744,7 @@ namespace ChartZedControl
 
             PointPairList points = new PointPairList();
 
-           
+
 
             int i = 0;
             foreach (double x in xx)
@@ -765,9 +764,8 @@ namespace ChartZedControl
                 lineItem.Symbol.Fill = new Fill(serie.Color);
             }
             serie.Item.IsVisible = serie.IsVisible;
-            serie.AllItems = new List<LineItem>();
-            serie.AllItems.Add(lineItem);
-            serie.DataPoints = new SortedList<double,double>();
+
+            serie.DataPoints = new SortedList<double, double>();
 
 
 
@@ -797,11 +795,9 @@ namespace ChartZedControl
                 newAx.MinorTic.Color = color;
 
 
-                foreach (LineItem item in serie.AllItems)
-                {
-                    item.IsY2Axis = true;
-                    item.YAxisIndex = y2axisIndex;
-                }
+
+                serie.Item.IsY2Axis = true;
+                serie.Item.YAxisIndex = y2axisIndex;
 
 
             }
@@ -822,10 +818,7 @@ namespace ChartZedControl
                 CheckBox chb = sender as CheckBox;
                 ChartZedSerie ser = grdLegend.SelectedItem as ChartZedSerie;
                 ser.Item.IsVisible = chb.IsChecked.Value;
-                foreach (LineItem item in ser.AllItems)
-                {
-                    item.IsVisible = chb.IsChecked.Value;
-                }
+
                 ser.IsVisible = chb.IsChecked.Value;
                 foreach (GraphPane pane in chart.MasterPane.PaneList)
                     refresh(pane);
@@ -879,10 +872,6 @@ namespace ChartZedControl
             foreach (ChartZedSerie ser in ObsSeries)
             {
                 ser.Item.IsVisible = visible;
-                foreach (LineItem item in ser.AllItems)
-                {
-                    item.IsVisible = visible;
-                }
                 ser.IsVisible = visible;
 
             }

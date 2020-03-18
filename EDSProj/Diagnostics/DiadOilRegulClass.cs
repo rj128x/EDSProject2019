@@ -95,12 +95,12 @@ namespace EDSProj.Diagnostics
             recL_NA = report.addRequestField(AllPoints[GG + "VT_GC02A-86.MCR@GRARM"], EDSReportFunction.val);
             recL_RK = report.addRequestField(AllPoints[GG + "VT_GC02A-68.MCR@GRARM"], EDSReportFunction.val);
 
-            recD_MNU1 = report.addRequestField(AllPoints[GG + "VT_PS01DI-01.MCR@GRARM"], EDSReportFunction.val);
-            recD_MNU2 = report.addRequestField(AllPoints[GG + "VT_PS02DI-01.MCR@GRARM"], EDSReportFunction.val);
-            recD_MNU3 = report.addRequestField(AllPoints[GG + "VT_PS03DI-01.MCR@GRARM"], EDSReportFunction.val);
+            recD_MNU1 = report.addRequestField(AllPoints[GG + "VT_PS01DI-01.MCR@GRARM"], EDSReportFunction.max);
+            recD_MNU2 = report.addRequestField(AllPoints[GG + "VT_PS02DI-01.MCR@GRARM"], EDSReportFunction.max);
+            recD_MNU3 = report.addRequestField(AllPoints[GG + "VT_PS03DI-01.MCR@GRARM"], EDSReportFunction.max);
 
-            recD_LA1 = report.addRequestField(AllPoints[GG + "VT_PS04DI-01.MCR@GRARM"], EDSReportFunction.val);
-            recD_LA2 = report.addRequestField(AllPoints[GG + "VT_PS05DI-01.MCR@GRARM"], EDSReportFunction.val);
+            recD_LA1 = report.addRequestField(AllPoints[GG + "VT_PS04DI-01.MCR@GRARM"], EDSReportFunction.max);
+            recD_LA2 = report.addRequestField(AllPoints[GG + "VT_PS05DI-01.MCR@GRARM"], EDSReportFunction.max);
 
             recT_SB = report.addRequestField(AllPoints[GG + "VT_PS00A-21.MCR@GRARM"], EDSReportFunction.val);
 
@@ -204,6 +204,7 @@ namespace EDSProj.Diagnostics
             serieV_RK = new SortedList<DateTime, double>();
 
             SortedList<DateTime, double> prevF = new SortedList<DateTime, double>();
+            SortedList<DateTime, double> prevDNasos = new SortedList<DateTime, double>();
 
             foreach (DateTime date in report.ResultData.Keys)
             {
@@ -227,24 +228,26 @@ namespace EDSProj.Diagnostics
 
                 double D_MNU = (D_MNU1 > 0 || D_MNU2 > 0 || D_MNU3 > 0)?1:0;
                 double D_LA = (D_LA1 > 0 || D_LA2 > 0) ? 1: 0;
+                double D_LA_MNU = D_MNU > 0 || D_LA > 0?1:0;
+                prevDNasos.Add(date, D_LA_MNU);
 
                 serieT_SB.Add(date, T_SB);
                 serieF.Add(date, F);
 
-                serieL_OGA.Add(date, L_OGA);
+                /*serieL_OGA.Add(date, L_OGA);
                 serieL_AGA.Add(date, L_AGA);
                 serieL_LB.Add(date, L_LB);
-                serieL_SB.Add(date, L_SB);
+                serieL_SB.Add(date, L_SB);*/
                 serieL_NA.Add(date, L_NA);
                 serieL_RK.Add(date, L_RK);
 
-                serieD_MNU1.Add(date, D_MNU1);
+                /*serieD_MNU1.Add(date, D_MNU1);
                 serieD_MNU2.Add(date, D_MNU2);
-                serieD_MNU3.Add(date, D_MNU3);
+                serieD_MNU3.Add(date, D_MNU3);*/
                 serieD_MNU.Add(date, D_MNU);
 
-                serieD_LA1.Add(date, D_LA1);
-                serieD_LA2.Add(date, D_LA2);
+                /*serieD_LA1.Add(date, D_LA1);
+                serieD_LA2.Add(date, D_LA2);*/
                 serieD_LA.Add(date, D_LA);
 
                 double V_OGA = double.NegativeInfinity;
@@ -254,13 +257,13 @@ namespace EDSProj.Diagnostics
                 double V_NA = double.NegativeInfinity;
                 double V_RK = double.NegativeInfinity;
 
-                if (prevF.Values.Max() < 1 || prevF.Values.Min() > 49 || fMinutes == 0)
+                if ((prevF.Values.Max() < 1 || prevF.Values.Min() > 49 || fMinutes == 0)  )
                 {
                     V_NA = L_NA * V0_Opn_NA / HodNA + (HodNA - L_NA) * V0_Cls_NA / HodNA;
                     V_RK = L_RK * V0_Opn_RK / HodRK + (HodRK - L_RK) * V0_Cls_RK / HodRK;
                 }
                 
-                if (D_MNU==0 && D_LA == 0)
+                if (D_MNU==0 && D_LA == 0 && prevDNasos.Values.Max() < 1)
                 {
                     V_OGA = V0_OGA + V1mm_OGA * L_OGA;
                     V_AGA = V0_AGA + V1mm_AGA * L_AGA;
@@ -270,7 +273,14 @@ namespace EDSProj.Diagnostics
 
                 double V = V_NA + V_RK + V_OGA + V_SB + V_LB+V_AGA;
                 V = V > 0 ? V : Double.NegativeInfinity;
-
+                if (V != double.NegativeInfinity)
+                {
+                    serieVFull.Add(serieVFull.Count, V);
+                    if (serieF[date] > 49)
+                        serieVRun.Add(serieVRun.Count(), V);
+                    else
+                        serieVStop.Add(serieVStop.Count(), V);
+                }
 
 
                 serieV_OGA.Add(date, V_OGA);
@@ -284,6 +294,10 @@ namespace EDSProj.Diagnostics
                 {
                     prevF.RemoveAt(0);
                 }
+                while (prevDNasos.Keys.First().AddMinutes(2) < prevDNasos.Keys.Last())
+                {
+                    prevDNasos.RemoveAt(0);
+                }
             }
 
             if (vMinutes > 1)
@@ -293,12 +307,15 @@ namespace EDSProj.Diagnostics
                 serieVStop = new SortedList<double, double>();
 
                 SortedList<DateTime, double> otr = new SortedList<DateTime, double>();
+                SortedList<DateTime, double> otrF = new SortedList<DateTime, double>();
                 List<DateTime> keys = serieV.Keys.ToList();
                 foreach (DateTime date in keys)
                 {
                     double val = serieV[date];
                     if (val != double.NegativeInfinity)
+                    {
                         otr.Add(date, val);
+                    }
 
                     if (otr.Count == vMinutes && val != double.NegativeInfinity)
                     {
@@ -310,6 +327,7 @@ namespace EDSProj.Diagnostics
                     {
                         serieV[date] = otr.Values.Average();
                     }
+
                     if (val != double.NegativeInfinity)
                     {
                         serieVFull.Add(serieVFull.Count, serieV[date]);
@@ -319,8 +337,11 @@ namespace EDSProj.Diagnostics
                             serieVStop.Add(serieVStop.Count(), serieV[date]);
                     }
                 }
-
+                MathFunc.CreateAvgSerie(serieVFull, (int)vMinutes);
+                MathFunc.CreateAvgSerie(serieVRun, (int)vMinutes);
+                MathFunc.CreateAvgSerie(serieVStop, (int)vMinutes);
             }
+
 
         }
 

@@ -110,7 +110,7 @@ namespace EDSApp
             brdRegulSettings.DataContext = CurrentDiagOilRegul;
             CurrentDiagOilRegul.V0_OGA = 7000;
             CurrentDiagOilRegul.V1mm_OGA = 3.1415;
-            CurrentDiagOilRegul.V0_AGA = 1600;
+            CurrentDiagOilRegul.V0_AGA = 1040;
             CurrentDiagOilRegul.V1mm_AGA = 0.8655;
             CurrentDiagOilRegul.V0_SB = 8800;
             CurrentDiagOilRegul.V1mm_SB = 11.61512;
@@ -270,6 +270,8 @@ namespace EDSApp
             btnRecalc.IsEnabled = false;
             btnCreatePP.IsEnabled = true;
             btnRecalcPP.IsEnabled = false;
+            btnCreateRegul.IsEnabled = true;
+            btnRecalcRegul.IsEnabled = false;
 
         }
         private void clndFrom_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
@@ -365,42 +367,84 @@ namespace EDSApp
             string caption = String.Format("Объем масла");
             CurrentDiagOilRegul.recalcData();
 
+            try
+            //if (winRegul!=null)
+            {
+                winRegul.Show();
+                winRegul.chart.UpdateSerieData("V СБ", CurrentDiagOilRegul.serieV_SB);
+                winRegul.chart.UpdateSerieData("V ОГА", CurrentDiagOilRegul.serieV_OGA);
+                winRegul.chart.UpdateSerieData("V АГА", CurrentDiagOilRegul.serieV_AGA);
+                winRegul.chart.UpdateSerieData("V РК", CurrentDiagOilRegul.serieV_RK);
+                winRegul.chart.UpdateSerieData("V НА", CurrentDiagOilRegul.serieV_NA);
+                winRegul.chart.UpdateSerieData("V ЛБ", CurrentDiagOilRegul.serieV_LB);
 
 
-            winRegul = new ReportResultWindow();
-            winRegul.chart.initControl();
-            winRegul.chart.init(true, "dd.MM HH");
-            winRegul.chart.AllYAxisIsVisible = true;
-            winRegul.chart.AddSerie("V SB", CurrentDiagOilRegul.serieV_SB, System.Drawing.Color.Lime, true, false, true, -1, true);
-            winRegul.chart.AddSerie("V OGA", CurrentDiagOilRegul.serieV_OGA, System.Drawing.Color.LightGreen, true, false, true, -1, true);
-            winRegul.chart.AddSerie("V AGA", CurrentDiagOilRegul.serieV_AGA, System.Drawing.Color.LightBlue, true, false, true, -1, true);
-            winRegul.chart.AddSerie("V NA", CurrentDiagOilRegul.serieV_NA, System.Drawing.Color.GreenYellow, true, false, true, -1, true);
-            winRegul.chart.AddSerie("V RK", CurrentDiagOilRegul.serieV_RK, System.Drawing.Color.Pink, true, false, true, -1, true);
-            winRegul.chart.AddSerie("V LB", CurrentDiagOilRegul.serieV_LB, System.Drawing.Color.Orange, true, false, true, -1, true);
-            
-
-            /*winRegul.chart.AddSerie("МНУ", CurrentDiagOilRegul.serieD_MNU, System.Drawing.Color.Orange, true, false, true, 0, false);
-            winRegul.chart.AddSerie("ЛА", CurrentDiagOilRegul.serieD_LA, System.Drawing.Color.DeepPink, true, false, true, 0, false);
-
-            winRegul.chart.AddSerie("L AGA", CurrentDiagOilRegul.serieL_AGA, System.Drawing.Color.LightBlue, true, false, true, 1, true);
-            winRegul.chart.AddSerie("L OGA", CurrentDiagOilRegul.serieL_OGA, System.Drawing.Color.LightGreen, true, false, true, 1, true);
-            winRegul.chart.AddSerie("L NA", CurrentDiagOilRegul.serieL_NA, System.Drawing.Color.GreenYellow, true, false, true, 2, true);
-            winRegul.chart.AddSerie("L RK", CurrentDiagOilRegul.serieL_RK, System.Drawing.Color.Indigo, true, false, true, 2, true);
-
-            winRegul.chart.init(true, "dd.MM HH");
-            winRegul.chart.AddSerie("L SB", CurrentDiagOilRegul.serieL_SB, System.Drawing.Color.LightPink, true, false, true, 2, true);
-            winRegul.chart.AddSerie("L LB", CurrentDiagOilRegul.serieL_LB, System.Drawing.Color.LightGray, true, false, true, 2, true);*/
+                winRegul.chart.UpdateSerieData("МНУ", CurrentDiagOilRegul.serieD_MNU);
+                winRegul.chart.UpdateSerieData("ЛА", CurrentDiagOilRegul.serieD_LA);
+                winRegul.chart.UpdateSerieData("T", CurrentDiagOilRegul.serieT_SB);
 
 
+                winRegul.chart.UpdateSerieData("F", CurrentDiagOilRegul.serieF);
+                winRegul.chart.UpdateSerieData("НА", CurrentDiagOilRegul.serieL_NA);
+                winRegul.chart.UpdateSerieData("РК", CurrentDiagOilRegul.serieL_RK);
+                winRegul.chart.UpdateSerieData("V", CurrentDiagOilRegul.serieV);
+                winRegul.chart.updateSeries();
 
-            winRegul.chart.init(true, "dd.MM HH");
-            winRegul.chart.AddSerie("V", CurrentDiagOilRegul.serieV, System.Drawing.Color.LightBlue, true, false, true, -1, true);
-            winRegul.chart.AddSerie("F", CurrentDiagOilRegul.serieF, System.Drawing.Color.Red, true, false, true, 0, true, 0, 200);
-            winRegul.chart.AddSerie("T", CurrentDiagOilRegul.serieT_SB, System.Drawing.Color.LightGreen, true, false, true, 1, true);
+            }
+            //else
+            catch
+            {
+                winRegul = new ReportResultWindow();
+                winRegul.chart.initControl();
+                winRegul.chart.init(true, "dd.MM HH");
+                winRegul.chart.AllYAxisIsVisible = true;
+                winRegul.chart.setY2AxisCount(winRegul.chart.CurrentGraphPane, 2);
+                winRegul.chart.AddSerie("V СБ", CurrentDiagOilRegul.serieV_SB, System.Drawing.Color.Lime, true, false, true, -1, true);
+                winRegul.chart.AddSerie("V ОГА", CurrentDiagOilRegul.serieV_OGA, System.Drawing.Color.LightGreen, true, false, true, -1, true);
+                winRegul.chart.AddSerie("V АГА", CurrentDiagOilRegul.serieV_AGA, System.Drawing.Color.LightBlue, true, false, true, 0, true);
+                winRegul.chart.AddSerie("V РК", CurrentDiagOilRegul.serieV_RK, System.Drawing.Color.Pink, true, false, true, 0, true);
+                winRegul.chart.AddSerie("V НА", CurrentDiagOilRegul.serieV_NA, System.Drawing.Color.GreenYellow, true, false, true, 0, true);
+                winRegul.chart.AddSerie("V ЛБ", CurrentDiagOilRegul.serieV_LB, System.Drawing.Color.Orange, true, false, true, 1, true);
+                //winRegul.chart.CurrentGraphPane.LineType = ZedGraph.LineType.Stack;
 
-            winRegul.Title = caption;
-            winRegul.Show();
+                winRegul.chart.init(true, "dd.MM HH");
+                winRegul.chart.setY2AxisCount(winRegul.chart.CurrentGraphPane, 2);
+                winRegul.chart.AddSerie("МНУ", CurrentDiagOilRegul.serieD_MNU, System.Drawing.Color.Orange, true, false, true, 0, true, -1, 5);
+                winRegul.chart.AddSerie("ЛА", CurrentDiagOilRegul.serieD_LA, System.Drawing.Color.DeepPink, true, false, true, 1, true, -2, 4);
+                winRegul.chart.AddSerie("T", CurrentDiagOilRegul.serieT_SB, System.Drawing.Color.LightGreen, true, false, true, -1, true);
 
+                winRegul.chart.init(true, "dd.MM HH");
+                winRegul.chart.setY2AxisCount(winRegul.chart.CurrentGraphPane, 2);
+                winRegul.chart.AddSerie("F", CurrentDiagOilRegul.serieF, System.Drawing.Color.Red, true, false, true, 0, true, 0, 200);
+                winRegul.chart.AddSerie("НА", CurrentDiagOilRegul.serieL_NA, System.Drawing.Color.Yellow, true, false, true, 1, true);
+                winRegul.chart.AddSerie("РК", CurrentDiagOilRegul.serieL_RK, System.Drawing.Color.Gray, true, false, true, 1, true);
+                winRegul.chart.AddSerie("V", CurrentDiagOilRegul.serieV, System.Drawing.Color.LightBlue, true, false, false, -1, true);
+
+                winRegul.Title = caption;
+                winRegul.Show();
+            }
+
+            //if (winRun!=null)
+            try
+            {
+                winRunRegul.Show();
+                winRunRegul.chart.UpdatePointSerieData("V", CurrentDiagOilRegul.serieVFull);
+                winRunRegul.chart.UpdatePointSerieData("V run", CurrentDiagOilRegul.serieVRun);
+                winRunRegul.chart.UpdatePointSerieData("V stop", CurrentDiagOilRegul.serieVStop);
+                winRunRegul.chart.updateSeries();
+            }
+            //else
+            catch
+            {
+                winRunRegul = new ReportResultWindow();
+                winRunRegul.chart.initControl();
+                winRunRegul.chart.init(true, "0.00", true);
+                winRunRegul.chart.AddPointSerie("V", CurrentDiagOilRegul.serieVFull, System.Drawing.Color.Orange, true, false);
+                winRunRegul.chart.AddPointSerie("V run", CurrentDiagOilRegul.serieVRun, System.Drawing.Color.LightGreen, true, false);
+                winRunRegul.chart.AddPointSerie("V stop", CurrentDiagOilRegul.serieVStop, System.Drawing.Color.LightBlue, true, false);
+                winRunRegul.Title = "объем на ГГ (убрать пустые поля)";
+                winRunRegul.Show();
+            }
 
 
 

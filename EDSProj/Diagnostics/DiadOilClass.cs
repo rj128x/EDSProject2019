@@ -56,7 +56,7 @@ namespace EDSProj.Diagnostics
 
         }
 
-        public abstract  Task<bool> ReadData(string GG);
+        public abstract Task<bool> ReadData(string GG);
 
 
         private double _V0;
@@ -98,7 +98,7 @@ namespace EDSProj.Diagnostics
             SortedList<DateTime, double> prevF = new SortedList<DateTime, double>();
             SortedList<DateTime, double> prevL1 = new SortedList<DateTime, double>();
             SortedList<DateTime, double> prevL2 = new SortedList<DateTime, double>();
-            
+
 
             foreach (DateTime date in report.ResultData.Keys)
             {
@@ -112,9 +112,9 @@ namespace EDSProj.Diagnostics
 
                 double Tavg = (TUp + TDn) / 2;
 
-                
 
-                if (serieF.Count>0 && Math.Abs(F-serieF.Values.Last())>40)
+
+                if (serieF.Count > 0 && Math.Abs(F - serieF.Values.Last()) > 40)
                 {
                     prevL1.Clear();
                     prevL2.Clear();
@@ -124,7 +124,7 @@ namespace EDSProj.Diagnostics
                 prevL1.Add(date, Lvl1);
                 prevL2.Add(date, Lvl2);
 
-                if (lMinutes > 0 && prevL1.Count>0 && prevL2.Count>0)
+                if (lMinutes > 0 && prevL1.Count > 0 && prevL2.Count > 0)
                 {
                     double l1Min = prevL1.Values.Min();
                     double l2Min = prevL2.Values.Min();
@@ -137,7 +137,7 @@ namespace EDSProj.Diagnostics
                 }
 
 
-                
+
 
                 double Lvl = datch == 0 ? (Lvl1 + Lvl2) / 2.0 : (datch == 1 ? Lvl1 : Lvl2);
                 double lvlCor = F > 49 ? Lvl + LDiff : Lvl;
@@ -154,7 +154,7 @@ namespace EDSProj.Diagnostics
                     serieLvl1.Add(date, Lvl1);
                     serieLvl2.Add(date, Lvl2);
 
-                   
+
 
                     if ((prevF.Values.Max() < 1 || prevF.Values.Min() > 49 || fMinutes == 0) /*&& (l1Min / l1Max > 0.95) && (l2Min / l2Max > 0.95)*/)
                     {
@@ -179,12 +179,12 @@ namespace EDSProj.Diagnostics
                     prevF.RemoveAt(0);
                 }
 
-                if (prevL1.Count>0)
-                while (prevL1.Keys.First().AddMinutes(lMinutes) < prevL1.Keys.Last())
-                {
-                    prevL1.RemoveAt(0);
-                    prevL2.RemoveAt(0);
-                }
+                if (prevL1.Count > 0)
+                    while (prevL1.Keys.First().AddMinutes(lMinutes) < prevL1.Keys.Last())
+                    {
+                        prevL1.RemoveAt(0);
+                        prevL2.RemoveAt(0);
+                    }
 
             }
 
@@ -193,18 +193,18 @@ namespace EDSProj.Diagnostics
                 serieVFull = new SortedList<double, double>();
                 serieVRun = new SortedList<double, double>();
                 serieVStop = new SortedList<double, double>();
-                
+
                 SortedList<DateTime, double> otr = new SortedList<DateTime, double>();
                 List<DateTime> keys = serieV.Keys.ToList();
                 foreach (DateTime date in keys)
                 {
                     double val = serieV[date];
-                    if (val!=double.NegativeInfinity)
-                        otr.Add(date,val);
-                    
-                    if (otr.Count == vMinutes && val!=double.NegativeInfinity)
+                    if (val != double.NegativeInfinity)
+                        otr.Add(date, val);
+
+                    if (otr.Count == vMinutes && val != double.NegativeInfinity)
                     {
-                        otr.RemoveAt(0);                        
+                        otr.RemoveAt(0);
                     }
                     if (val == double.NegativeInfinity)
                         otr.Clear();
@@ -221,10 +221,12 @@ namespace EDSProj.Diagnostics
                             serieVStop.Add(serieVStop.Count(), serieV[date]);
                     }
                 }
-                
+
             }
 
         }
+
+        
 
 
         protected string getValFromSerie(SortedList<DateTime, double> ser, DateTime date, string format)
@@ -232,7 +234,7 @@ namespace EDSProj.Diagnostics
             if (ser.ContainsKey(date))
             {
                 double val = ser[date];
-                string valStr = val>double.NegativeInfinity?String.Format("{0:" + format + "}", ser[date]):"";
+                string valStr = val > double.NegativeInfinity ? String.Format("{0:" + format + "}", ser[date]) : "";
                 return valStr;
             }
             else
