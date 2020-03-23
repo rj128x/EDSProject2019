@@ -52,7 +52,7 @@
                                 <DataGridTemplateColumn Header="Val" Width="50">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Value, StringFormat='0.00'}"/>
+                                            <TextBlock Text="{Binding Value}"/>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
@@ -98,14 +98,14 @@
                             <DataGridTemplateColumn Header="MinVal" Width="50">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBox Text="{Binding MinVal, Mode=TwoWay, StringFormat='0.00', UpdateSourceTrigger='PropertyChanged'}"  IsEnabled="{Binding IsNotAuto}"/>
+                                        <TextBox Text="{Binding MinVal, Mode=TwoWay, StringFormat='0.###', UpdateSourceTrigger='PropertyChanged'}"  IsEnabled="{Binding IsNotAuto}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
                             <DataGridTemplateColumn Header="MaxVal" Width="50" >
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBox Text="{Binding MaxVal,Mode=TwoWay, StringFormat='0.00', UpdateSourceTrigger='PropertyChanged'}" IsEnabled="{Binding IsNotAuto}"/>
+                                        <TextBox Text="{Binding MaxVal,Mode=TwoWay, StringFormat='0.###', UpdateSourceTrigger='PropertyChanged'}" IsEnabled="{Binding IsNotAuto}"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

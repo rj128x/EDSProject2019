@@ -130,6 +130,7 @@ namespace EDSApp
             CurrentDiagOilRegul.TMZ = 22;
             CurrentDiagOilRegul.Tkoef = 0.0007;
             CurrentDiagOilRegul.fMinutes = 10;
+            CurrentDiagOilRegul.V_TB = 2000;
 
 
 
@@ -188,6 +189,7 @@ namespace EDSApp
                 win = new ReportResultWindow();
                 win.chart.initControl();
                 win.chart.init(true, "dd.MM HH");
+                win.chart.CurrentFormatY = "0";
                 win.chart.AllYAxisIsVisible = true;
 
 
@@ -222,7 +224,8 @@ namespace EDSApp
             {
                 winRun = new ReportResultWindow();
                 winRun.chart.initControl();
-                winRun.chart.init(true, "0.00", true);
+                winRun.chart.init(true, "0", true);
+                winRun.chart.CurrentFormatY = "0";
                 winRun.chart.AddPointSerie("V", diag.serieVFull, System.Drawing.Color.Orange, true, false);
                 winRun.chart.AddPointSerie("V run", diag.serieVRun, System.Drawing.Color.LightGreen, true, false);
                 winRun.chart.AddPointSerie("V stop", diag.serieVStop, System.Drawing.Color.LightBlue, true, false);
@@ -398,13 +401,14 @@ namespace EDSApp
                 winRegul.chart.initControl();
                 winRegul.chart.init(true, "dd.MM HH");
                 winRegul.chart.AllYAxisIsVisible = true;
+                winRegul.chart.CurrentFormatY = "0";
                 winRegul.chart.setY2AxisCount(winRegul.chart.CurrentGraphPane, 2);
-                winRegul.chart.AddSerie("V СБ", CurrentDiagOilRegul.serieV_SB, System.Drawing.Color.Lime, true, false, true, -1, true);
+                winRegul.chart.AddSerie("V СБ", CurrentDiagOilRegul.serieV_SB, System.Drawing.Color.LightBlue, true, false, true, -1, true);
                 winRegul.chart.AddSerie("V ОГА", CurrentDiagOilRegul.serieV_OGA, System.Drawing.Color.LightGreen, true, false, true, -1, true);
-                winRegul.chart.AddSerie("V АГА", CurrentDiagOilRegul.serieV_AGA, System.Drawing.Color.LightBlue, true, false, true, 0, true);
+                winRegul.chart.AddSerie("V АГА", CurrentDiagOilRegul.serieV_AGA, System.Drawing.Color.LightCoral, true, false, true, 0, false);
                 winRegul.chart.AddSerie("V РК", CurrentDiagOilRegul.serieV_RK, System.Drawing.Color.Pink, true, false, true, 0, true);
-                winRegul.chart.AddSerie("V НА", CurrentDiagOilRegul.serieV_NA, System.Drawing.Color.GreenYellow, true, false, true, 0, true);
-                winRegul.chart.AddSerie("V ЛБ", CurrentDiagOilRegul.serieV_LB, System.Drawing.Color.Orange, true, false, true, 1, true);
+                winRegul.chart.AddSerie("V НА", CurrentDiagOilRegul.serieV_NA, System.Drawing.Color.Red, true, false, true, 0, true);
+                winRegul.chart.AddSerie("V ЛБ", CurrentDiagOilRegul.serieV_LB, System.Drawing.Color.Orange, true, false, true, 1, false);
                 //winRegul.chart.CurrentGraphPane.LineType = ZedGraph.LineType.Stack;
 
                 winRegul.chart.init(true, "dd.MM HH");
@@ -439,13 +443,15 @@ namespace EDSApp
                 winRunRegul = new ReportResultWindow();
                 winRunRegul.chart.initControl();
                 winRunRegul.chart.init(true, "0.00", true);
+                winRunRegul.chart.CurrentFormatY = "0";
                 winRunRegul.chart.AddPointSerie("V", CurrentDiagOilRegul.serieVFull, System.Drawing.Color.Orange, true, false);
                 winRunRegul.chart.AddPointSerie("V run", CurrentDiagOilRegul.serieVRun, System.Drawing.Color.LightGreen, true, false);
                 winRunRegul.chart.AddPointSerie("V stop", CurrentDiagOilRegul.serieVStop, System.Drawing.Color.LightBlue, true, false);
                 winRunRegul.Title = "объем на ГГ (убрать пустые поля)";
                 winRunRegul.Show();
             }
-
+            if (chbCreateReport.IsChecked.Value)
+                CurrentDiagOilRegul.createText();
 
 
         }

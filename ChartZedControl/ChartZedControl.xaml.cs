@@ -73,6 +73,7 @@ namespace ChartZedControl
         }
 
         public string Header { get; set; }
+        
 
 
         public System.Windows.Media.Brush FillBrush { get; set; }
@@ -143,7 +144,6 @@ namespace ChartZedControl
             }
         }
         protected System.Drawing.Color _color;
-
         public System.Drawing.Color Color {
             get {
                 return _color;
@@ -154,8 +154,8 @@ namespace ChartZedControl
             }
         }
 
-        private double _value;
-        public double Value {
+        private string _value;
+        public string Value {
             get => _value;
             set {
                 _value = value;
@@ -164,7 +164,9 @@ namespace ChartZedControl
         }
 
 
+
         public System.Windows.Media.Brush FillBrush { get; set; }
+        public string FormatY { get; set; }
         public SortedList<DateTime, double> Data { get; set; }
         public SortedList<double, double> DataPoints { get; set; }
     }
@@ -198,7 +200,7 @@ namespace ChartZedControl
 
         public DateTime CursorDate { get => _cursorDate; set { _cursorDate = value; NotifyChanged("CursorDate"); } }
         public Double CursorX { get => _cursorX; set { _cursorX = value; NotifyChanged("CursorX"); } }
-
+        public string CurrentFormatY { get; set; }
 
 
         public ChartZedControl()
@@ -208,6 +210,7 @@ namespace ChartZedControl
             ObsYAxis = new ObservableCollection<ChartZedYAxis>();
             BGColor = System.Drawing.Color.Black;
             FontColor = System.Drawing.Color.Orange;
+            CurrentFormatY = "0.###";
 
             InitializeComponent();
 
@@ -235,11 +238,11 @@ namespace ChartZedControl
                         if (serie.Data.Count > 0 && serie.Data.Keys.Min() < CursorDate && CursorDate < serie.Data.Keys.Max())
                         {
                             var d = serie.Data.First(de => de.Key >= CursorDate);
-                            serie.Value = serie.Data[d.Key];
+                            serie.Value =  serie.Data[d.Key].ToString(serie.FormatY);
                         }
                         else
                         {
-                            serie.Value = Double.PositiveInfinity;
+                            serie.Value = "";
                         }
 
                     }
@@ -253,11 +256,11 @@ namespace ChartZedControl
                         if (serie.DataPoints.Count > 0 && serie.DataPoints.Keys.Min() < CursorX && CursorX < serie.DataPoints.Keys.Max())
                         {
                             var d = serie.DataPoints.First(de => de.Key >= CursorX);
-                            serie.Value = serie.DataPoints[d.Key];
+                            serie.Value = serie.DataPoints[d.Key].ToString(serie.FormatY);
                         }
                         else
                         {
-                            serie.Value = Double.PositiveInfinity;
+                            serie.Value = "";
                         }
 
                     }
@@ -319,13 +322,7 @@ namespace ChartZedControl
             graphPane.XAxis.Scale.Format = xFormat;
             graphPane.XAxis.Title.IsVisible = false;
             graphPane.XAxis.Scale.FontSpec.FontColor = FontColor;
-            //graphPane.YAxis.Title.IsVisible = false;
-            /*graphPane.YAxis.Scale.FontSpec.Size = 9;
-            graphPane.YAxis.Scale.FontSpec.IsBold = true;
-            graphPane.YAxis.Scale.IsUseTenPower = false;
-            graphPane.YAxis.MajorGrid.IsVisible = true;
-            graphPane.YAxis.MinorTic.IsOpposite = false;
-            graphPane.YAxis.MajorTic.IsOpposite = false;*/
+
             initAxis(graphPane.YAxis);
             graphPane.YAxis.MajorGrid.Color = System.Drawing.Color.DarkGray;
             graphPane.YAxis.MajorGrid.IsZeroLine = false;
@@ -582,6 +579,7 @@ namespace ChartZedControl
             serie.Pane = graphPane;
             serie.Header = header;
             serie.Y2Index = y2axisIndex;
+            serie.FormatY = CurrentFormatY;
 
             ObsSeries.Add(serie);
 
@@ -682,6 +680,7 @@ namespace ChartZedControl
             serie.IsVisible = isVisible;
             serie.Pane = graphPane;
             serie.Y2Index = y2axisIndex;
+            serie.FormatY = CurrentFormatY;
             UpdatePointSerieData(header, data);
 
             if (y2axisIndex == -1)

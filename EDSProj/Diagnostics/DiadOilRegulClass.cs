@@ -211,10 +211,10 @@ namespace EDSProj.Diagnostics
                 double T_SB = report.ResultData[date][recT_SB.Id];
                 double F = report.ResultData[date][recF.Id];
 
-                double L_OGA = report.ResultData[date][recL_OGA.Id];
-                double L_AGA = report.ResultData[date][recL_AGA.Id];
+                double L_OGA = report.ResultData[date][recL_OGA.Id];//2800
+                double L_AGA = report.ResultData[date][recL_AGA.Id];//1530
                 double L_LB = report.ResultData[date][recL_LB.Id];
-                double L_SB = report.ResultData[date][recL_SB.Id];
+                double L_SB = report.ResultData[date][recL_SB.Id];//460
                 double L_NA = report.ResultData[date][recL_NA.Id];
                 double L_RK = report.ResultData[date][recL_RK.Id];
 
@@ -234,20 +234,20 @@ namespace EDSProj.Diagnostics
                 serieT_SB.Add(date, T_SB);
                 serieF.Add(date, F);
 
-                /*serieL_OGA.Add(date, L_OGA);
+                serieL_OGA.Add(date, L_OGA);
                 serieL_AGA.Add(date, L_AGA);
                 serieL_LB.Add(date, L_LB);
-                serieL_SB.Add(date, L_SB);*/
+                serieL_SB.Add(date, L_SB);
                 serieL_NA.Add(date, L_NA);
                 serieL_RK.Add(date, L_RK);
 
-                /*serieD_MNU1.Add(date, D_MNU1);
+                serieD_MNU1.Add(date, D_MNU1);
                 serieD_MNU2.Add(date, D_MNU2);
-                serieD_MNU3.Add(date, D_MNU3);*/
+                serieD_MNU3.Add(date, D_MNU3);
                 serieD_MNU.Add(date, D_MNU);
 
-                /*serieD_LA1.Add(date, D_LA1);
-                serieD_LA2.Add(date, D_LA2);*/
+                serieD_LA1.Add(date, D_LA1);
+                serieD_LA2.Add(date, D_LA2);
                 serieD_LA.Add(date, D_LA);
 
                 double V_OGA = double.NegativeInfinity;
@@ -261,6 +261,7 @@ namespace EDSProj.Diagnostics
                 {
                     V_NA = L_NA * V0_Opn_NA / HodNA + (HodNA - L_NA) * V0_Cls_NA / HodNA;
                     V_RK = L_RK * V0_Opn_RK / HodRK + (HodRK - L_RK) * V0_Cls_RK / HodRK;
+                    
                 }
                 
                 if (D_MNU==0 && D_LA == 0 && prevDNasos.Values.Max() < 1)
@@ -271,7 +272,20 @@ namespace EDSProj.Diagnostics
                     V_LB = V0_LB + V1mm_LB * L_LB;
                 }
 
-                double V = V_NA + V_RK + V_OGA + V_SB + V_LB+V_AGA;
+                V_NA = V_NA * (1 + (Tbaz - T_SB)*Tkoef);
+                V_RK = V_RK * (1 + (Tbaz - T_SB) * Tkoef);
+                V_SB = V_SB * (1 + (Tbaz - T_SB) * Tkoef);
+                V_OGA = V_OGA * (1 + (Tbaz - T_SB) * Tkoef);
+                double VTB = V_TB * (1 + (Tbaz - T_SB) * Tkoef);
+
+                V_LB = V_LB * (1 + (Tbaz - TMZ) * Tkoef);
+                V_AGA = V_AGA * (1 + (Tbaz - TMZ) * Tkoef);
+
+                
+
+
+
+                double V = V_NA + V_RK + V_OGA + V_SB + V_LB+V_AGA+VTB;
                 V = V > 0 ? V : Double.NegativeInfinity;
                 if (V != double.NegativeInfinity)
                 {
@@ -365,14 +379,28 @@ namespace EDSProj.Diagnostics
             try
             {
                 List<string> headers = new List<string>();
-                headers.Add("L1");
-                headers.Add("L2");
-                headers.Add("T up");
-                headers.Add("T dn");
-                headers.Add("F");
-                headers.Add("T avg");
-                headers.Add("L кор");
-                headers.Add("V calc");
+                headers.Add("L ОГА");
+                headers.Add("L АГА");
+                headers.Add("L СБ");
+                headers.Add("L ЛБ");
+                headers.Add("L НА");
+                headers.Add("L РК");
+                headers.Add("МНУ1");
+                headers.Add("МНУ2");
+                headers.Add("МНУ3");
+                headers.Add("ЛА1");
+                headers.Add("ЛА2");
+                headers.Add("Т СБ");
+
+                headers.Add("V ОГА");
+                headers.Add("V АГА");
+                headers.Add("V СБ");
+                headers.Add("V ЛБ");
+                headers.Add("V НА");
+                headers.Add("V РК");
+
+                headers.Add("V");
+                
 
                 string header = "";
                 foreach (string hdr in headers)
@@ -394,13 +422,26 @@ namespace EDSProj.Diagnostics
                 foreach (DateTime date in keys)
                 {
                     string ValuesStr = "";
-                    /*ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieLvl1, date, "0.00"));
-                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieLvl2, date, "0.00"));
-                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieTUP, date, "0"));
-                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieTDn, date, "0"));
-                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieF, date, "0"));
-                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieTAvg, date, "0"));
-                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieLvlCor, date, "0.00"));*/
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieL_OGA, date, "0"));
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieL_AGA, date, "0"));
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieL_SB, date, "0"));
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieL_LB, date, "0"));
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieL_NA, date, "0"));
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieL_RK, date, "0"));
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieD_MNU1, date, "#"));
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieD_MNU2, date, "#"));
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieD_MNU3, date, "#"));
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieD_LA1, date, "#"));
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieD_LA2, date, "#"));
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieT_SB, date, "0"));
+
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieV_OGA, date, "0"));
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieV_AGA, date, "0"));
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieV_SB, date, "0"));
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieV_LB, date, "0"));
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieV_NA, date, "0"));
+                    ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieV_RK, date, "0"));
+                    
                     ValuesStr += String.Format("<td align='right'>{0}</td>", getValFromSerie(serieV, date, "0"));
 
                     tW.WriteLine(String.Format("<tr><th >{0}</th>{1}</tr>", date.ToString("dd.MM.yyyy HH:mm"), ValuesStr));
