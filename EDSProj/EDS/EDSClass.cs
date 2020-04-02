@@ -20,6 +20,15 @@ namespace EDSProj
 		public bool Selected { get; set; }
 	}
 
+	public class PuskStopData
+	{
+		public DateTime TimeOn { get; set; }
+		public DateTime TimeOff { get; set; }
+		public int Length { get; set; }
+
+
+	}
+
 	public delegate void StateChangeDelegate();
 
 	public class EDSClass : INotifyPropertyChanged
@@ -406,6 +415,127 @@ namespace EDSProj
 
 			}
 			return res;
+		}
+
+		public static async Task<double> getValFromServer(string iess,DateTime date)
+		{
+			TabularRequest req = new TabularRequest();
+			req.period = new TimePeriod()
+			{
+				from = new Timestamp() { second = EDSClass.toTS(date) },
+				till = new Timestamp() { second = EDSClass.toTS(date)+1 }
+			};
+
+			req.step = new TimeDuration() { seconds = 1 };
+
+			List<TabularRequestItem> list = new List<TabularRequestItem>();
+			list.Add(new TabularRequestItem()
+			{
+				function = "VALUE",
+				pointId = new PointId() { iess = iess },
+				shadePriority = ShadePriority.REGULAROVERSHADE
+			});
+
+			req.items = list.ToArray();
+			uint id = EDSClass.Client.requestTabular(EDSClass.AuthStr, req);
+			TabularRow[] rows;
+			bool ok = await EDSClass.ProcessQueryAsync(id);
+
+			PointId[] points = EDSClass.Client.getTabular(EDSClass.AuthStr, id, out rows);
+			double val = Double.MinValue;
+			TabularRow row = rows[0];
+			{
+				val = getVal(row.values[0].value);
+			}
+			return val; 
+		}
+
+		public static async Task<DateTime> getValNextDate(string iess, DateTime dateStart, DateTime dateEnd, string func, double limitVal)
+		{
+
+			TabularRequest req = new TabularRequest();
+			req.period = new TimePeriod()
+			{
+				from = new Timestamp() { second = EDSClass.toTS(dateStart) },
+				till = new Timestamp() { second = EDSClass.toTS(dateEnd) }
+			};
+
+			req.step = new TimeDuration() { seconds = (dateEnd-dateStart).Seconds-2 };
+
+			List<TabularRequestItem> list = new List<TabularRequestItem>();
+			list.Add(new TabularRequestItem()
+			{
+				function = func,
+				pointId = new PointId() { iess = iess },
+				@params = new double[] {limitVal}
+				
+			});
+
+			uint id = 0;
+			try
+			{
+				id = EDSClass.Client.requestTabular(EDSClass.AuthStr, req);
+			}
+			catch (Exception e)
+			{
+				Logger.Info(e.ToString());
+			}
+			TabularRow[] rows;
+			bool ok = await EDSClass.ProcessQueryAsync(id);
+
+			PointId[] points = EDSClass.Client.getTabular(EDSClass.AuthStr, id, out rows);
+			if (rows.Length > 0)
+			{
+				TabularRow row = rows[0];
+				double ts = getVal(row.values[0].value);
+				return EDSClass.fromTS((long)ts);
+			}
+			else
+				return dateEnd;
+
+		}
+
+		public static async Task<List<PuskStopData>> AnalizePuskStopData(string pointName, DateTime dateStart, DateTime dateEnd)
+		{
+			List<PuskStopData> result= new List<PuskStopData>();
+			try
+			{
+				DateTime ds = dateStart.AddSeconds(0);
+				DateTime de = dateEnd.AddSeconds(0);
+				PuskStopData record = new PuskStopData();
+				double val0 = await getValFromServer(pointName, ds);
+				if (val0 > 0.9)
+				{
+					DateTime dt = await getValNextDate(pointName, ds, de, "F_INTOOVER_DT", 0.5);
+					if (dt > ds && dt < de)
+						ds = dt;
+					else return result;
+				}
+				while (ds < de)
+				{
+					DateTime dt = await getValNextDate(pointName, ds, de, "F_INTOOVER_DT", 0.5);
+					if (dt>ds && dt < de)
+					{
+						record.TimeOn = dt;
+						DateTime dt1 = await getValNextDate(pointName, ds, de, "F_INTOOVER_DT", 0.5);
+						if (dt1>dt&& dt1 < de)
+						{
+							record.TimeOff = dt1;
+							record.Length = (record.TimeOff - record.TimeOn).Seconds;
+							result.Add(record);
+							record = new PuskStopData();
+							ds = dt1.AddSeconds(1);
+						}
+						else { return result; }
+					}
+					else { return result; }
+				}
+				return result;
+
+
+
+			}catch{ return result; }
+
 		}
 
 

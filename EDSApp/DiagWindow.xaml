@@ -221,6 +221,19 @@
 
                     </Grid>
                 </TabItem>
+                <TabItem Header="Насосы">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                        </Grid.ColumnDefinitions>
+                    
+                    <Border Grid.Column="0">
+                        <StackPanel Orientation="Vertical">
+                            <Button Name="MNUBUtttonCreate"  Content="Длительность" Click="MNUBUtttonCreate_Click"/>
+                        </StackPanel>
+                    </Border>
+                    </Grid>
+                </TabItem>
             </TabControl>
             <Border Height="30" Width="500" HorizontalAlignment="Left">
                 <StackPanel  Orientation="Horizontal">

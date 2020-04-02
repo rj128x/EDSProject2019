@@ -48,7 +48,7 @@
       <HintPath>..\libs\MODES082019\Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
-      <HintPath>..\libs\MODES2018\BIN\log4net.dll</HintPath>
+      <HintPath>..\libs\log4net\log4net.dll</HintPath>
     </Reference>
     <Reference Include="ModesApiExternal, Version=1.4.7.12, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -75,6 +75,7 @@
     <Compile Include="Diagnostics\DiadOilClass.cs" />
     <Compile Include="Diagnostics\DiadOilPPClass.cs" />
     <Compile Include="Diagnostics\DiadOilGPClass.cs" />
+    <Compile Include="Diagnostics\DiagNasos.cs" />
     <Compile Include="Diagnostics\MathFunc.cs" />
     <Compile Include="EDS\EDSClass.cs" />
     <Compile Include="EDS\EDSPointsClass.cs" />

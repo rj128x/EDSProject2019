@@ -74,12 +74,15 @@ namespace EDSApp
 
         ReportResultWindow winRegul;
         ReportResultWindow winRunRegul;
+        ReportResultWindow winMNU;
         public DiagWindow()
         {
             InitializeComponent();
             this.DataContext = this;
-            DateStart = DateTime.Now.Date.ToString();
-            DateEnd = DateTime.Now.Date.AddHours(DateTime.Now.Hour).ToString();
+            /*DateStart = DateTime.Now.Date.ToString();
+            DateEnd = DateTime.Now.Date.AddHours(DateTime.Now.Hour).ToString();*/
+            DateStart = "23.03.2020 00:00:00";
+            DateEnd = "24.03.2020 00:00:00";
             grdStatus.DataContext = EDSClass.Single;
             DiadOilClass.init();
 
@@ -454,6 +457,28 @@ namespace EDSApp
                 CurrentDiagOilRegul.createText();
 
 
+        }
+
+        private async void MNUBUtttonCreate_Click(object sender, RoutedEventArgs e)
+        {
+            if (!EDSClass.Single.Ready)
+            {
+                MessageBox.Show("ЕДС сервер не готов");
+                return;
+            }
+            EDSClass.Disconnect();
+            EDSClass.Connect();
+
+            DiagNasos MNU = new DiagNasos(_DateStart,_DateEnd,txtGG.Text);
+            await MNU.ReadData();
+
+            winMNU = new ReportResultWindow();
+            winMNU.chart.initControl();
+            winMNU.chart.init(true, "dd.MM HH");
+            winMNU.chart.AllYAxisIsVisible = true;
+            winMNU.chart.CurrentFormatY = "0";
+            winMNU.chart.AddSerie("V СБ", MNU.MNUASerie, System.Drawing.Color.LightBlue, true, false, true, -1, true);
+            winMNU.Show();
         }
     }
 }
