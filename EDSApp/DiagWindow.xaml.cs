@@ -461,24 +461,37 @@ namespace EDSApp
 
         private async void MNUBUtttonCreate_Click(object sender, RoutedEventArgs e)
         {
-            if (!EDSClass.Single.Ready)
+           /* if (!EDSClass.Single.Ready)
             {
                 MessageBox.Show("ЕДС сервер не готов");
                 return;
             }
             EDSClass.Disconnect();
-            EDSClass.Connect();
+            EDSClass.Connect();*/
 
             DiagNasos MNU = new DiagNasos(_DateStart,_DateEnd,txtGG.Text);
             await MNU.ReadData();
 
             winMNU = new ReportResultWindow();
-            winMNU.chart.initControl();
-            winMNU.chart.init(true, "dd.MM HH");
+            winMNU.chart.initControl();            
             winMNU.chart.AllYAxisIsVisible = true;
             winMNU.chart.CurrentFormatY = "0";
-            winMNU.chart.AddSerie("V СБ", MNU.MNUASerie, System.Drawing.Color.LightBlue, true, false, true, -1, true);
+            
+            winMNU.chart.init(true, "dd.MM HH");
+            winMNU.chart.AddSerie("STOP", MNU.GGRunSerie, System.Drawing.Color.LightBlue, true, false, true, -1, true);
+
+            winMNU.chart.init(true, "dd.MM HH");
+            winMNU.chart.AddSerie("A", MNU.MNUASerie, System.Drawing.Color.LightBlue, true, false, true, -1, true);
+
+            winMNU.chart.init(true, "dd.MM HH");
+            winMNU.chart.AddSerie("B", MNU.MNUBSerie, System.Drawing.Color.LightBlue, true, false, true, -1, true);
+
+            winMNU.chart.init(true, "dd.MM HH");
+            winMNU.chart.AddSerie("C", MNU.MNUCSerie, System.Drawing.Color.LightBlue, true, false, true, -1, true);
+
+
             winMNU.Show();
+
         }
     }
 }

@@ -26,11 +26,20 @@ namespace DiagCondoleApp
 
             while (date < dateEnd)
             {
-                bool ok = await PuskStopData.FillPuskStopData("05", "GG_STOP", "05VT_GC02D-45.MCR@GRARM", date, date.AddHours(12));
-                ok = await PuskStopData.FillPuskStopData("05", "MNU_1", "05VT_PS01DI-01.MCR@GRARM", date, date.AddHours(12));
-                ok = await PuskStopData.FillPuskStopData("05", "MNU_2", "05VT_PS02DI-01.MCR@GRARM", date, date.AddHours(12));
-                ok = await PuskStopData.FillPuskStopData("05", "MNU_3", "05VT_PS03DI-01.MCR@GRARM", date, date.AddHours(12));
-                Logger.Info(ok.ToString());
+                Logger.Info(date.ToString());
+                DateTime start = DateTime.Now;
+                foreach (string gg in new string[]{ "04","05","07"}){
+                    bool ok = await PuskStopData.FillPuskStopData(gg, "GG_STOP", gg+"VT_GC02D-45.MCR@GRARM", date, date.AddHours(12), false);
+                    ok = await PuskStopData.FillPuskStopData(gg, "MNU_1", gg+"VT_PS01DI-01.MCR@GRARM", date, date.AddHours(12), true);
+                    ok = await PuskStopData.FillPuskStopData(gg, "MNU_2", gg+"VT_PS02DI-01.MCR@GRARM", date, date.AddHours(12), true);
+                    ok = await PuskStopData.FillPuskStopData(gg, "MNU_3", gg+"VT_PS03DI-01.MCR@GRARM", date, date.AddHours(12), true);
+                }
+
+
+
+
+                DateTime end = DateTime.Now;
+                Logger.Info((end - start).TotalMinutes.ToString());
                 date = date.AddHours(12);
             }
 

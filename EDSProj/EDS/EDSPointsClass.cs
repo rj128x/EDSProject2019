@@ -18,6 +18,31 @@ namespace EDSProj
 		public string AC { get; set; }
 		public bool IsShade { get; set; }
 
+		static EDSPointInfo()
+		{
+			Cache = new Dictionary<string, EDSPointInfo>();
+
+		}
+		public static Dictionary<string, EDSPointInfo> Cache;
+
+		public static async Task<EDSPointInfo> GetPointInfo(string iess)
+		{
+			if (Cache.ContainsKey(iess))
+				return Cache[iess];
+			else
+			{
+				SortedList<string, EDSPointInfo> temp = new SortedList<string, EDSPointInfo>();
+				bool ok = await EDSPointsClass.getPointsArr(iess,temp);
+				if (temp.Count > 0)
+				{
+					Cache.Add(iess, temp.Values.First());
+					return temp.Values.First();
+				}				
+			}
+			return null;
+
+		}
+
 		public EDSPointInfo(string iess, string desc, string tg) {
 			this.IESS = iess;
 			this.Desc = desc;

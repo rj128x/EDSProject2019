@@ -25,6 +25,8 @@ namespace EDSProj.Diagnostics
         public DateTime DateEnd { get; set; }
         public string GG { get; set; }
         public SortedList<DateTime, double> MNUASerie = new SortedList<DateTime, double>();
+        public SortedList<DateTime, double> MNUBSerie = new SortedList<DateTime, double>();
+        public SortedList<DateTime, double> MNUCSerie = new SortedList<DateTime, double>();
         public SortedList<DateTime, double> GGRunSerie = new SortedList<DateTime, double>();
 
 
@@ -36,21 +38,32 @@ namespace EDSProj.Diagnostics
 
         }
 
-        public async Task<bool> ReadData()
+        protected SortedList<DateTime, double> createPuskStopSerie(string type_data)
         {
+            SortedList<DateTime, double> serie = new SortedList<DateTime, double>();
             DiagDBEntities diagDB = new DiagDBEntities();
-            IQueryable<PuskStopInfo> req = from pi in diagDB.PuskStopInfoes where 
-                                           pi.GG == Int32.Parse(GG) && pi.TypeData == "GG_STOP" &&
-                                           pi.TimeOff > DateStart && pi.TimeOn < DateEnd 
-                                           select pi;
+            int gg = Int32.Parse(GG);
+            IQueryable<PuskStopInfo> req = 
+                    from pi in diagDB.PuskStopInfoes
+                    where
+                        pi.GG == gg && pi.TypeData == type_data &&
+                        pi.TimeOff > DateStart && pi.TimeOn < DateEnd
+                    select pi;
             foreach (PuskStopInfo pi in req)
             {
-                GGRunSerie.Add(pi.TimeOn, 0);
-                GGRunSerie.Add(pi.TimeOn.AddSeconds(1), 1);
-                GGRunSerie.Add(pi.TimeOff, 1);
-                GGRunSerie.Add(pi.TimeOff.AddSeconds(1), 0);
-
+                serie.Add(pi.TimeOn, 0);
+                serie.Add(pi.TimeOn.AddMilliseconds(1), 1);
+                serie.Add(pi.TimeOff, 1);
+                serie.Add(pi.TimeOff.AddMilliseconds(1), 0);
             }
+            return serie;
+        }
+        public async Task<bool> ReadData()
+        {
+            GGRunSerie = createPuskStopSerie("GG_STOP");
+            MNUASerie = createPuskStopSerie("MNU_1");
+            MNUBSerie = createPuskStopSerie("MNU_2");
+            MNUCSerie = createPuskStopSerie("MNU_3");
             return true;
         }
     }
