@@ -20,14 +20,7 @@ namespace EDSProj
 		public bool Selected { get; set; }
 	}
 
-	public class PuskStopData
-	{
-		public DateTime TimeOn { get; set; }
-		public DateTime TimeOff { get; set; }
-		public int Length { get; set; }
-
-
-	}
+	
 
 	public delegate void StateChangeDelegate();
 
@@ -460,7 +453,7 @@ namespace EDSProj
 				till = new Timestamp() { second = EDSClass.toTS(dateEnd) }
 			};
 
-			req.step = new TimeDuration() { seconds = (dateEnd-dateStart).Seconds-2 };
+			req.step = new TimeDuration() { seconds = (long)(dateEnd-dateStart).TotalSeconds};
 
 			List<TabularRequestItem> list = new List<TabularRequestItem>();
 			list.Add(new TabularRequestItem()
@@ -471,6 +464,7 @@ namespace EDSProj
 				
 			});
 
+			req.items = list.ToArray();
 			uint id = 0;
 			try
 			{
@@ -495,48 +489,7 @@ namespace EDSProj
 
 		}
 
-		public static async Task<List<PuskStopData>> AnalizePuskStopData(string pointName, DateTime dateStart, DateTime dateEnd)
-		{
-			List<PuskStopData> result= new List<PuskStopData>();
-			try
-			{
-				DateTime ds = dateStart.AddSeconds(0);
-				DateTime de = dateEnd.AddSeconds(0);
-				PuskStopData record = new PuskStopData();
-				double val0 = await getValFromServer(pointName, ds);
-				if (val0 > 0.9)
-				{
-					DateTime dt = await getValNextDate(pointName, ds, de, "F_INTOOVER_DT", 0.5);
-					if (dt > ds && dt < de)
-						ds = dt;
-					else return result;
-				}
-				while (ds < de)
-				{
-					DateTime dt = await getValNextDate(pointName, ds, de, "F_INTOOVER_DT", 0.5);
-					if (dt>ds && dt < de)
-					{
-						record.TimeOn = dt;
-						DateTime dt1 = await getValNextDate(pointName, ds, de, "F_INTOOVER_DT", 0.5);
-						if (dt1>dt&& dt1 < de)
-						{
-							record.TimeOff = dt1;
-							record.Length = (record.TimeOff - record.TimeOn).Seconds;
-							result.Add(record);
-							record = new PuskStopData();
-							ds = dt1.AddSeconds(1);
-						}
-						else { return result; }
-					}
-					else { return result; }
-				}
-				return result;
-
-
-
-			}catch{ return result; }
-
-		}
+		
 
 
 	}

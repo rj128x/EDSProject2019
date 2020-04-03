@@ -25,7 +25,8 @@ namespace EDSProj.Diagnostics
         public DateTime DateEnd { get; set; }
         public string GG { get; set; }
         public SortedList<DateTime, double> MNUASerie = new SortedList<DateTime, double>();
-        
+        public SortedList<DateTime, double> GGRunSerie = new SortedList<DateTime, double>();
+
 
         public DiagNasos(DateTime dateStart,DateTime dateEnd,string GG)
         {
@@ -37,21 +38,20 @@ namespace EDSProj.Diagnostics
 
         public async Task<bool> ReadData()
         {
-            MNUASerie = new SortedList<DateTime, double>();
-            List<PuskStopData> resultA = await EDSClass.AnalizePuskStopData(GG + "VT_PS01DI-01.MCR@GRARM", DateStart, DateEnd);
-            if (resultA.Count > 0)
+            DiagDBEntities diagDB = new DiagDBEntities();
+            IQueryable<PuskStopInfo> req = from pi in diagDB.PuskStopInfoes where 
+                                           pi.GG == Int32.Parse(GG) && pi.TypeData == "GG_STOP" &&
+                                           pi.TimeOff > DateStart && pi.TimeOn < DateEnd 
+                                           select pi;
+            foreach (PuskStopInfo pi in req)
             {
-                foreach (PuskStopData rec in resultA)
-                {
-                    MNUASerie.Add(rec.TimeOn.AddMilliseconds(-1), 0);
-                    MNUASerie.Add(rec.TimeOn, 1);
-                    MNUASerie.Add(rec.TimeOff, 1);
-                    MNUASerie.Add(rec.TimeOff.AddMilliseconds(1), 0);
+                GGRunSerie.Add(pi.TimeOn, 0);
+                GGRunSerie.Add(pi.TimeOn.AddSeconds(1), 1);
+                GGRunSerie.Add(pi.TimeOff, 1);
+                GGRunSerie.Add(pi.TimeOff.AddSeconds(1), 0);
 
-                }
-                return true;
             }
-            return false;
+            return true;
         }
     }
 }

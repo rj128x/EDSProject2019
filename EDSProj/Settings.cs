@@ -130,6 +130,7 @@ namespace EDSProj
 		public string Name { get; protected set; }
 		public DateTime Date { get; protected set; }
 
+
 		public static void InitFileLogger(string path, string name, Logger newLogger = null) {
 			try {
 				if (context != null && context.IsFileLogger && context.appender != null) {

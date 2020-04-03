@@ -43,6 +43,12 @@
     <Reference Include="BytesRoad.Net.Sockets">
       <HintPath>..\libs\ftpLib\BytesRoad.Net.Sockets.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Infrastructure, Version=1.4.7.138, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\MODES082019\Infrastructure.dll</HintPath>
@@ -55,8 +61,10 @@
       <HintPath>..\libs\MODES082019\ModesApiExternal.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -71,12 +79,28 @@
     <Compile Include="AIS\AIS_NEW.cs" />
     <Compile Include="AIS\AIS_OLD.cs" />
     <Compile Include="AVRCHMReport.cs" />
+    <Compile Include="DiagDB.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DiagDB.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DiagDB.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DiagDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DiagDB.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DiagDB.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Diagnostics\DiadOilRegulClass.cs" />
     <Compile Include="Diagnostics\DiadOilClass.cs" />
     <Compile Include="Diagnostics\DiadOilPPClass.cs" />
     <Compile Include="Diagnostics\DiadOilGPClass.cs" />
     <Compile Include="Diagnostics\DiagNasos.cs" />
     <Compile Include="Diagnostics\MathFunc.cs" />
+    <Compile Include="Diagnostics\PuskStopData.cs" />
     <Compile Include="EDS\EDSClass.cs" />
     <Compile Include="EDS\EDSPointsClass.cs" />
     <Compile Include="EDS\EDSReport.cs" />
@@ -85,6 +109,14 @@
     <Compile Include="ModesCentre\MCPBRData.cs" />
     <Compile Include="ModesCentre\MCServerReader.cs" />
     <Compile Include="ModesCentre\MCSettings.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="PuskStopInfo.cs">
+      <DependentUpon>DiagDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="Water\InerpolationRashod.cs" />
     <Compile Include="Service References\EDSWebService\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -131,8 +163,30 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="DiagDB.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DiagDB.edmx</DependentUpon>
+      <LastGenOutput>DiagDB.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="DiagDB.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DiagDB.edmx</DependentUpon>
+      <LastGenOutput>DiagDB.cs</LastGenOutput>
+    </Content>
     <Content Include="workReference.txt" />
     <None Include="DATA\АИС_Импорт.xlsx" />
+    <EntityDeploy Include="DiagDB.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DiagDB.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="DiagDB.edmx.diagram">
+      <DependentUpon>DiagDB.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Service References\EDSWebService\eds1.wsdl" />
     <None Include="Service References\EDSWebService\EDSProj.EDSWebService.Event.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -288,7 +342,9 @@
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\EDSWebService\" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
