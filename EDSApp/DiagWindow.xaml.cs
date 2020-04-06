@@ -17,6 +17,8 @@ using EDSProj.Diagnostics;
 using EDSProj;
 using System.Globalization;
 using System.ComponentModel;
+using static EDSProj.Diagnostics.DiagNasos;
+using System.Collections.ObjectModel;
 
 namespace EDSApp
 {
@@ -37,9 +39,11 @@ namespace EDSApp
 
         private DateTime _DateStart;
         private DateTime _DateEnd;
-        public String DateStart {
+        public String DateStart
+        {
             get { return _DateStart.ToString("dd.MM.yyyy HH:mm"); }
-            set {
+            set
+            {
                 try
                 {
                     _DateStart = DateTime.Parse(value);
@@ -51,9 +55,11 @@ namespace EDSApp
                 NotifyChanged("DateStart");
             }
         }
-        public String DateEnd {
+        public String DateEnd
+        {
             get { return _DateEnd.ToString("dd.MM.yyyy HH:mm"); }
-            set {
+            set
+            {
                 try
                 {
                     _DateEnd = DateTime.Parse(value);
@@ -69,6 +75,7 @@ namespace EDSApp
         public DiadOilGPClass CurrentDiagGP;
         public DiadOilPPClass CurrentDiagPP;
         public DiadOilRegulClass CurrentDiagOilRegul;
+        public ObservableCollection<DiagNasos> CurrentMNU;
         ReportResultWindow win;
         ReportResultWindow winRun;
 
@@ -461,37 +468,64 @@ namespace EDSApp
 
         private async void MNUBUtttonCreate_Click(object sender, RoutedEventArgs e)
         {
-           /* if (!EDSClass.Single.Ready)
+            /* if (!EDSClass.Single.Ready)
+             {
+                 MessageBox.Show("ЕДС сервер не готов");
+                 return;
+             }
+             EDSClass.Disconnect();
+             EDSClass.Connect();*/
+
+            DateTime dt = _DateStart;
+            ObservableCollection<DiagNasos> CurrentMNU = new ObservableCollection<DiagNasos>();
+            MNUGrid.ItemsSource = CurrentMNU;
+            while (dt < _DateEnd)
             {
-                MessageBox.Show("ЕДС сервер не готов");
-                return;
+
+                DiagNasos diag = new DiagNasos(dt, dt.AddDays(1), txtGG.Text);
+                bool ok = await diag.ReadData();
+                CurrentMNU.Add(diag);
+                dt = dt.AddDays(1);
             }
-            EDSClass.Disconnect();
-            EDSClass.Connect();*/
 
-            DiagNasos MNU = new DiagNasos(_DateStart,_DateEnd,txtGG.Text);
-            await MNU.ReadData();
 
+
+        }
+
+        private async void MNUGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DiagNasos record = MNUGrid.SelectedItem as DiagNasos;
             winMNU = new ReportResultWindow();
-            winMNU.chart.initControl();            
+            winMNU.chart.initControl();
             winMNU.chart.AllYAxisIsVisible = true;
             winMNU.chart.CurrentFormatY = "0";
+
+            winMNU.chart.init(true, "dd.MM HH");
+            winMNU.chart.setY2AxisCount(winMNU.chart.CurrentGraphPane, 3);
+            winMNU.chart.AddSerie("STOP", record.GetSerieData(record.DateStart, record.DateEnd, record.GGRunData),
+                System.Drawing.Color.LightBlue, true, false, true, -1, true);            
+            winMNU.chart.AddSerie("Одновр раб", record.GetSerieData(record.DateStart, record.DateEnd, record.OneTimeWorkInfo.Values.ToList()),
+                System.Drawing.Color.Red, true, false, true, 0, true,0,5);
+            bool ok = await record.GetSerieLEDSData();            
+            winMNU.chart.AddSerie("L", record.dataLvl,   System.Drawing.Color.Orange, true, false, true, 1, true);
+            winMNU.chart.AddSerie("P", record.dataP, System.Drawing.Color.Yellow, true, false, true, 2, true);
+
             
-            winMNU.chart.init(true, "dd.MM HH");
-            winMNU.chart.AddSerie("STOP", MNU.GGRunSerie, System.Drawing.Color.LightBlue, true, false, true, -1, true);
+
 
             winMNU.chart.init(true, "dd.MM HH");
-            winMNU.chart.AddSerie("A", MNU.MNUASerie, System.Drawing.Color.LightBlue, true, false, true, -1, true);
+            winMNU.chart.setY2AxisCount(winMNU.chart.CurrentGraphPane, 3);
+            winMNU.chart.AddSerie("MNU A", record.GetSerieData(record.DateStart, record.DateEnd, record.MNU1Data),
+                System.Drawing.Color.Red, true, false, true, -1, true, 0, 3);
+            winMNU.chart.AddSerie("MNU B", record.GetSerieData(record.DateStart, record.DateEnd, record.MNU2Data),
+                System.Drawing.Color.Green, true, false, true, 0, true, -1, 2);
+            winMNU.chart.AddSerie("MNU C", record.GetSerieData(record.DateStart, record.DateEnd, record.MNU3Data),
+                System.Drawing.Color.Yellow, true, false, true, 1, true, -2, 1);
 
-            winMNU.chart.init(true, "dd.MM HH");
-            winMNU.chart.AddSerie("B", MNU.MNUBSerie, System.Drawing.Color.LightBlue, true, false, true, -1, true);
 
-            winMNU.chart.init(true, "dd.MM HH");
-            winMNU.chart.AddSerie("C", MNU.MNUCSerie, System.Drawing.Color.LightBlue, true, false, true, -1, true);
 
 
             winMNU.Show();
-
         }
     }
 }

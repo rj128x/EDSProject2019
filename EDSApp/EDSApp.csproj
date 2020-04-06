@@ -101,6 +101,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\DateTimeHHMMConverter.cs" />
     <Compile Include="Converters\LogicNotConverter.cs">
       <CustomToolNamespace>EDSApp.Converters</CustomToolNamespace>
     </Compile>

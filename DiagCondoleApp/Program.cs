@@ -23,25 +23,28 @@ namespace DiagCondoleApp
         {
             DateTime date = DateTime.Parse("21.03.2020 00:00");
             DateTime dateEnd = DateTime.Parse("29.03.2020");
-
+            DateTime start = DateTime.Now;
             while (date < dateEnd)
             {
                 Logger.Info(date.ToString());
-                DateTime start = DateTime.Now;
+                
                 foreach (string gg in new string[]{ "04","05","07"}){
-                    bool ok = await PuskStopData.FillPuskStopData(gg, "GG_STOP", gg+"VT_GC02D-45.MCR@GRARM", date, date.AddHours(12), false);
-                    ok = await PuskStopData.FillPuskStopData(gg, "MNU_1", gg+"VT_PS01DI-01.MCR@GRARM", date, date.AddHours(12), true);
-                    ok = await PuskStopData.FillPuskStopData(gg, "MNU_2", gg+"VT_PS02DI-01.MCR@GRARM", date, date.AddHours(12), true);
-                    ok = await PuskStopData.FillPuskStopData(gg, "MNU_3", gg+"VT_PS03DI-01.MCR@GRARM", date, date.AddHours(12), true);
+                    //bool ok = await PuskStopReader.FillPuskStopData(gg, "GG_RUN", gg+"VT_GC02D-45.MCR@GRARM", date, date.AddHours(12), true);
+                     bool ok = await PuskStopReader.FillPuskStopData(gg, "GG_STOP", gg + "VT_GC02D-45.MCR@GRARM", date, date.AddHours(12), false);
+                    /*ok = await PuskStopReader.FillPuskStopData(gg, "MNU_1", gg+"VT_PS01DI-01.MCR@GRARM", date, date.AddHours(12), false);
+                    ok = await PuskStopReader.FillPuskStopData(gg, "MNU_2", gg+"VT_PS02DI-01.MCR@GRARM", date, date.AddHours(12), false);
+                    ok = await PuskStopReader.FillPuskStopData(gg, "MNU_3", gg+"VT_PS03DI-01.MCR@GRARM", date, date.AddHours(12), false);*/
                 }
 
 
 
 
-                DateTime end = DateTime.Now;
-                Logger.Info((end - start).TotalMinutes.ToString());
+                
+                
                 date = date.AddHours(12);
             }
+            DateTime end = DateTime.Now;
+            Logger.Info((end - start).TotalMinutes.ToString());
 
         }
 

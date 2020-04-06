@@ -111,9 +111,9 @@
                                 <StackPanel Orientation="Horizontal" >
                                     <TextBlock Text="Усреднять данные объема уровня за " Width="250"></TextBlock>
                                     <TextBox Text="{Binding vMinutes, Mode=TwoWay}" Width="40"/>
-                                </StackPanel>                               
-                                
-                                <Button Content="Сформировать" Name="btnCreatePP" Click="btnCreatePP_Click" Height="26" VerticalAlignment="Bottom"/>                                
+                                </StackPanel>
+
+                                <Button Content="Сформировать" Name="btnCreatePP" Click="btnCreatePP_Click" Height="26" VerticalAlignment="Bottom"/>
                                 <Button Name="btnRecalcPP" Click="btnRecalcPP_Click" Content="Пересчитать" Height="26"/>
                             </StackPanel>
 
@@ -129,7 +129,7 @@
                                     <TextBlock Text="V0 Трубы (л)" Width="250"></TextBlock>
                                     <TextBox Text="{Binding V_TB, Mode=TwoWay, StringFormat='0.#####'}" Width="60" />
                                 </StackPanel>
-                                
+
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="V0 ОГА (л)" Width="250"></TextBlock>
                                     <TextBox Text="{Binding V0_OGA, Mode=TwoWay, StringFormat='0.#####'}" Width="60" />
@@ -138,7 +138,7 @@
                                     <TextBlock Text="V_1mm ОГА (л)" Width="250"></TextBlock>
                                     <TextBox Text="{Binding V1mm_OGA, Mode=TwoWay, StringFormat='0.#####'}" Width="60"/>
                                 </StackPanel>
-                                
+
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="V0 АГА (л)" Width="250"></TextBlock>
                                     <TextBox Text="{Binding V0_AGA, Mode=TwoWay, StringFormat='0.#####'}" Width="60" />
@@ -225,13 +225,118 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                    
-                    <Border Grid.Column="0">
-                        <StackPanel Orientation="Vertical">
-                            <Button Name="MNUBUtttonCreate"  Content="Длительность" Click="MNUBUtttonCreate_Click"/>
-                        </StackPanel>
-                    </Border>
+
+                        <Border Grid.Column="0">
+                            <StackPanel Orientation="Vertical">
+                                <Button Name="MNUBUtttonCreate"  Content="Длительность" Click="MNUBUtttonCreate_Click"/>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1">
+                            <DataGrid x:Name="MNUGrid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" 
+                                      CanUserResizeColumns="False" MouseDoubleClick="MNUGrid_MouseDoubleClick">
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Header="Дата">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Date}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                    <DataGridTemplateColumn Header="Время раб/ост ГГ" >
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <TextBlock  Text="{Binding timeGGRun , StringFormat='0.#'}"/>
+                                                    <TextBlock  Text="{Binding timeGGStop , StringFormat='0.#'}" HorizontalAlignment="Right"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Пусков на раб ГГ" >
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <TextBlock  Text="{Binding NasosRunGG.cntPusk}"/>
+                                                    <TextBlock  Text="{Binding NasosRunGG.cntPuskRel, StringFormat='0.#'}" HorizontalAlignment="Right"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Пусков на ост ГГ" >
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <TextBlock  Text="{Binding NasosStopGG.cntPusk}"/>
+                                                    <TextBlock  Text="{Binding NasosStopGG.cntPuskRel, StringFormat='0.#'}" HorizontalAlignment="Right"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Время на ост ГГ" >
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="Мин:"/>
+                                                        <TextBlock Text="{Binding NasosStopGG.minLen}"/>
+                                                        <TextBlock Text="{Binding NasosStopGG.minTime, Converter={StaticResource dateTimeHHMMConverter}}" Margin="10,00,0,0"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="Макс:"/>
+                                                        <TextBlock Text="{Binding NasosStopGG.maxLen}"/>
+                                                        <TextBlock Text="{Binding NasosStopGG.maxTime, Converter={StaticResource dateTimeHHMMConverter}}" Margin="10,00,0,0"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="Ср:"/>
+                                                        <TextBlock Text="{Binding NasosStopGG.avgLen, StringFormat='0'}"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Время на раб ГГ" >
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="Мин:"/>
+                                                        <TextBlock Text="{Binding NasosRunGG.minLen}"/>
+                                                        <TextBlock Text="{Binding NasosRunGG.minTime, Converter={StaticResource dateTimeHHMMConverter}}" Margin="10,00,0,0"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="Макс:"/>
+                                                        <TextBlock Text="{Binding NasosRunGG.maxLen}"/>
+                                                        <TextBlock Text="{Binding NasosRunGG.maxTime, Converter={StaticResource dateTimeHHMMConverter}}" Margin="10,00,0,0"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="Ср:"/>
+                                                        <TextBlock Text="{Binding NasosRunGG.avgLen, StringFormat='0'}"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="Одноврем работа " >
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+
+                                                    <TextBlock Text="{Binding OneTimeWork}" TextWrapping="Wrap"/>
+
+
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Border>
+
+
                     </Grid>
                 </TabItem>
             </TabControl>

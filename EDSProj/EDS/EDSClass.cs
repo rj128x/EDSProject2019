@@ -10,7 +10,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace EDSProj
 {
-	public enum EDSReportPeriod { sec, minute, hour, day, month,minute5,minute10,minute15,minute30 }
+	public enum EDSReportPeriod { sec,sec5,sec10,sec15,sec30, minute, hour, day, month,minute5,minute10,minute15,minute30 }
 	public enum EDSReportFunction { avg, max, min, val, vyrab }
 	public class TechGroupInfo
 	{
@@ -226,6 +226,10 @@ namespace EDSProj
 			Single = new EDSClass();
 			ReportPeriods = new Dictionary<EDSReportPeriod, string>();
 			ReportPeriods.Add(EDSReportPeriod.sec, "Секунда");
+			ReportPeriods.Add(EDSReportPeriod.sec5, "5 Секунда");
+			ReportPeriods.Add(EDSReportPeriod.sec10, "10 Секунда");
+			ReportPeriods.Add(EDSReportPeriod.sec15, "15 Секунда");
+			ReportPeriods.Add(EDSReportPeriod.sec30, "30 Секунда");
 			ReportPeriods.Add(EDSReportPeriod.minute, "Минута");
 			ReportPeriods.Add(EDSReportPeriod.hour, "Час");
 			ReportPeriods.Add(EDSReportPeriod.day, "Сутки");
@@ -270,6 +274,18 @@ namespace EDSProj
 			switch (period) {
 				case EDSReportPeriod.sec:
 					res = 1;
+					break;
+				case EDSReportPeriod.sec5:
+					res = 5;
+					break;
+				case EDSReportPeriod.sec10:
+					res = 10;
+					break;
+				case EDSReportPeriod.sec15:
+					res = 15;
+					break;
+				case EDSReportPeriod.sec30:
+					res = 30;
 					break;
 				case EDSReportPeriod.minute:
 					res = 60;
