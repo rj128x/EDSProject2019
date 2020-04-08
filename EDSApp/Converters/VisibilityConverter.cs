@@ -30,6 +30,18 @@ namespace EDSApp.Converters
 					return System.Windows.Visibility.Collapsed;
 				}
 			}
+			else if (value is Double)
+			{
+				try
+				{
+					Double val =(Double)value;
+					return (!Double.IsNaN(val) &&val>0) ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+				}
+				catch
+				{
+					return System.Windows.Visibility.Collapsed;
+				}
+			}
 			else if (value is String) {
 				try {
 					string val = (String)value;

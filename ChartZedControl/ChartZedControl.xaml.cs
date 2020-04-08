@@ -596,6 +596,10 @@ namespace ChartZedControl
 
                 graphPane.YAxis.MinorTic.Color = color;
 
+                if (min > double.MinValue)
+                    graphPane.YAxis.Scale.Min = min;
+                if (max < double.MaxValue)
+                    graphPane.YAxis.Scale.Max = max;
 
             }
             if (y2axisIndex > -1)

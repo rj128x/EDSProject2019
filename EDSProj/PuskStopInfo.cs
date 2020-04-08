@@ -14,10 +14,14 @@ namespace EDSProj
     
     public partial class PuskStopInfo
     {
+        public int ID { get; set; }
         public int GG { get; set; }
         public string TypeData { get; set; }
         public System.DateTime TimeOn { get; set; }
         public System.DateTime TimeOff { get; set; }
         public double Length { get; set; }
+        public double ValueStart { get; set; }
+        public double ValueEnd { get; set; }
+        public string Comment { get; set; }
     }
 }

@@ -9,16 +9,44 @@ using System.Threading.Tasks;
 
 namespace EDSProj.Diagnostics
 {
+    
     public class PuskStopData
     {
         public DateTime TimeOn { get; set; }
         public DateTime TimeOff { get; set; }
         public double Length { get; set; }
 
+        public double ValueStart { get; set; }
+        public double ValueEnd { get; set; }
+
+        public string Comment { get; set; }
 
     }
     public class PuskStopReader
     {
+        public class PuskStopReaderRecord
+        {
+            public string iess { get; set; }
+
+            public string ValueIess { get; set; }
+            public string DBRecord { get; set; }
+            public bool inverted { get; set; }
+            public int gg { get; set; }
+            public EDSReportRequestRecord rec { get; set; }
+
+
+        }
+
+        protected static async Task<bool> UpdateValue(PuskStopData dataRecord, PuskStopReaderRecord readerRecord) 
+        {
+            if (String.IsNullOrEmpty(readerRecord.ValueIess))
+                return false;
+            double val0= await EDSClass.getValFromServer(readerRecord.ValueIess, dataRecord.TimeOn);
+            double val1 = await EDSClass.getValFromServer(readerRecord.ValueIess, dataRecord.TimeOff);
+            dataRecord.ValueStart = val0;
+            dataRecord.ValueEnd = val1;
+            return true;
+        }
         public static async Task<List<PuskStopData>> AnalizePuskStopData(string pointName, DateTime dateStart, DateTime dateEnd, bool inverted)
         {
             List<PuskStopData> result = new List<PuskStopData>();
@@ -36,7 +64,7 @@ namespace EDSProj.Diagnostics
                     {
                         ds = dt;
                         record.TimeOn = dateStart;
-                        record.TimeOff = dt;
+                        record.TimeOff = dt;                        
                         result.Add(record);
                     }
                     else
@@ -87,85 +115,108 @@ namespace EDSProj.Diagnostics
 
         }
 
-        public static async Task<List<PuskStopData>> AnalizePuskStopDataFull(string pointName, DateTime dateStart, DateTime dateEnd, bool inverted)
+        public static async Task<SortedList<int,List<PuskStopData>>> AnalizePuskStopDataFull(List<PuskStopReaderRecord>req, DateTime dateStart, DateTime dateEnd)
         {
             EDSReport report = new EDSReport(dateStart, dateEnd, EDSReportPeriod.sec);
-            EDSPointInfo point = await EDSPointInfo.GetPointInfo(pointName);
-            EDSReportRequestRecord pointRec = report.addRequestField(point, EDSReportFunction.val);
+            Dictionary<string, EDSReportRequestRecord> records = new Dictionary<string, EDSReportRequestRecord>();
+
+            foreach (PuskStopReaderRecord de in req)
+            {
+                EDSReportRequestRecord pointRec = null;
+                if (!records.ContainsKey(de.iess))
+                {
+                    EDSPointInfo point = await EDSPointInfo.GetPointInfo(de.iess);
+                    pointRec = report.addRequestField(point, EDSReportFunction.val);
+                    records.Add(de.iess, pointRec);
+                }
+                else
+                {
+                    pointRec = records[de.iess];
+                }
+                de.rec = pointRec;
+            }
             bool ok = await report.ReadData();
             List<DateTime> keys = report.ResultData.Keys.ToList();
-            SortedList<DateTime, double> data = new SortedList<DateTime, double>();
-            foreach (DateTime dt in keys)
+
+            SortedList<int, List<PuskStopData>> FullResult = new SortedList<int, List<PuskStopData>>();
+            
+            foreach (PuskStopReaderRecord readField in req)
             {
-                data.Add(dt, report.ResultData[dt][pointRec.Id]);
-            }
-            double val0 = data.Values.First();
-
-            List<PuskStopData> result = new List<PuskStopData>();
-            PuskStopData record = new PuskStopData();
-
-            DateTime ds = dateStart.AddSeconds(0);
-            if ((inverted && val0 < 0.5) || (!inverted && val0 > 0.9))
-            {
-
-                try
+                bool inverted = readField.inverted;
+                List<PuskStopData> result = new List<PuskStopData>();
+                FullResult.Add(FullResult.Count , result);
+                SortedList<DateTime, double> data = new SortedList<DateTime, double>();
+                foreach (DateTime dt in keys)
                 {
-                    DateTime dt = inverted ? data.First(de => de.Value > 0.5).Key : data.First(de => de.Value < 0.5).Key;
-                    record.TimeOff = dt;
-                    record.TimeOn = dateStart;
-                    record.Length = (dt - dateStart).TotalSeconds;
-                    ds = dt.AddSeconds(0);
-                    result.Add(record);
+                    data.Add(dt, report.ResultData[dt][readField.rec.Id]);
                 }
-                catch
-                {
-                    record.TimeOn = dateStart;
-                    record.TimeOff = dateEnd;
-                    record.Length = (dateEnd - dateStart).TotalSeconds;
-                    result.Add(record);
-                    return result;
-                }
-            }
+                double val0 = data.Values.First();
 
-            while (ds <= dateEnd)
-            {
-                try
+                PuskStopData record = new PuskStopData();
+
+                DateTime ds = dateStart.AddSeconds(0);
+                if ((inverted && val0 < 0.5) || (!inverted && val0 > 0.9))
                 {
-                    DateTime dt = inverted ? data.First(de => de.Key > ds && de.Value < 0.5).Key :
-                        data.First(de => de.Key > ds && de.Value > 0.5).Key;
-                    record = new PuskStopData();
-                    record.TimeOn = dt;
+
                     try
                     {
-                        DateTime dt1 = inverted ? data.First(de => de.Key > dt && de.Value > 0.5).Key :
-                            data.First(de => de.Key > dt && de.Value < 0.5).Key;
-                        record.TimeOff = dt1;
-                        record.Length = (record.TimeOff - record.TimeOn).TotalSeconds;
+                        DateTime dt = inverted ? data.First(de => de.Value > 0.5).Key : data.First(de => de.Value < 0.5).Key;
+                        record.TimeOff = dt;
+                        record.TimeOn = dateStart;
+                        record.Length = (dt - dateStart).TotalSeconds;
+                        ds = dt.AddSeconds(0);
                         result.Add(record);
-                        ds = dt1.AddSeconds(0);
+
                     }
                     catch
                     {
+                        record.TimeOn = dateStart;
                         record.TimeOff = dateEnd;
-                        record.Length = (record.TimeOff - record.TimeOn).TotalSeconds;
+                        record.Length = (dateEnd - dateStart).TotalSeconds;
                         result.Add(record);
-                        return result;
+                        continue;
                     }
                 }
-                catch
+
+                while (ds <= dateEnd)
                 {
-                    return result;
+                    try
+                    {
+                        DateTime dt = inverted ? data.First(de => de.Key > ds && de.Value < 0.5).Key :
+                            data.First(de => de.Key > ds && de.Value > 0.5).Key;
+                        record = new PuskStopData();
+                        record.TimeOn = dt;
+                        try
+                        {
+                            DateTime dt1 = inverted ? data.First(de => de.Key > dt && de.Value > 0.5).Key :
+                                data.First(de => de.Key > dt && de.Value < 0.5).Key;
+                            record.TimeOff = dt1;
+                            record.Length = (record.TimeOff - record.TimeOn).TotalSeconds;
+                            result.Add(record);
+                            ds = dt1.AddSeconds(0);
+                        }
+                        catch
+                        {
+                            record.TimeOff = dateEnd;
+                            record.Length = (record.TimeOff - record.TimeOn).TotalSeconds;
+                            result.Add(record);
+                            break;
+                        }
+                    }
+                    catch
+                    {
+                        break;
+                    }
                 }
             }
 
-            return result;
 
-
+            return FullResult;
 
         }
 
 
-        public async static Task<bool> FillPuskStopData(string GG, string typeData, string iess, DateTime dateStart, DateTime dateEnd, bool full)
+        public async static Task<bool> FillPuskStopData(List<PuskStopReaderRecord> reqList, DateTime dateStart, DateTime dateEnd)
         {
             try
             {
@@ -175,94 +226,128 @@ namespace EDSProj.Diagnostics
             EDSClass.Connect();
             if (!EDSClass.Connected)
                 return false;
+            SortedList<int, List<PuskStopData>> FullResult= await AnalizePuskStopDataFull(reqList, dateStart, dateEnd);
 
-            List<PuskStopData> data = new List<PuskStopData>(); ;
-            if (full)
+            for (int index=0;index< reqList.Count;index++)
             {
-                data = await AnalizePuskStopDataFull(iess, dateStart, dateEnd, true);
-            }
-            else
-            {
-                data = await AnalizePuskStopData(iess, dateStart, dateEnd, false);
-            }
+                List<PuskStopData> data = FullResult[index];
+                PuskStopReaderRecord reqRecord = reqList[index];
+                int gg = reqRecord.gg;
+                string typeData = reqRecord.DBRecord;                
 
-            if (data.Count > 0)
-            {
-                int gg = Int32.Parse(GG);
-                DiagDBEntities diagDB = new DiagDBEntities();
-
-                PuskStopData first = data.First();
-                PuskStopData last = data.Last();
-                IQueryable<PuskStopInfo> reqFirst = from pi in diagDB.PuskStopInfoes where pi.GG == gg && pi.TypeData == typeData && pi.TimeOff == first.TimeOn select pi;
-
-                if (reqFirst.Count() > 0)
+                if (data.Count > 0)
                 {
-                    PuskStopInfo firstDB = reqFirst.First();
-                    firstDB.TimeOff = first.TimeOff;
-                    firstDB.Length = (firstDB.TimeOff - firstDB.TimeOn).TotalSeconds;
+                    Logger.Info("Обновляем уровни");
+                    foreach (PuskStopData rec in data)
+                    {
+                        await UpdateValue(rec, reqRecord);
+                    }
+                    DiagDBEntities diagDB = new DiagDBEntities();
 
+                    PuskStopData first = data.First();
+                    PuskStopData last = data.Last();
+                    IQueryable<PuskStopInfo> reqFirst = from pi in diagDB.PuskStopInfoes where pi.GG == gg && pi.TypeData == typeData && pi.TimeOff == first.TimeOn select pi;
+
+                    if (reqFirst.Count() > 0)
+                    {
+                        PuskStopInfo firstDB = reqFirst.First();                        
+                        firstDB.TimeOff = first.TimeOff;
+                        firstDB.Length = (firstDB.TimeOff - firstDB.TimeOn).TotalSeconds;
+                        firstDB.ValueEnd = first.ValueEnd;
+
+                        diagDB.SaveChanges();
+
+                        if (data.Count > 1)
+                        {
+                            data.RemoveAt(0);
+                        }
+                        else
+                        {
+                            continue;
+                        }
+
+                    }
+
+                    IQueryable<PuskStopInfo> reqLast = from pi in diagDB.PuskStopInfoes where pi.GG == gg && pi.TypeData == typeData && pi.TimeOn == last.TimeOff select pi;
+                    if (reqLast.Count() > 0)
+                    {
+                        PuskStopInfo lastDB = reqLast.First();
+                        lastDB.TimeOn = last.TimeOn;
+                        lastDB.Length = (lastDB.TimeOff - lastDB.TimeOn).TotalSeconds;
+                        lastDB.ValueStart = last.ValueStart;
+                        diagDB.SaveChanges();
+                        if (data.Count > 0)
+                        {
+                            data.Remove(last);
+                        }
+                        else
+                        {
+                            continue;
+                        }
+
+                    }
+
+
+
+                    IQueryable<PuskStopInfo> req = from pi in diagDB.PuskStopInfoes where pi.GG == gg && pi.TypeData == typeData && pi.TimeOn > dateStart && pi.TimeOn <= dateEnd select pi;
+                    SortedList<DateTime, PuskStopInfo> dataDB = new SortedList<DateTime, PuskStopInfo>();
+                    foreach (PuskStopInfo pi in req)
+                    {
+                        dataDB.Add(pi.TimeOn, pi);
+                    }
+
+                    foreach (PuskStopData rec in data)
+                    {
+                        PuskStopInfo recDB = new PuskStopInfo();
+                        if (dataDB.ContainsKey(rec.TimeOn))
+                            recDB = dataDB[rec.TimeOn];
+
+                        recDB.GG = gg;
+                        recDB.TypeData = typeData;
+                        recDB.TimeOn = rec.TimeOn;
+                        recDB.TimeOff = rec.TimeOff;
+                        recDB.Length = rec.Length;
+                        recDB.ValueEnd = rec.ValueEnd;
+                        recDB.ValueStart = rec.ValueStart;
+
+                        if (!dataDB.ContainsKey(rec.TimeOn))
+                            diagDB.PuskStopInfoes.Add(recDB);
+
+                    }
                     diagDB.SaveChanges();
 
-                    if (data.Count > 1)
-                    {
-                        data.RemoveAt(0);
-                    }
-                    else
-                    {
-                        return true;
-                    }
-
                 }
+            }
+            return true;
+        }
 
-                IQueryable<PuskStopInfo> reqLast = from pi in diagDB.PuskStopInfoes where pi.GG == gg && pi.TypeData == typeData && pi.TimeOn == last.TimeOff select pi;
-                if (reqLast.Count() > 0)
+        public static void RefreshPuskStopData(DateTime DateStart,DateTime DateEnd)
+        {
+            DiagDBEntities diagDB = new DiagDBEntities();
+            for (int gg = 1; gg <= 10; gg ++)
+            {
+
+                IEnumerable<PuskStopInfo> reqGG = from r in diagDB.PuskStopInfoes
+                                                  where r.GG == gg && r.TypeData.StartsWith("GG_") &&
+                                                  DateStart < r.TimeOff && DateEnd > r.TimeOn
+                                                  select r;
+                foreach (PuskStopInfo rec in reqGG)
                 {
-                    PuskStopInfo lastDB = reqLast.First();
-                    lastDB.TimeOn = last.TimeOn;
-                    lastDB.Length = (lastDB.TimeOff - lastDB.TimeOn).TotalSeconds;
-                    diagDB.SaveChanges();
-                    if (data.Count > 0)
+                    IEnumerable<PuskStopInfo> reqPI = from r in diagDB.PuskStopInfoes
+                                                      where r.GG == gg && (!r.TypeData.StartsWith("GG")) &&
+                                                      (!r.Comment.Contains(rec.TypeData))&&
+                                                      r.TimeOn > rec.TimeOn && r.TimeOff < rec.TimeOff
+                                                      select r;
+                    foreach (PuskStopInfo pi in reqPI)
                     {
-                        data.Remove(last);
-                    }
-                    else
-                    {
-                        return true;
-                    }
-
-                }
-
-
-
-                IQueryable<PuskStopInfo> req = from pi in diagDB.PuskStopInfoes where pi.GG == gg && pi.TypeData == typeData && pi.TimeOn > dateStart && pi.TimeOn <= dateEnd select pi;
-                SortedList<DateTime, PuskStopInfo> dataDB = new SortedList<DateTime, PuskStopInfo>();
-                foreach (PuskStopInfo pi in req)
-                {
-                    dataDB.Add(pi.TimeOn, pi);
-                }
-
-                foreach (PuskStopData rec in data)
-                {
-                    PuskStopInfo recDB = new PuskStopInfo();
-                    if (dataDB.ContainsKey(rec.TimeOn))
-                        recDB = dataDB[rec.TimeOn];
-
-                    recDB.GG = Int32.Parse(GG);
-                    recDB.TypeData = typeData;
-                    recDB.TimeOn = rec.TimeOn;
-                    recDB.TimeOff = rec.TimeOff;
-                    recDB.Length = rec.Length;
-
-                    if (!dataDB.ContainsKey(rec.TimeOn))
-                        diagDB.PuskStopInfoes.Add(recDB);
+                        if (!pi.Comment.Contains(rec.TypeData))
+                            pi.Comment+=String.Format("{0}[{1}]; ",rec.TypeData,rec.ID);
+                    }                    
 
                 }
                 diagDB.SaveChanges();
 
-
-                return true;
             }
-            return false;
         }
     }
 }

@@ -237,40 +237,65 @@
                             <DataGrid x:Name="MNUGrid" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" 
                                       CanUserResizeColumns="False" MouseDoubleClick="MNUGrid_MouseDoubleClick">
                                 <DataGrid.Columns>
-                                    <DataGridTemplateColumn Header="Дата">
+                                    <DataGridTemplateColumn >
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="Дата"/>
+                                        </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Text="{Binding Date}"/>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Width="150">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="работа [ч]" TextWrapping="Wrap"/>
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock  Text="{Binding timeGGRun , StringFormat='0.#'}"/>
 
-                                    <DataGridTemplateColumn Header="Время раб/ост ГГ" >
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Width="150">
+                                        <DataGridTemplateColumn.Header>
+                                            <TextBlock Text="простой [ч]" TextWrapping="Wrap"/>
+                                        </DataGridTemplateColumn.Header>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock  Text="{Binding timeGGStop , StringFormat='0.#'}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn  >
+                                        <DataGridTemplateColumn.Header>
+                                            <StackPanel>
+                                                <TextBlock Text="пусков ГГ раб" TextWrapping="Wrap"/>
+                                                <TextBlock Text="всего /в час" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel>
-                                                    <TextBlock  Text="{Binding timeGGRun , StringFormat='0.#'}"/>
-                                                    <TextBlock  Text="{Binding timeGGStop , StringFormat='0.#'}" HorizontalAlignment="Right"/>
+                                                    <TextBlock  Text="{Binding NasosRunGG[0].cntPusk}"/>
+                                                    <TextBlock  Text="{Binding NasosRunGG[0].cntPuskRel, StringFormat='0.#'}" HorizontalAlignment="Right"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn Header="Пусков на раб ГГ" >
+                                    <DataGridTemplateColumn  >
+                                        <DataGridTemplateColumn.Header>
+                                            <StackPanel>
+                                                <TextBlock Text="пусков ГГ стоит" TextWrapping="Wrap"/>
+                                                <TextBlock Text="всего /в час" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel>
-                                                    <TextBlock  Text="{Binding NasosRunGG.cntPusk}"/>
-                                                    <TextBlock  Text="{Binding NasosRunGG.cntPuskRel, StringFormat='0.#'}" HorizontalAlignment="Right"/>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn Header="Пусков на ост ГГ" >
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <StackPanel>
-                                                    <TextBlock  Text="{Binding NasosStopGG.cntPusk}"/>
-                                                    <TextBlock  Text="{Binding NasosStopGG.cntPuskRel, StringFormat='0.#'}" HorizontalAlignment="Right"/>
+                                                    <TextBlock  Text="{Binding NasosStopGG[0].cntPusk}"/>
+                                                    <TextBlock  Text="{Binding NasosStopGG[0].cntPuskRel, StringFormat='0.#'}" HorizontalAlignment="Right"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -279,19 +304,19 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel>
-                                                    <StackPanel Orientation="Horizontal">
+                                                    <StackPanel Orientation="Horizontal" Visibility="{Binding NasosStopGG[0].minLen, Converter={StaticResource visibilityConverter}}">
                                                         <TextBlock Text="Мин:"/>
-                                                        <TextBlock Text="{Binding NasosStopGG.minLen}"/>
-                                                        <TextBlock Text="{Binding NasosStopGG.minTime, Converter={StaticResource dateTimeHHMMConverter}}" Margin="10,00,0,0"/>
+                                                        <TextBlock Text="{Binding NasosStopGG[0].minLen}"/>
+                                                        <TextBlock Text="{Binding NasosStopGG[0].minTime, Converter={StaticResource dateTimeHHMMConverter}}" Margin="10,00,0,0"/>
                                                     </StackPanel>
-                                                    <StackPanel Orientation="Horizontal">
+                                                    <StackPanel Orientation="Horizontal" Visibility="{Binding NasosStopGG[0].maxLen, Converter={StaticResource visibilityConverter}}">
                                                         <TextBlock Text="Макс:"/>
-                                                        <TextBlock Text="{Binding NasosStopGG.maxLen}"/>
-                                                        <TextBlock Text="{Binding NasosStopGG.maxTime, Converter={StaticResource dateTimeHHMMConverter}}" Margin="10,00,0,0"/>
+                                                        <TextBlock Text="{Binding NasosStopGG[0].maxLen}"/>
+                                                        <TextBlock Text="{Binding NasosStopGG[0].maxTime, Converter={StaticResource dateTimeHHMMConverter}}" Margin="10,00,0,0"/>
                                                     </StackPanel>
                                                     <StackPanel Orientation="Horizontal">
                                                         <TextBlock Text="Ср:"/>
-                                                        <TextBlock Text="{Binding NasosStopGG.avgLen, StringFormat='0'}"/>
+                                                        <TextBlock Text="{Binding NasosStopGG[0].avgLen, StringFormat='0'}"/>
                                                     </StackPanel>
                                                 </StackPanel>
                                             </DataTemplate>
@@ -301,19 +326,19 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel>
-                                                    <StackPanel Orientation="Horizontal">
+                                                    <StackPanel Orientation="Horizontal" Visibility="{Binding NasosRunGG[0].minLen, Converter={StaticResource visibilityConverter}}">
                                                         <TextBlock Text="Мин:"/>
-                                                        <TextBlock Text="{Binding NasosRunGG.minLen}"/>
-                                                        <TextBlock Text="{Binding NasosRunGG.minTime, Converter={StaticResource dateTimeHHMMConverter}}" Margin="10,00,0,0"/>
+                                                        <TextBlock Text="{Binding NasosRunGG[0].minLen}"/>
+                                                        <TextBlock Text="{Binding NasosRunGG[0].minTime, Converter={StaticResource dateTimeHHMMConverter}}" Margin="10,00,0,0"/>
                                                     </StackPanel>
-                                                    <StackPanel Orientation="Horizontal">
+                                                    <StackPanel Orientation="Horizontal" Visibility="{Binding NasosRunGG[0].maxLen, Converter={StaticResource visibilityConverter}}">
                                                         <TextBlock Text="Макс:"/>
-                                                        <TextBlock Text="{Binding NasosRunGG.maxLen}"/>
-                                                        <TextBlock Text="{Binding NasosRunGG.maxTime, Converter={StaticResource dateTimeHHMMConverter}}" Margin="10,00,0,0"/>
+                                                        <TextBlock Text="{Binding NasosRunGG[0].maxLen}"/>
+                                                        <TextBlock Text="{Binding NasosRunGG[0].maxTime, Converter={StaticResource dateTimeHHMMConverter}}" Margin="10,00,0,0"/>
                                                     </StackPanel>
                                                     <StackPanel Orientation="Horizontal">
                                                         <TextBlock Text="Ср:"/>
-                                                        <TextBlock Text="{Binding NasosRunGG.avgLen, StringFormat='0'}"/>
+                                                        <TextBlock Text="{Binding NasosRunGG[0].avgLen, StringFormat='0'}"/>
                                                     </StackPanel>
                                                 </StackPanel>
                                             </DataTemplate>
