@@ -478,7 +478,7 @@ namespace EDSApp
 
             DateTime dt = _DateStart;
             ObservableCollection<DiagNasos> CurrentMNU = new ObservableCollection<DiagNasos>();
-            MNUGrid.ItemsSource = CurrentMNU;
+            
             while (dt < _DateEnd)
             {
 
@@ -487,7 +487,7 @@ namespace EDSApp
                 CurrentMNU.Add(diag);
                 dt = dt.AddDays(1);
             }
-
+            MNUGrid.ItemsSource = CurrentMNU;
 
 
         }

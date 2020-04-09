@@ -40,8 +40,9 @@ namespace EDSProj.Diagnostics
         public double timeGGRun { get; set; }
         public double timeGGStop { get; set; }
 
-        public List<AnalizeNasosData> NasosRunGG;
-        public List<AnalizeNasosData> NasosStopGG;
+        public List<AnalizeNasosData> NasosRunGG=new List<AnalizeNasosData>();
+        public List<AnalizeNasosData> NasosStopGG=new List<AnalizeNasosData>();
+        public List<AnalizeNasosData> NasosGG = new List<AnalizeNasosData>();
 
         public SortedList<DateTime, PuskStopData> OneTimeWorkInfo;
         public String OneTimeWork { get; set; }
@@ -157,13 +158,12 @@ namespace EDSProj.Diagnostics
         }
 
 
-        protected AnalizeNasosData processNasosData(string type,List<PuskStopData> GGData,
+        protected AnalizeNasosData processNasosData(string type,
             List<PuskStopData> NasosData, bool calcOneTime)
         {
             AnalizeNasosData result = new AnalizeNasosData();
             result.maxLen = double.NaN;
             result.minLen = double.NaN;
-            List<double> stayLens = new List<double>();
 
             IEnumerable<PuskStopData> req = from nd in NasosData
                                     where                       
@@ -175,14 +175,7 @@ namespace EDSProj.Diagnostics
             foreach (PuskStopData rec in req)
             {
                 result.sumLen += rec.Length;
-                
-                PuskStopData ggON = GGData.Last(gg => gg.TimeOn < rec.TimeOn);                
-                if (ggON != null && ggON.TimeOn > prevDateOn)
-                    prevDateOn = ggON.TimeOn;
-                double stay = (rec.TimeOn - prevDateOn).TotalSeconds;
-                if (stay > 0)
-                    stayLens.Add(stay);
-                prevDateOn = rec.TimeOn;
+
 
                 result.cntPusk++;
                 if (double.IsNaN(result.minLen) || rec.Length < result.minLen)
@@ -225,31 +218,27 @@ namespace EDSProj.Diagnostics
                     }
                 }
             }
-            PuskStopData last = req.Last();
-            if (last != null)
-            {
-                double stay = (DateEnd - last.TimeOff).TotalSeconds;
-                if (stay > 0)
-                    stayLens.Add(stay);
-            }
-            result.sumStay = (DateStart - DateEnd).TotalSeconds - result.sumLen;
+            double timeSum = (type == "STOP" ? timeGGStop : timeGGRun);
+
+
+            result.sumStay = timeSum-result.sumLen;
             result.workRel = result.sumLen / result.sumStay;
             result.avgLen = result.sumLen / result.cntPusk;
-            result.avgStay = stayLens.Average();
-            result.cntPuskRel = result.cntPusk / (type=="STOP"?timeGGStop:timeGGRun);
+            result.avgStay = result.sumStay/(result.cntPusk);
+            result.cntPuskRel = result.cntPusk / timeSum;
             return result;
         }
 
 
 
-        public async Task<bool> ReadData(String type, int nasosCount)
+        public async Task<bool> ReadData(String type, int nasosCount,string typeCalcRun="GG_UST")
         {
             Date = DateStart.ToString("dd.MM");
             GGRunData = createPuskStopData("GG_RUN");
             GGStopData = createPuskStopData("GG_STOP");
-            GGUstData = createPuskStopData("GG_UST");
+            GGUstData = createPuskStopData(typeCalcRun);
 
-
+            NasosData.Add(DataFull);
             for (int nasos = 1; nasos <= nasosCount;nasos++) {
                 NasosData.Add(createPuskStopData(String.Format("{0}_{1}",type,nasos), DataFull));                
             }
@@ -274,16 +263,16 @@ namespace EDSProj.Diagnostics
                 timeGGStop += (end - start).TotalSeconds;
             }
 
-            timeGGRun /= 3600;
-            timeGGStop /= 3600;
 
 
-            NasosRunGG.Add(processNasosData("UST",GGUstData, DataFull, true));
-            NasosStopGG.Add(processNasosData("STOP",GGStopData, DataFull, true));
+            NasosRunGG.Add(processNasosData(typeCalcRun,  DataFull, true));
+            NasosStopGG.Add(processNasosData("STOP", DataFull, true));
+            NasosGG.Add(processNasosData("GG",  DataFull, true));
             for (int nasos = 1; nasos <= nasosCount; nasos++)
             {
-                NasosRunGG.Add(processNasosData("UST",GGUstData, NasosData[nasos], false));
-                NasosStopGG.Add(processNasosData("STOP",GGStopData, NasosData[nasos], false));
+                NasosRunGG.Add(processNasosData(typeCalcRun, NasosData[nasos], false));
+                NasosStopGG.Add(processNasosData("STOP",NasosData[nasos], false));
+                NasosGG.Add(processNasosData("GG", NasosData[nasos], false));
             }
 
 
