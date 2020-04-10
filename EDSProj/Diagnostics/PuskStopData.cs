@@ -21,6 +21,10 @@ namespace EDSProj.Diagnostics
 
         public string Comment { get; set; }
 
+        public PuskStopData PrevRecord { get; set; }
+        public PuskStopData NextRecord { get; set; }
+
+        public string TypeData { get; set; }
     }
     public class PuskStopReader
     {

@@ -12,25 +12,78 @@ namespace EDSProj.Diagnostics
 
     public class AnalizeNasosData
     {
-        public double sumLen { get; set; }
-        public double sumStay { get; set; }
+        public class AvgInfo
+        {
+            protected SortedList<DateTime, double> data;
+            public SortedList<double, double> PData;
+            public double MathO;
+            public int Count { get { return data.Count; } }
+            public AvgInfo()
+            {
+                data = new SortedList<DateTime, double>();
+            }
+            public void Add(DateTime dt,double val)
+            {
+                while (data.ContainsKey(dt))
+                {
+                    dt = dt.AddMilliseconds(1);                   
 
+
+                }
+                data.Add(dt, val);
+            }
+
+            public void calcAVG()
+            {
+                if (data.Count == 0)
+                    return;
+                if (data.Count <= 3)
+                {
+                    MathO = data.Values.Average();
+                    return;
+                }
+                double min = data.Values.Min();
+                double max= data.Values.Max();
+                double step = (max - min) / (1+3.322*Math.Log10(Count));
+                PData = new SortedList<double, double>();                
+                double v = min;
+                while (v <= max)
+                {
+                    int cnt = (from d in data.Values where d >= v && d <= v + step select d).Count();
+                    PData.Add(v, cnt);
+                    v += step;
+                }
+                double sum = 0;
+                foreach (KeyValuePair<double,double> de in PData)
+                {
+                    sum += de.Key * de.Value;
+                }
+                MathO = sum / Count;
+            }
+            
+        }
+
+        public double sumTime { get; set; }
         public double workRel { get; set; }
-        public double cntPusk { get; set; }        
-        public double cntPuskRel { get; set; }
+        
+        public AvgInfo StayInfo { get; set; }
+        public AvgInfo RunInfo { get; set; }
+        public AvgInfo VInfo { get; set; }
 
 
-        public double maxLen { get; set; }
-        public double minLen { get; set; }
+        public AnalizeNasosData()
+        {
+            StayInfo = new AvgInfo();
+            RunInfo = new AvgInfo();
+            VInfo = new AvgInfo();
+        }
 
-        public DateTime? minTime { get; set; }
-        public DateTime? maxTime { get; set; }
-
-
-        public double avgLen { get; set; }
-        public double avgStay { get; set; }
-
-
+        public void calcAvg()
+        {
+            StayInfo.calcAVG();
+            RunInfo.calcAVG();
+            VInfo.calcAVG();
+        }
     }
 
 
@@ -40,9 +93,6 @@ namespace EDSProj.Diagnostics
         public double timeGGRun { get; set; }
         public double timeGGStop { get; set; }
 
-        public List<AnalizeNasosData> NasosRunGG=new List<AnalizeNasosData>();
-        public List<AnalizeNasosData> NasosStopGG=new List<AnalizeNasosData>();
-        public List<AnalizeNasosData> NasosGG = new List<AnalizeNasosData>();
 
         public SortedList<DateTime, PuskStopData> OneTimeWorkInfo;
         public String OneTimeWork { get; set; }
@@ -62,12 +112,23 @@ namespace EDSProj.Diagnostics
 
 
 
-        public List<PuskStopData> DataFull = new List<PuskStopData>();
-        public List<List<PuskStopData>> NasosData = new List<List<PuskStopData>>();        
-        public List<PuskStopData> GGRunData = new List<PuskStopData>();
-        public List<PuskStopData> GGUstData = new List<PuskStopData>();
-        public List<PuskStopData> GGStopData = new List<PuskStopData>();
+        public Dictionary<string, List<PuskStopData>> DataGG = new Dictionary<string, List<PuskStopData>>();
+        public Dictionary<string, List<PuskStopData>> DataNasos = new Dictionary<string, List<PuskStopData>>();
+        public Dictionary<string, AnalizeNasosData> NasosRunGG = new Dictionary<string, AnalizeNasosData>();
+        public Dictionary<string, AnalizeNasosData> NasosStopGG = new Dictionary<string, AnalizeNasosData>();
+        public Dictionary<string, AnalizeNasosData> NasosGG = new Dictionary<string, AnalizeNasosData>();
+        public List<PuskStopData> FullNasosData = new List<PuskStopData>();
+        public List<PuskStopData> FullGGData = new List<PuskStopData>();
 
+        public AnalizeNasosData NasosRunGGView 
+        {
+             get { return NasosRunGG.ContainsKey("SVOD")? NasosRunGG["SVOD"]:new AnalizeNasosData(); }
+        }
+
+        public AnalizeNasosData NasosStopGGView
+        {
+            get { return NasosStopGG.ContainsKey("SVOD") ? NasosStopGG["SVOD"] : new AnalizeNasosData(); }
+        }
 
 
         public DiagNasos(DateTime dateStart, DateTime dateEnd, string GG)
@@ -128,7 +189,7 @@ namespace EDSProj.Diagnostics
             return true;
         }
 
-        protected List<PuskStopData> createPuskStopData(string type_data, List<PuskStopData> FullData = null)
+        protected List<PuskStopData> createPuskStopData(string type_data, Dictionary<string, List<PuskStopData>> DiffData)
         {
             List<PuskStopData> result = new List<PuskStopData>();
             DiagDBEntities diagDB = new DiagDBEntities();
@@ -136,118 +197,188 @@ namespace EDSProj.Diagnostics
             IQueryable<PuskStopInfo> req =
                     from pi in diagDB.PuskStopInfoes
                     where
-                        pi.GG == gg && pi.TypeData == type_data &&
+                        pi.GG == gg && pi.TypeData.Contains(type_data) &&
                         pi.TimeOff > DateStart && pi.TimeOn < DateEnd
+                    orderby pi.TimeOn
                     select pi;
+
+            PuskStopData prevDataFirst = null;
+            try
+            {
+                PuskStopInfo rf =
+                    (from pi in diagDB.PuskStopInfoes
+                     where
+                             pi.GG == gg && pi.TypeData.Contains(type_data) &&
+                             pi.TimeOff < DateStart
+                     orderby pi.TimeOff descending
+                     select pi).First();
+
+                prevDataFirst = new PuskStopData();
+                prevDataFirst.TimeOff = rf.TimeOff;
+                prevDataFirst.ValueStart = rf.ValueStart;
+                prevDataFirst.ValueEnd = rf.ValueEnd;
+            }
+            catch { }
+
+            PuskStopData nextDataLast = null;
+            try
+            {
+                PuskStopInfo rl =
+                    (from pi in diagDB.PuskStopInfoes
+                     where
+                             pi.GG == gg && pi.TypeData.Contains(type_data) &&
+                             pi.TimeOn > DateEnd
+                     orderby pi.TimeOn
+                     select pi).First();
+
+                nextDataLast = new PuskStopData();
+                nextDataLast.TimeOn = rl.TimeOn;
+                nextDataLast.ValueStart = rl.ValueStart;
+                nextDataLast.ValueEnd = rl.ValueEnd;
+
+            }
+            catch { }
+
+            PuskStopData prevData = prevDataFirst;
             foreach (PuskStopInfo pi in req)
             {
                 PuskStopData dat = new PuskStopData();
                 dat.Length = pi.Length;
                 dat.TimeOn = pi.TimeOn;
                 dat.TimeOff = pi.TimeOff;
-                dat.Comment = pi.Comment;
+                dat.ValueEnd = pi.ValueEnd;
+                dat.ValueStart = pi.ValueStart;
+                dat.TypeData = pi.TypeData;
+                dat.PrevRecord = prevData;
+                dat.Comment = "";
+                if (prevData != null)
+                    prevData.NextRecord = dat;
                 result.Add(dat);
-                if (FullData != null)
-                {
-                    DateTime dt = dat.TimeOn;
-                    dt = dt.AddMilliseconds(1);
-                    FullData.Add(dat);
-                }
+                if (DiffData != null && !DiffData.ContainsKey(pi.TypeData))
+                    DiffData.Add(pi.TypeData, new List<PuskStopData>());
+                DiffData[pi.TypeData].Add(dat);
+
+                prevData = dat;
             }
+            if (result.Count > 0)
+                result.Last().NextRecord = nextDataLast;
+
             return result;
         }
 
-
-        protected AnalizeNasosData processNasosData(string type,
-            List<PuskStopData> NasosData, bool calcOneTime)
+        protected void CreateComments()
         {
-            AnalizeNasosData result = new AnalizeNasosData();
-            result.maxLen = double.NaN;
-            result.minLen = double.NaN;
-
-            IEnumerable<PuskStopData> req = from nd in NasosData
-                                    where                       
-                                    nd.TimeOn > DateStart && nd.TimeOff < DateEnd && 
-                                    nd.Comment.Contains(type) orderby nd.TimeOn
-                                            select nd;
-
-            DateTime prevDateOn = DateStart;
-            foreach (PuskStopData rec in req)
+            foreach (PuskStopData ggRec in FullGGData)
             {
-                result.sumLen += rec.Length;
-
-
-                result.cntPusk++;
-                if (double.IsNaN(result.minLen) || rec.Length < result.minLen)
+                IEnumerable<PuskStopData> req = from nd in FullNasosData
+                                                where
+                       nd.PrevRecord != null &&
+                       nd.PrevRecord.TimeOff > ggRec.TimeOn &&
+                       nd.TimeOff < ggRec.TimeOff
+                                                select nd;
+                foreach (PuskStopData pi in req)
                 {
-                    result.minLen = rec.Length;
-                    result.minTime = rec.TimeOn;
-                }
-
-                if (double.IsNaN(result.maxLen) || rec.Length > result.maxLen)
-                {
-                    result.maxLen = rec.Length;
-                    result.maxTime = rec.TimeOn;
-                }
-
-
-
-                if (calcOneTime)
-                {
-                    IEnumerable<PuskStopData> req2 = from nd in req
-                                                     where
-                                      rec.TimeOn < nd.TimeOff && rec.TimeOff > nd.TimeOn &&
-                                      nd.TimeOn > DateStart && nd.TimeOff < DateEnd  
-                                                     select nd;
-                    if (req2.Count() > 1)
-                    {
-                        PuskStopData one = new PuskStopData();
-                        one.TimeOn = DateTime.MinValue;
-                        one.TimeOff = DateTime.MaxValue;
-                        foreach (PuskStopData dt in req2)
-                        {
-                            one.TimeOn = dt.TimeOn > one.TimeOn ? dt.TimeOn : one.TimeOn;
-                            one.TimeOff = dt.TimeOff < one.TimeOff ? dt.TimeOff : one.TimeOff;
-                        }
-                        if (!OneTimeWorkInfo.ContainsKey(one.TimeOn))
-                        {
-                            one.Length = (one.TimeOff - one.TimeOn).TotalSeconds;
-                            OneTimeWorkInfo.Add(one.TimeOn, one);
-
-                        }
-                    }
+                    pi.Comment += ggRec.TypeData + ";";
                 }
             }
-            double timeSum = (type == "STOP" ? timeGGStop : timeGGRun);
+
+        }
+
+        
+
+        protected Dictionary<string, AnalizeNasosData> processNasosData(string typeGG)
+        {
+            Dictionary<string, AnalizeNasosData> result = new Dictionary<string, AnalizeNasosData>();
+            result.Add("SVOD", new AnalizeNasosData());
+            
+
+            foreach (string key in DataNasos.Keys)
+            {
+                result.Add(key, new AnalizeNasosData());
+            }
+            PuskStopData last = null;
+            IEnumerable<PuskStopData> req = from nd in FullNasosData
+                                            where
+                                            nd.Comment.Contains(typeGG)
+                                            select nd;
+            foreach (PuskStopData nr in req)
+            {
+                DateTime d1 = nr.PrevRecord != null && nr.PrevRecord.TimeOff > DateStart ?
+                    nr.PrevRecord.TimeOff : DateStart;
+                DateTime d2 = nr.TimeOn > DateStart ? nr.TimeOn : DateStart;
+                DateTime d3 = nr.TimeOff < DateEnd ? nr.TimeOff : DateEnd;
 
 
-            result.sumStay = timeSum-result.sumLen;
-            result.workRel = result.sumLen / result.sumStay;
-            result.avgLen = result.sumLen / result.cntPusk;
-            result.avgStay = result.sumStay/(result.cntPusk);
-            result.cntPuskRel = result.cntPusk / timeSum;
+                double sumTime = (d3 - d1).TotalSeconds;
+                double sumWork = (d3 - d2).TotalSeconds;
+                double sumStay = (d2 - d1).TotalSeconds;
+
+                if (sumStay > 0)
+                {
+                    result["SVOD"].StayInfo.Add(d1, sumStay);
+                }
+                result["SVOD"].RunInfo.Add(d2, sumWork);
+                result["SVOD"].sumTime += sumTime;
+
+
+
+                result[nr.TypeData].RunInfo.Add(d2, sumWork);
+
+                if (nr.PrevRecord != null && nr.TimeOn>nr.PrevRecord.TimeOff)
+                {
+                    double l1 = nr.PrevRecord.ValueEnd;
+                    double l2 = nr.ValueStart;
+                    double tim = (nr.TimeOn - nr.PrevRecord.TimeOff).TotalSeconds;
+                    double avgV = (l2 - l1) / tim;
+                                        
+                    result["SVOD"].VInfo.Add(nr.PrevRecord.TimeOff,avgV);
+                }
+                last = nr;
+            }
+            if (last != null && last.NextRecord != null && last.NextRecord.TimeOn>last.TimeOff)
+            {
+                double l1 = last.ValueEnd;
+                double l2 = last.NextRecord.ValueStart;
+                double tim = (last.NextRecord.TimeOn - last.TimeOff).TotalSeconds;
+                 double avgV = (l2 - l1) / tim;                
+
+                result["SVOD"].VInfo.Add(last.TimeOff, avgV);
+
+            }
+                        
+            foreach (string key in result.Keys)
+            {
+                result[key].calcAvg();
+            }
+         
             return result;
         }
 
 
-
-        public async Task<bool> ReadData(String type, int nasosCount,string typeCalcRun="GG_UST")
+        public bool ReadData(String type, int nasosCount, string typeCalcRun = "GG_UST")
         {
-            Date = DateStart.ToString("dd.MM");
-            GGRunData = createPuskStopData("GG_RUN");
-            GGStopData = createPuskStopData("GG_STOP");
-            GGUstData = createPuskStopData(typeCalcRun);
+            DataGG = new Dictionary<string, List<PuskStopData>>();
+            DataGG.Add("GG_RUN", new List<PuskStopData>());
+            DataGG.Add("GG_STOP", new List<PuskStopData>());
+            DataGG.Add("GG_UST", new List<PuskStopData>());
 
-            NasosData.Add(DataFull);
-            for (int nasos = 1; nasos <= nasosCount;nasos++) {
-                NasosData.Add(createPuskStopData(String.Format("{0}_{1}",type,nasos), DataFull));                
+            DataNasos = new Dictionary<string, List<PuskStopData>>();
+            Date = DateStart.ToString("dd.MM");
+
+            for (int nasos = 1; nasos <= nasosCount; nasos++)
+            {
+                DataNasos.Add(String.Format("{0}_{1}", type, nasos), new List<PuskStopData>());
             }
+
+            FullGGData = createPuskStopData("GG", DataGG);
+            FullNasosData = createPuskStopData(type, DataNasos);
+            CreateComments();
 
             timeGGRun = 0;
             timeGGStop = 0;
             OneTimeWorkInfo = new SortedList<DateTime, PuskStopData>();
 
-            IEnumerable<PuskStopData> req = from gg in GGUstData where gg.TimeOn <= DateEnd && gg.TimeOff >= DateStart select gg;
+            IEnumerable<PuskStopData> req = from gg in DataGG[typeCalcRun] where gg.TimeOn <= DateEnd && gg.TimeOff >= DateStart select gg;
             foreach (PuskStopData rec in req)
             {
                 DateTime start = rec.TimeOn > DateStart ? rec.TimeOn : DateStart;
@@ -255,7 +386,7 @@ namespace EDSProj.Diagnostics
                 timeGGRun += (end - start).TotalSeconds;
             }
 
-            req = from gg in GGStopData where gg.TimeOn <= DateEnd && gg.TimeOff >= DateStart select gg;
+            req = from gg in DataGG["GG_STOP"] where gg.TimeOn <= DateEnd && gg.TimeOff >= DateStart select gg;
             foreach (PuskStopData rec in req)
             {
                 DateTime start = rec.TimeOn > DateStart ? rec.TimeOn : DateStart;
@@ -263,20 +394,11 @@ namespace EDSProj.Diagnostics
                 timeGGStop += (end - start).TotalSeconds;
             }
 
+            NasosRunGG = processNasosData(typeCalcRun);
+            NasosStopGG = processNasosData("GG_STOP");
+            NasosGG = processNasosData("GG");
 
 
-            NasosRunGG.Add(processNasosData(typeCalcRun,  DataFull, true));
-            NasosStopGG.Add(processNasosData("STOP", DataFull, true));
-            NasosGG.Add(processNasosData("GG",  DataFull, true));
-            for (int nasos = 1; nasos <= nasosCount; nasos++)
-            {
-                NasosRunGG.Add(processNasosData(typeCalcRun, NasosData[nasos], false));
-                NasosStopGG.Add(processNasosData("STOP",NasosData[nasos], false));
-                NasosGG.Add(processNasosData("GG", NasosData[nasos], false));
-            }
-
-
-            OneTimeWork = String.Format("Одновр пуск насосов: {0} раз", OneTimeWorkInfo.Count());
 
 
             /*NasosRunGG.cntPuskRel = NasosRunGG.cntPusk / timeGGRun;

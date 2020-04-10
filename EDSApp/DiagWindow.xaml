@@ -278,8 +278,8 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel>
-                                                    <TextBlock  Text="{Binding NasosRunGG[0].cntPusk}"/>
-                                                    <TextBlock  Text="{Binding NasosRunGG[0].cntPuskRel, StringFormat='0.#'}" HorizontalAlignment="Right"/>
+                                                    <TextBlock  Text="{Binding  NasosRunGGView.cntPusk}"/>
+                                                    <TextBlock  Text="{Binding NasosRunGGView.cntPuskRel, StringFormat='0.#'}" HorizontalAlignment="Right"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -294,68 +294,14 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel>
-                                                    <TextBlock  Text="{Binding NasosStopGG[0].cntPusk}"/>
-                                                    <TextBlock  Text="{Binding NasosStopGG[0].cntPuskRel, StringFormat='0.#'}" HorizontalAlignment="Right"/>
+                                                    <TextBlock  Text="{Binding NasosStopGGView.cntPusk}"/>
+                                                    <TextBlock  Text="{Binding NasosStopGGView.cntPuskRel, StringFormat='0.#'}" HorizontalAlignment="Right"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn Header="Время на ост ГГ" >
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <StackPanel>
-                                                    <StackPanel Orientation="Horizontal" Visibility="{Binding NasosStopGG[0].minLen, Converter={StaticResource visibilityConverter}}">
-                                                        <TextBlock Text="Мин:"/>
-                                                        <TextBlock Text="{Binding NasosStopGG[0].minLen}"/>
-                                                        <TextBlock Text="{Binding NasosStopGG[0].minTime, Converter={StaticResource dateTimeHHMMConverter}}" Margin="10,00,0,0"/>
-                                                    </StackPanel>
-                                                    <StackPanel Orientation="Horizontal" Visibility="{Binding NasosStopGG[0].maxLen, Converter={StaticResource visibilityConverter}}">
-                                                        <TextBlock Text="Макс:"/>
-                                                        <TextBlock Text="{Binding NasosStopGG[0].maxLen}"/>
-                                                        <TextBlock Text="{Binding NasosStopGG[0].maxTime, Converter={StaticResource dateTimeHHMMConverter}}" Margin="10,00,0,0"/>
-                                                    </StackPanel>
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="Ср:"/>
-                                                        <TextBlock Text="{Binding NasosStopGG[0].avgLen, StringFormat='0'}"/>
-                                                    </StackPanel>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn Header="Время на раб ГГ" >
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <StackPanel>
-                                                    <StackPanel Orientation="Horizontal" Visibility="{Binding NasosRunGG[0].minLen, Converter={StaticResource visibilityConverter}}">
-                                                        <TextBlock Text="Мин:"/>
-                                                        <TextBlock Text="{Binding NasosRunGG[0].minLen}"/>
-                                                        <TextBlock Text="{Binding NasosRunGG[0].minTime, Converter={StaticResource dateTimeHHMMConverter}}" Margin="10,00,0,0"/>
-                                                    </StackPanel>
-                                                    <StackPanel Orientation="Horizontal" Visibility="{Binding NasosRunGG[0].maxLen, Converter={StaticResource visibilityConverter}}">
-                                                        <TextBlock Text="Макс:"/>
-                                                        <TextBlock Text="{Binding NasosRunGG[0].maxLen}"/>
-                                                        <TextBlock Text="{Binding NasosRunGG[0].maxTime, Converter={StaticResource dateTimeHHMMConverter}}" Margin="10,00,0,0"/>
-                                                    </StackPanel>
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="Ср:"/>
-                                                        <TextBlock Text="{Binding NasosRunGG[0].avgLen, StringFormat='0'}"/>
-                                                    </StackPanel>
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                    <DataGridTemplateColumn Header="Одноврем работа " >
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <StackPanel>
 
-                                                    <TextBlock Text="{Binding OneTimeWork}" TextWrapping="Wrap"/>
-
-
-                                                </StackPanel>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
+                                    
 
                                 </DataGrid.Columns>
                             </DataGrid>
