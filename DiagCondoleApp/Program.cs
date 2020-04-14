@@ -25,14 +25,15 @@ namespace DiagCondoleApp
                 DateStart = DateTime.Parse(Console.ReadLine());
                 Console.WriteLine("Введите дату конца выгрузки: ");
                 DateEnd = DateTime.Parse(Console.ReadLine());
-            }*/
-
+            }
+            */
 
             Settings.init("Data/Settings.xml");
             Logger.InitFileLogger("C:/diagLog", "diag");
             //process(DateStart, DateEnd);
+            //PuskStopReader.CheckCrossData(DateStart, DateEnd);
             //PuskStopReader.RefreshPuskStopData(DateStart, DateEnd);
-            CreateReport(DateTime.Parse("01.01.2020"), DateTime.Parse("08.04.2020"));
+            CreateReport(DateTime.Parse("01.01.2020"), DateTime.Parse("13.04.2020"));
             //Console.ReadLine();
         }
 
@@ -45,28 +46,48 @@ namespace DiagCondoleApp
             else
                 return val;
         }
+
+        protected static void fillVerticalDouble(IXLWorksheet sheet, int col, string title, List<double> data)
+        {
+            sheet.Cell(1, col).Value = title;
+            int row = 2;
+            foreach (double d in data)
+            {
+                sheet.Cell(row++, col).Value = d;
+            }
+        }
+        protected static void fillHorDouble(IXLWorksheet sheet, int row, string title, List<double> data)
+        {
+            sheet.Cell(row, 1).Value = title;
+            int col = 2;
+            foreach (double d in data)
+            {
+                sheet.Cell(row, col++).Value = d;
+            }
+        }
+
         public static async void CreateReport(DateTime dateStart, DateTime dateEnd)
         {
+            int nasosCount = 3;
+            string type = "MNU";
+            string typeRunGG = "GG_UST";
 
+            string FileNameFull = String.Format("D:/wrk/test{0}.xlsx", type);
+            XLWorkbook wbFull = new XLWorkbook();
 
-
-
-            int nasosCount = 2;
-            string type = "DN";
-            string typeRunGG = "GG_RUN";
-
-            string FileNameTem = String.Format("D:/wrk/template3.xlsx", nasosCount);
-            string FileName = String.Format("D:/wrk/test{0}.xlsx", type);
-            XLWorkbook wb = new XLWorkbook(FileNameTem);
-            wb.SaveAs(FileName);
 
             for (int gg = 1; gg <= 10; gg++)
             {
+                string FileNameTem = String.Format("D:/wrk/template3.xlsx", nasosCount);
+                string FileName = String.Format("D:/wrk/test{0}_GG{1}.xlsx", type,gg);
+                XLWorkbook wb = new XLWorkbook(FileNameTem);
+                wb.SaveAs(FileName);
+
                 IXLWorksheet sheetTemp = null;
                 bool ok = wb.TryGetWorksheet("GGTemplate", out sheetTemp);
 
                 IXLWorksheet sheet = sheetTemp.CopyTo(String.Format("GG {0}", gg));
-
+                IXLWorksheet sheetSvod = wb.AddWorksheet("GG SVOD");
 
                 int RowCount = (int)((dateEnd - dateStart).TotalDays / 7 + 7);
 
@@ -80,6 +101,7 @@ namespace DiagCondoleApp
                 DateTime ds = dateStart.AddSeconds(0);
 
                 int rowIndex = 0;
+                int  weekNumber = 0;
                 while (ds < dateEnd)
                 {
                     Logger.Info(String.Format("{0}: {1}", gg, ds));
@@ -89,19 +111,12 @@ namespace DiagCondoleApp
                     diag.ReadData(type, nasosCount, typeRunGG);
                     Logger.Info("read");
 
-                    /*ok = wb.TryGetWorksheet("GGFullData", out sheetTemp);
+                    ok = wb.TryGetWorksheet("GGFullData", out sheetTemp);
                     IXLWorksheet shFull = sheetTemp.CopyTo(String.Format("GG{0}_{1}", gg, ds.ToString("ddMM")));
 
-                    int col = 1;
-                    foreach (KeyValuePair<double, double> dd in diag.NasosRunGG["SVOD"].RunInfo.PData) 
-                    {
-                        shFull.Cell(2, col).Value = dd.Key;
-                        shFull.Cell(3, col).Value = dd.Value;
-                        col++;
-                    }*/
 
-                    //int row = 2;
-                    /*foreach (PuskStopData pd in diag.FullNasosData)
+                    int row = 2;
+                    foreach (PuskStopData pd in diag.FullNasosData)
                     {
                         row++;
                         shFull.Cell(row, 1).Value = pd.TimeOn;
@@ -114,16 +129,38 @@ namespace DiagCondoleApp
                         if (pd.NextRecord != null)
                             shFull.Cell(row, 7).Value = pd.NextRecord.TimeOn;
                         shFull.Cell(row, 8).Value = pd.Comment;
-                    }*/
+                    }
+
+
+                    sheetSvod.Cell(RowCount * 1 - 1,1).Value = "ГГ в работе. время простоя насосов";
+                    fillHorDouble(sheetSvod, RowCount * 1 + weekNumber, ds.ToString(), diag.NasosRunGG["SVOD"].StayInfo.sorted);
+                    sheetSvod.Cell(RowCount * 2 - 1, 1).Value = "ГГ в работе. время работы насосов";
+                    fillHorDouble(sheetSvod, RowCount * 2 + weekNumber, ds.ToString(), diag.NasosRunGG["SVOD"].RunInfo.sorted);
+                    sheetSvod.Cell(RowCount * 3 - 1, 1).Value = "ГГ в работе. скорость набора уровня (потери давления)";
+                    fillHorDouble(sheetSvod, RowCount * 3 + weekNumber, ds.ToString(), diag.NasosRunGG["SVOD"].VInfo.sorted);
+
+                    sheetSvod.Cell(RowCount * 4 - 1, 1).Value = "ГГ в простое. время простоя насосов";
+                    fillHorDouble(sheetSvod, RowCount * 4 + weekNumber, ds.ToString(), diag.NasosStopGG["SVOD"].StayInfo.sorted);
+                    sheetSvod.Cell(RowCount * 5 - 1, 1).Value = "ГГ в простое. время простоя насосов";
+                    fillHorDouble(sheetSvod, RowCount * 5 + weekNumber, ds.ToString(), diag.NasosStopGG["SVOD"].RunInfo.sorted);
+                    sheetSvod.Cell(RowCount * 6 - 1, 1).Value = "ГГ в простое. время простоя насосов";
+                    fillHorDouble(sheetSvod, RowCount * 6 + weekNumber, ds.ToString(), diag.NasosStopGG["SVOD"].VInfo.sorted);
+
+                    fillVerticalDouble(shFull, 16, "вр простоя (ГГраб)", diag.NasosStopGG["SVOD"].StayInfo.sorted);
+                    fillVerticalDouble(shFull, 17, "вр простоя (ГГраб)", diag.NasosStopGG["SVOD"].StayInfo.filtered);
+                    fillVerticalDouble(shFull, 18, "вр раб (ГГраб)", diag.NasosStopGG["SVOD"].StayInfo.sorted);
+                    fillVerticalDouble(shFull, 19, "вр раб (ГГраб)", diag.NasosStopGG["SVOD"].StayInfo.filtered);
+                    fillVerticalDouble(shFull, 20, "скор (ГГраб)", diag.NasosStopGG["SVOD"].VInfo.sorted);
+                    fillVerticalDouble(shFull, 21, "скор (ГГраб)", diag.NasosStopGG["SVOD"].VInfo.filtered);
 
 
                     for (int i = 0; i < 3; i++)
                     {
                         Dictionary<string, AnalizeNasosData> data = i == 0 ? diag.NasosGG : i == 1 ? diag.NasosRunGG : diag.NasosStopGG;
 
-                        int row = 5 + RowCount * i + rowIndex;
+                         row = 5 + RowCount * i + rowIndex;
 
-                        sheet.Cell(row, 1).Value = de;
+                        sheet.Cell(row, 1).Value = ds;
                         sheet.Cell(row, 2).Value = diag.timeGGRun / 3600;
                         sheet.Cell(row, 2).Style.NumberFormat.Format = "0.0";
                         sheet.Cell(row, 3).Value = diag.timeGGStop / 3600;
@@ -136,7 +173,7 @@ namespace DiagCondoleApp
                         sheet.Cell(row, 6).Style.NumberFormat.Format = "0.0";
                         sheet.Cell(row, 7).Value = getVal(data["SVOD"].StayInfo.MathO / 60);
                         sheet.Cell(row, 7).Style.NumberFormat.Format = "0.0";
-                        sheet.Cell(row, 8).Value = getVal(data["SVOD"].workRel * 100);
+                        sheet.Cell(row, 8).Value = getVal(data["SVOD"].RunInfo.MathO/data["SVOD"].StayInfo.MathO);
                         sheet.Cell(row, 8).Style.NumberFormat.Format = "0.00";
                         sheet.Cell(row, 9).Value = getVal(data["SVOD"].VInfo.MathO * 3600);
                         sheet.Cell(row, 9).Style.NumberFormat.Format = "0.00";
@@ -149,10 +186,10 @@ namespace DiagCondoleApp
                             sheet.Cell(row, col + 1).Value = getVal(nd.RunInfo.Count);
                             sheet.Cell(row, col + 1).Style.NumberFormat.Format = "0";
                             if (data["SVOD"].RunInfo.Count>0)
-                            sheet.Cell(row, col + 2).Value = getVal(nd.RunInfo.Count / data["SVOD"].RunInfo.Count * 100);
+                            sheet.Cell(row, col + 2).Value = getVal(nd.RunInfo.Count*100.0 / data["SVOD"].RunInfo.Count );
                             sheet.Cell(row, col + 2).Style.NumberFormat.Format = "0.0";
 
-                            sheet.Cell(row, col + 3).Value = getVal(nd.RunInfo.MathO / 60);
+                            sheet.Cell(row, col + 3).Value = getVal(nd.RunInfo.MathO / 60.0);
                             sheet.Cell(row, col + 3).Style.NumberFormat.Format = "0.0";
 
                             col += 3;
@@ -162,9 +199,13 @@ namespace DiagCondoleApp
                     }
                     ds = de.AddSeconds(0);
                     rowIndex++;
+                    weekNumber++;
                 }
+                sheet.CopyTo(wbFull, sheet.Name);
+                wb.SaveAs(FileName);
             }
-            wb.SaveAs(FileName);
+            wbFull.SaveAs(FileNameFull);
+            
 
         }
 

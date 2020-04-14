@@ -391,7 +391,44 @@ namespace EDSProj.Diagnostics
             }
         }
 
+        public static void CheckCrossData(DateTime DateStart, DateTime DateEnd)
+        {
+            DiagDBEntities diagDB = new DiagDBEntities();
+            for (int gg = 1; gg <= 10; gg++)
+            {
+                Logger.Info(String.Format("GG {0}", gg));
+                List<PuskStopInfo> data = (
+                    from d in diagDB.PuskStopInfoes where d.TimeOn <= DateEnd && d.TimeOff >= DateStart && 
+                    d.GG==gg && d.TypeData.Contains("GG") select d).ToList();
+                List<int> removedItems = new List<int>();
+                foreach (PuskStopInfo pi in data)
+                {
+                    if (removedItems.Contains(pi.ID))
+                        continue;
+                    IEnumerable<PuskStopInfo> crossData = from d in diagDB.PuskStopInfoes where
+                                                          d.GG == pi.GG && d.TypeData == pi.TypeData && d.ID != pi.ID &&
+                                                          (d.TimeOff>=pi.TimeOn && d.TimeOff<=pi.TimeOff ||
+                                                          d.TimeOn >= pi.TimeOn && d.TimeOn <= pi.TimeOff) select d;
+                    if (crossData.Count() > 0 )
+                    {
+                        Logger.Info(String.Format("Delete {0}", crossData.Count()));
+                        foreach (PuskStopInfo d in crossData)
+                        {
+                            removedItems.Add(d.ID);
+                            pi.TimeOn = d.TimeOn < pi.TimeOn ? d.TimeOn : pi.TimeOn;
+                            pi.TimeOff = d.TimeOff > pi.TimeOff ? d.TimeOff : pi.TimeOff;
+                            pi.Length = (pi.TimeOff - pi.TimeOn).TotalSeconds;
+                            diagDB.PuskStopInfoes.Remove(d);
+                        }
+                    }
+                    diagDB.SaveChanges();
+                }
+                
+            }
+            
+        }
 
-        
+
+
     }
 }

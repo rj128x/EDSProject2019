@@ -15,18 +15,23 @@ namespace EDSProj.Diagnostics
         public class AvgInfo
         {
             protected SortedList<DateTime, double> data;
-            public SortedList<double, double> PData;
+            public List<double> sorted;
+            public List<double> filtered;
+
             public double MathO;
             public int Count { get { return data.Count; } }
             public AvgInfo()
             {
                 data = new SortedList<DateTime, double>();
+                sorted = new List<double>();
+                filtered = new List<double>();
+
             }
-            public void Add(DateTime dt,double val)
+            public void Add(DateTime dt, double val)
             {
                 while (data.ContainsKey(dt))
                 {
-                    dt = dt.AddMilliseconds(1);                   
+                    dt = dt.AddMilliseconds(1);
 
 
                 }
@@ -42,30 +47,29 @@ namespace EDSProj.Diagnostics
                     MathO = data.Values.Average();
                     return;
                 }
-                double min = data.Values.Min();
-                double max= data.Values.Max();
-                double step = (max - min) / (1+3.322*Math.Log10(Count));
-                PData = new SortedList<double, double>();                
-                double v = min;
-                while (v <= max)
-                {
-                    int cnt = (from d in data.Values where d >= v && d <= v + step select d).Count();
-                    PData.Add(v, cnt);
-                    v += step;
-                }
-                double sum = 0;
-                foreach (KeyValuePair<double,double> de in PData)
-                {
-                    sum += de.Key * de.Value;
-                }
-                MathO = sum / Count;
+
+                sorted = data.Values.ToList();
+                sorted.Sort();
+                double avg = sorted.Average();
+                double mid = sorted[sorted.Count / 2];
+                double x25 = sorted[sorted.Count / 4];
+                double x75 = sorted[sorted.Count * 3 / 4];
+
+                double min = x25 - 1.5 * (x75 - x25);
+                double max = x75 + 1.5 * (x75 - x25);
+
+                filtered = (from d in sorted where d >= min && d <= max select d).ToList();
+
+
+                MathO = filtered.Average();
+
             }
-            
+
         }
 
         public double sumTime { get; set; }
         public double workRel { get; set; }
-        
+
         public AvgInfo StayInfo { get; set; }
         public AvgInfo RunInfo { get; set; }
         public AvgInfo VInfo { get; set; }
@@ -120,9 +124,9 @@ namespace EDSProj.Diagnostics
         public List<PuskStopData> FullNasosData = new List<PuskStopData>();
         public List<PuskStopData> FullGGData = new List<PuskStopData>();
 
-        public AnalizeNasosData NasosRunGGView 
+        public AnalizeNasosData NasosRunGGView
         {
-             get { return NasosRunGG.ContainsKey("SVOD")? NasosRunGG["SVOD"]:new AnalizeNasosData(); }
+            get { return NasosRunGG.ContainsKey("SVOD") ? NasosRunGG["SVOD"] : new AnalizeNasosData(); }
         }
 
         public AnalizeNasosData NasosStopGGView
@@ -238,7 +242,9 @@ namespace EDSProj.Diagnostics
 
             }
             catch { }
+            //List<PuskStopData> forPrevNext = new List<PuskStopData>();
 
+            //forPrevNext.Add(prevDataFirst);
             PuskStopData prevData = prevDataFirst;
             foreach (PuskStopInfo pi in req)
             {
@@ -249,17 +255,32 @@ namespace EDSProj.Diagnostics
                 dat.ValueEnd = pi.ValueEnd;
                 dat.ValueStart = pi.ValueStart;
                 dat.TypeData = pi.TypeData;
-                dat.PrevRecord = prevData;
                 dat.Comment = "";
-                if (prevData != null)
-                    prevData.NextRecord = dat;
+                dat.PrevRecord = prevData;
+                if (dat.PrevRecord != null)
+                    dat.PrevRecord.NextRecord = dat;
+                prevData = dat;
+
+                /*try
+                {
+                    dat.PrevRecord= (from d in forPrevNext where d.TimeOff < pi.TimeOn orderby d.TimeOff descending select d).First();
+                    if (dat.PrevRecord != null)
+                    {
+                        dat.PrevRecord.NextRecord = dat;
+                    }
+                }
+                catch { }
+                forPrevNext.Add(dat);
+                */
+
                 result.Add(dat);
+
                 if (DiffData != null && !DiffData.ContainsKey(pi.TypeData))
                     DiffData.Add(pi.TypeData, new List<PuskStopData>());
                 DiffData[pi.TypeData].Add(dat);
 
-                prevData = dat;
             }
+
             if (result.Count > 0)
                 result.Last().NextRecord = nextDataLast;
 
@@ -284,13 +305,13 @@ namespace EDSProj.Diagnostics
 
         }
 
-        
+
 
         protected Dictionary<string, AnalizeNasosData> processNasosData(string typeGG)
         {
             Dictionary<string, AnalizeNasosData> result = new Dictionary<string, AnalizeNasosData>();
             result.Add("SVOD", new AnalizeNasosData());
-            
+
 
             foreach (string key in DataNasos.Keys)
             {
@@ -318,39 +339,43 @@ namespace EDSProj.Diagnostics
                     result["SVOD"].StayInfo.Add(d1, sumStay);
                 }
                 result["SVOD"].RunInfo.Add(d2, sumWork);
-                result["SVOD"].sumTime += sumTime;
+
+                if (sumTime > 0)
+                {
+                    result["SVOD"].sumTime += sumTime;
+                }
 
 
 
                 result[nr.TypeData].RunInfo.Add(d2, sumWork);
 
-                if (nr.PrevRecord != null && nr.TimeOn>nr.PrevRecord.TimeOff)
+                if (nr.PrevRecord != null && nr.TimeOn > nr.PrevRecord.TimeOff)
                 {
                     double l1 = nr.PrevRecord.ValueEnd;
                     double l2 = nr.ValueStart;
                     double tim = (nr.TimeOn - nr.PrevRecord.TimeOff).TotalSeconds;
                     double avgV = (l2 - l1) / tim;
-                                        
-                    result["SVOD"].VInfo.Add(nr.PrevRecord.TimeOff,avgV);
+
+                    result["SVOD"].VInfo.Add(nr.PrevRecord.TimeOff, avgV);
                 }
                 last = nr;
             }
-            if (last != null && last.NextRecord != null && last.NextRecord.TimeOn>last.TimeOff)
+            if (last != null && last.NextRecord != null && last.NextRecord.TimeOn > last.TimeOff)
             {
                 double l1 = last.ValueEnd;
                 double l2 = last.NextRecord.ValueStart;
                 double tim = (last.NextRecord.TimeOn - last.TimeOff).TotalSeconds;
-                 double avgV = (l2 - l1) / tim;                
+                double avgV = (l2 - l1) / tim;
 
                 result["SVOD"].VInfo.Add(last.TimeOff, avgV);
 
             }
-                        
+
             foreach (string key in result.Keys)
             {
                 result[key].calcAvg();
             }
-         
+
             return result;
         }
 
@@ -396,7 +421,7 @@ namespace EDSProj.Diagnostics
 
             NasosRunGG = processNasosData(typeCalcRun);
             NasosStopGG = processNasosData("GG_STOP");
-            NasosGG = processNasosData("GG");
+            NasosGG = processNasosData("");
 
 
 
