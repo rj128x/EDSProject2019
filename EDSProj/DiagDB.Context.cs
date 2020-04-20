@@ -26,5 +26,7 @@ namespace EDSProj
         }
     
         public virtual DbSet<PuskStopInfo> PuskStopInfoes { get; set; }
+        public virtual DbSet<PuskStopPoint> PuskStopPoints { get; set; }
+        public virtual DbSet<AnalogData> AnalogDatas { get; set; }
     }
 }

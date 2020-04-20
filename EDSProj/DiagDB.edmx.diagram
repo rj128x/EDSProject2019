@@ -6,6 +6,8 @@
     <edmx:Diagrams>
       <Diagram DiagramId="d32ac683d2ce4d809bce40908ed34005" Name="Diagram1">
         <EntityTypeShape EntityType="DiagDBModel.PuskStopInfo" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DiagDBModel.PuskStopPoint" Width="1.5" PointX="3.375" PointY="0.75" />
+        <EntityTypeShape EntityType="DiagDBModel.AnalogData" Width="1.5" PointX="3.375" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -5,6 +5,16 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="Хранилище DiagDBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AnalogData">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="gg" Type="int" Nullable="false" />
+          <Property Name="pointType" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="value" Type="float" Nullable="false" />
+        </EntityType>
         <EntityType Name="PuskStopInfo">
           <Key>
             <PropertyRef Name="ID" />
@@ -19,8 +29,21 @@
           <Property Name="ValueEnd" Type="float" Nullable="false" />
           <Property Name="Comment" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="PuskStopPoints">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="gg" Type="int" Nullable="false" />
+          <Property Name="pointType" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="point" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="inverted" Type="bit" Nullable="false" />
+          <Property Name="analog" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityContainer Name="Хранилище DiagDBModelContainer">
+          <EntitySet Name="AnalogData" EntityType="Self.AnalogData" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PuskStopInfo" EntityType="Self.PuskStopInfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PuskStopPoints" EntityType="Self.PuskStopPoints" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -28,6 +51,8 @@
       <Schema Namespace="DiagDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="DiagDBEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="PuskStopInfoes" EntityType="DiagDBModel.PuskStopInfo" />
+          <EntitySet Name="PuskStopPoints" EntityType="DiagDBModel.PuskStopPoint" />
+          <EntitySet Name="AnalogDatas" EntityType="DiagDBModel.AnalogData" />
         </EntityContainer>
         <EntityType Name="PuskStopInfo">
           <Key>
@@ -42,6 +67,27 @@
           <Property Name="ValueStart" Type="Double" Nullable="false" />
           <Property Name="ValueEnd" Type="Double" Nullable="false" />
           <Property Name="Comment" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PuskStopPoint">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="gg" Type="Int32" Nullable="false" />
+          <Property Name="pointType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="point" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="inverted" Type="Boolean" Nullable="false" />
+          <Property Name="analog" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AnalogData">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="gg" Type="Int32" Nullable="false" />
+          <Property Name="pointType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="value" Type="Double" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -60,6 +106,29 @@
                 <ScalarProperty Name="TimeOn" ColumnName="TimeOn" />
                 <ScalarProperty Name="TypeData" ColumnName="TypeData" />
                 <ScalarProperty Name="GG" ColumnName="GG" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PuskStopPoints">
+            <EntityTypeMapping TypeName="DiagDBModel.PuskStopPoint">
+              <MappingFragment StoreEntitySet="PuskStopPoints">
+                <ScalarProperty Name="analog" ColumnName="analog" />
+                <ScalarProperty Name="inverted" ColumnName="inverted" />
+                <ScalarProperty Name="point" ColumnName="point" />
+                <ScalarProperty Name="pointType" ColumnName="pointType" />
+                <ScalarProperty Name="gg" ColumnName="gg" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AnalogDatas">
+            <EntityTypeMapping TypeName="DiagDBModel.AnalogData">
+              <MappingFragment StoreEntitySet="AnalogData">
+                <ScalarProperty Name="value" ColumnName="value" />
+                <ScalarProperty Name="pointType" ColumnName="pointType" />
+                <ScalarProperty Name="gg" ColumnName="gg" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -19,7 +19,7 @@ namespace EDSProj.Diagnostics
             public List<double> filtered;
 
             public double MathO;
-            public int Count { get { return data.Count; } }
+            public int Count { get { return filtered.Count; } }
             public AvgInfo()
             {
                 data = new SortedList<DateTime, double>();
@@ -40,28 +40,33 @@ namespace EDSProj.Diagnostics
 
             public void calcAVG()
             {
+                MathO = 0;
                 if (data.Count == 0)
                     return;
-                if (data.Count <= 3)
+                sorted = data.Values.ToList();
+                sorted.Sort();
+                filtered = (from d in sorted select d).ToList();
+                if (data.Count <= 2)
                 {
-                    MathO = data.Values.Average();
+                    MathO = 0;
                     return;
                 }
 
-                sorted = data.Values.ToList();
-                sorted.Sort();
+                
                 double avg = sorted.Average();
                 double mid = sorted[sorted.Count / 2];
                 double x25 = sorted[sorted.Count / 4];
                 double x75 = sorted[sorted.Count * 3 / 4];
 
+
                 double min = x25 - 1.5 * (x75 - x25);
                 double max = x75 + 1.5 * (x75 - x25);
 
                 filtered = (from d in sorted where d >= min && d <= max select d).ToList();
+                filtered = (from d in filtered where d*mid>0 select d).ToList();
 
-
-                MathO = filtered.Average();
+                if (filtered.Count>0)
+                    MathO = filtered.Average();
 
             }
 
@@ -87,6 +92,8 @@ namespace EDSProj.Diagnostics
             StayInfo.calcAVG();
             RunInfo.calcAVG();
             VInfo.calcAVG();
+            sumTime = StayInfo.filtered.Sum()+ RunInfo.filtered.Sum(); ;
+
         }
     }
 
@@ -112,7 +119,9 @@ namespace EDSProj.Diagnostics
 
         public DateTime DateStart { get; set; }
         public DateTime DateEnd { get; set; }
-        public string GG { get; set; }
+        public int GG { get; set; }
+
+        public string NasosType { get; set; }
 
 
 
@@ -135,7 +144,7 @@ namespace EDSProj.Diagnostics
         }
 
 
-        public DiagNasos(DateTime dateStart, DateTime dateEnd, string GG)
+        public DiagNasos(DateTime dateStart, DateTime dateEnd, int GG)
         {
             this.DateStart = dateStart;
             this.DateEnd = dateEnd;
@@ -197,11 +206,10 @@ namespace EDSProj.Diagnostics
         {
             List<PuskStopData> result = new List<PuskStopData>();
             DiagDBEntities diagDB = new DiagDBEntities();
-            int gg = Int32.Parse(GG);
             IQueryable<PuskStopInfo> req =
                     from pi in diagDB.PuskStopInfoes
                     where
-                        pi.GG == gg && pi.TypeData.Contains(type_data) &&
+                        pi.GG == GG && pi.TypeData.Contains(type_data) &&
                         pi.TimeOff > DateStart && pi.TimeOn < DateEnd
                     orderby pi.TimeOn
                     select pi;
@@ -212,7 +220,7 @@ namespace EDSProj.Diagnostics
                 PuskStopInfo rf =
                     (from pi in diagDB.PuskStopInfoes
                      where
-                             pi.GG == gg && pi.TypeData.Contains(type_data) &&
+                             pi.GG == GG && pi.TypeData.Contains(type_data) &&
                              pi.TimeOff < DateStart
                      orderby pi.TimeOff descending
                      select pi).First();
@@ -230,7 +238,7 @@ namespace EDSProj.Diagnostics
                 PuskStopInfo rl =
                     (from pi in diagDB.PuskStopInfoes
                      where
-                             pi.GG == gg && pi.TypeData.Contains(type_data) &&
+                             pi.GG == GG && pi.TypeData.Contains(type_data) &&
                              pi.TimeOn > DateEnd
                      orderby pi.TimeOn
                      select pi).First();
@@ -289,6 +297,7 @@ namespace EDSProj.Diagnostics
 
         protected void CreateComments()
         {
+            
             foreach (PuskStopData ggRec in FullGGData)
             {
                 IEnumerable<PuskStopData> req = from nd in FullNasosData
@@ -300,6 +309,35 @@ namespace EDSProj.Diagnostics
                 foreach (PuskStopData pi in req)
                 {
                     pi.Comment += ggRec.TypeData + ";";
+                }
+            }
+        }
+
+        protected void UpdateGGData(string typeGG,AnalizeNasosData nasosData)
+        {
+            DiagDBEntities diagDB = new DiagDBEntities();
+            IEnumerable<PuskStopData> ggData = from g in FullGGData where g.TypeData.Contains(typeGG) select g;
+            foreach (PuskStopData ggRec in ggData)
+            {
+                IEnumerable<PuskStopData> req = from nd in FullNasosData
+                                                where                                              
+                       (nd.TimeOn>ggRec.TimeOn && nd.TimeOn<ggRec.TimeOff)||
+                       (nd.TimeOff>ggRec.TimeOn && nd.TimeOff<ggRec.TimeOff)
+                                                select  nd;
+                if (req.Count() == 0)
+                {
+                    try
+                    {
+                        double v1 = (from a in diagDB.AnalogDatas where a.Date == ggRec.TimeOn &&
+                                     a.pointType == NasosType && a.gg==GG select a.value).First();
+                        double v2 = (from a in diagDB.AnalogDatas where a.Date == ggRec.TimeOff && a.pointType == NasosType select a.value).First();
+                        if (v1 != 0 && v2 != 0)
+                        {
+                            double v = (v2 - v1) / (ggRec.TimeOff - ggRec.TimeOn).TotalSeconds;
+                            nasosData.VInfo.Add(ggRec.TimeOn, v);
+                        }
+                    }
+                    catch { }
                 }
             }
 
@@ -338,11 +376,12 @@ namespace EDSProj.Diagnostics
                 {
                     result["SVOD"].StayInfo.Add(d1, sumStay);
                 }
-                result["SVOD"].RunInfo.Add(d2, sumWork);
+                
 
                 if (sumTime > 0)
                 {
-                    result["SVOD"].sumTime += sumTime;
+                    
+                    result["SVOD"].RunInfo.Add(d2, sumWork);
                 }
 
 
@@ -371,6 +410,7 @@ namespace EDSProj.Diagnostics
 
             }
 
+            UpdateGGData(typeGG,result["SVOD"]);
             foreach (string key in result.Keys)
             {
                 result[key].calcAvg();
@@ -382,6 +422,7 @@ namespace EDSProj.Diagnostics
 
         public bool ReadData(String type, int nasosCount, string typeCalcRun = "GG_UST")
         {
+            NasosType = type;
             DataGG = new Dictionary<string, List<PuskStopData>>();
             DataGG.Add("GG_RUN", new List<PuskStopData>());
             DataGG.Add("GG_STOP", new List<PuskStopData>());

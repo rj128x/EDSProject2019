@@ -428,6 +428,83 @@ namespace EDSProj.Diagnostics
             
         }
 
+        public static async Task<bool> FillAnalogData(DateTime DateStart, DateTime DateEnd,List<string>Types)
+        {
+            DiagDBEntities diagDB = new DiagDBEntities();
+            for (int gg = 1; gg <= 10; gg++)
+            {
+                try
+                {
+                    EDSClass.Disconnect();
+                }
+                catch { }
+                EDSClass.Connect();
+
+                Logger.Info(string.Format("GG{0}", gg));
+                List<PuskStopPoint> points = (from p in diagDB.PuskStopPoints
+                                              where p.gg == gg && p.analog == true && Types.Contains(p.pointType)
+                                              select p).ToList();
+                List<AnalogData> existData = (from a in diagDB.AnalogDatas where
+                                              a.gg == gg && Types.Contains(a.pointType) &&
+                                              a.Date >= DateStart && a.Date <= DateEnd select a).ToList();
+                Dictionary<string, string> pointsDict = new Dictionary<string, string>();
+                foreach (String type in Types)
+                {
+                    try
+                    {
+                        PuskStopPoint pt = (from p in diagDB.PuskStopPoints where p.gg == gg && p.pointType == type select p).First();
+                        pointsDict.Add(type, pt.point);
+                    }
+                    catch
+                    {
+                        pointsDict.Add(type, "");
+                    }
+
+                }
+
+                List<PuskStopInfo> data = (
+                    from d in diagDB.PuskStopInfoes
+                    where d.TimeOn <= DateEnd && d.TimeOff >= DateStart &&
+                        d.GG == gg && d.TypeData.Contains("GG_RUN")
+                    select d).ToList();
+
+                
+                foreach (PuskStopInfo ggRec in data)
+                {
+
+                    Logger.Info(String.Format("GG {0} {1} -{2}", gg,ggRec.TimeOn,ggRec.TimeOff));
+                    foreach (string type in Types)
+                    {
+                        if (string.IsNullOrEmpty(pointsDict[type]))
+                            continue;
+                        foreach (DateTime dt in new DateTime[] { ggRec.TimeOn, ggRec.TimeOff })
+                        {
+                            IEnumerable<AnalogData> datas = (from a in existData where a.Date == dt && a.pointType == type select a);
+                            AnalogData dat = null;
+                            if (datas.Count() == 0)
+                            {
+                                dat = new AnalogData();
+                                diagDB.AnalogDatas.Add(dat);
+                                dat.pointType = type;
+                                dat.gg = gg;
+                                dat.Date = dt;
+                                dat.value = await EDSClass.getValFromServer(pointsDict[type], dt);
+                            }
+                            else
+                            {                                
+                                dat = datas.First();
+                            }
+                            
+                        }                        
+                    }
+                    diagDB.SaveChanges();
+                }
+            }
+            return true;
+
+        }
+
+
 
 
     }

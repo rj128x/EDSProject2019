@@ -82,6 +82,9 @@
     <Compile Include="AIS\AIS_1MIN.cs" />
     <Compile Include="AIS\AIS_NEW.cs" />
     <Compile Include="AIS\AIS_OLD.cs" />
+    <Compile Include="AnalogData.cs">
+      <DependentUpon>DiagDB.tt</DependentUpon>
+    </Compile>
     <Compile Include="AVRCHMReport.cs" />
     <Compile Include="DiagDB.Context.cs">
       <AutoGen>True</AutoGen>
@@ -119,6 +122,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="PuskStopInfo.cs">
+      <DependentUpon>DiagDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PuskStopPoint.cs">
       <DependentUpon>DiagDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Water\InerpolationRashod.cs" />
