@@ -12,6 +12,6 @@
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <zed:ChartZedControl x:Name="chart"/>
+        <zed:ChartZedControl x:Name="i_chart"/>
     </Grid>
 </Window>

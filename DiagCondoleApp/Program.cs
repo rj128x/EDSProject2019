@@ -13,8 +13,40 @@ using System.Threading.Tasks;
 
 namespace DiagCondoleApp
 {
+
     class Program
     {
+        protected static DateTime GetDate(string arg)
+        {
+            int val = 0;
+            bool isInt = int.TryParse(arg, out val);
+            if (isInt)
+            {
+                DateTime now = DateTime.Now;
+
+                    DateTime date = now.Date.AddHours(now.Hour);
+
+                    date = date.AddHours(val);
+                    return date;
+            }
+            else
+            {
+                bool isDate;
+                DateTime date = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
+                isDate = DateTime.TryParse(arg, out date);
+                if (isDate)
+                {
+                    return date;
+                }
+                else
+                {
+                    date = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
+                    if (DateTime.Now.Minute > 30)
+                        date = date.AddMinutes(30);
+                    return date;
+                }
+            }
+        }
         public static void Main(string[] args)
         {
             Settings.init("Data/Settings.xml");
@@ -35,36 +67,56 @@ namespace DiagCondoleApp
                 Console.WriteLine("заполнить дополнительные данные-2:");
                 type = Int32.Parse(Console.ReadLine());
             }
-
-            
-
-            
-            switch (type)
+            if (args.Count() == 3)
             {
-                case 0:
-                    process(DateStart, DateEnd);
-                    break;
-                case 1:
-                    PuskStopReader.CheckCrossData(DateStart, DateEnd);
-                    break;
-                case 2:
-                    FillAnalogData(DateStart, DateEnd,
-                        (new string[] { "DN", "LN" }).ToList());
-                    break;
-            }*/
+                DateStart =  GetDate(args[0]);
+                DateEnd = GetDate(args[1]);
+                type = Int32.Parse(args[2]);
+            }
 
-            CreateReport(DateTime.Parse("01.01.2020"), DateTime.Parse("20.04.2020"));
+
+
+
+            Task<bool>res= run(DateStart, DateEnd, type);
+            res.Wait();*/
+
+
+            CreateReport(DateTime.Parse("01.01.2019"), DateTime.Parse("20.04.2020"));
             //fillDBPoints();
 
 
-            Console.ReadLine();
         }
 
-        public static async void FillAnalogData(DateTime DateStart, DateTime DateEnd, List<string> Types)
+        public static async Task<bool>  run(DateTime DateStart, DateTime DateEnd, int type)
         {
-            bool ok= await PuskStopReader.FillAnalogData(DateStart,DateEnd,Types);
-            Logger.Info(ok.ToString());
+            bool ok = true;
+            switch (type)
+            {
+                case 0:
+                    ok= await process(DateStart, DateEnd);
+                    Logger.Info(ok.ToString());
+                    break;
+                case 1:
+                    ok= PuskStopReader.CheckCrossData(DateStart, DateEnd);
+                    Logger.Info(ok.ToString());
+                    break;
+                case 2:
+                    ok=await PuskStopReader.FillAnalogData(DateStart, DateEnd, (new string[] { "DN", "LN" }).ToList());
+                    Logger.Info(ok.ToString());
+                    break;
+                case 100:
+                    ok = await process(DateStart, DateEnd);
+                    Logger.Info(ok.ToString());
+                    PuskStopReader.CheckCrossData(DateStart, DateEnd);
+                    ok = await PuskStopReader.FillAnalogData(DateStart, DateEnd, (new string[] { "DN", "LN" }).ToList());
+                    Logger.Info(ok.ToString());
+                    break;
+            }
+            return ok;
+            
         }
+
+
 
 
         public static object getVal(double val)
@@ -101,14 +153,14 @@ namespace DiagCondoleApp
             string type = "DN";
             string typeRunGG = "GG_RUN";
 
-            string FileNameFull = String.Format("D:/wrk/test{0}.xlsx", type);
+            string FileNameFull = String.Format("c:/wrk/test{0}.xlsx", type);
             XLWorkbook wbFull = new XLWorkbook();
 
 
             for (int gg = 1; gg <= 10; gg++)
             {
-                string FileNameTem = String.Format("D:/wrk/template3.xlsx", nasosCount);
-                string FileName = String.Format("D:/wrk/test{0}_GG{1}.xlsx", type, gg);
+                string FileNameTem = String.Format("c:/wrk/template3.xlsx", nasosCount);
+                string FileName = String.Format("c:/wrk/test{0}_GG{1}.xlsx", type, gg);
                 try
                 {
                     File.Delete(FileName);
@@ -255,7 +307,7 @@ namespace DiagCondoleApp
             wbFull.SaveAs(FileNameFull);
         }
 
-        public static async void process(DateTime dateStart, DateTime dateEnd)
+        public static async Task<bool> process(DateTime dateStart, DateTime dateEnd)
         {
             DateTime date = dateStart.AddSeconds(0); ;
             DateTime start = DateTime.Now;
@@ -290,6 +342,8 @@ namespace DiagCondoleApp
                 for (int gg = 1; gg <= 10; gg++)
                 {
                     if (gg == 3) continue;
+                    if (gg == 5 && date < DateTime.Parse("01.06.2019"))
+                        continue;
                     Logger.Info(String.Format("ГГ {0} Дата {1}", gg, date));
                     List<PuskStopReader.PuskStopReaderRecord> request = requestsDict[gg];                  
 
@@ -301,6 +355,7 @@ namespace DiagCondoleApp
             DateTime end = DateTime.Now;
             Logger.Info((end - start).TotalMinutes.ToString());
             Logger.Info("Finish");
+            return true;
         }
 
         public static async void fillDBPoints()

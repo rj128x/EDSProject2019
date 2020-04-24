@@ -482,7 +482,7 @@ namespace EDSApp
             while (dt < _DateEnd)
             {
 
-                DiagNasos diag = new DiagNasos(dt, dt.AddDays(1), txtGG.Text);
+                DiagNasos diag = new DiagNasos(dt, dt.AddDays(1), Int32.Parse(txtGG.Text));
                 bool ok = diag.ReadData("MNU",3);
                 CurrentMNU.Add(diag);
                 dt = dt.AddDays(1);

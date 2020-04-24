@@ -141,7 +141,7 @@ namespace EDSProj.Diagnostics
                 }
                 de.rec = pointRec;
 
-                if (!String.IsNullOrEmpty(de.ValueIess)&& !records.ContainsKey(de.ValueIess))
+                if (!String.IsNullOrEmpty(de.ValueIess) && !records.ContainsKey(de.ValueIess))
                 {
                     EDSPointInfo point = await EDSPointInfo.GetPointInfo(de.ValueIess);
                     pointRec = report.addRequestField(point, EDSReportFunction.val);
@@ -149,7 +149,7 @@ namespace EDSProj.Diagnostics
                 }
 
 
-                
+
             }
             bool ok = await report.ReadData();
             List<DateTime> keys = report.ResultData.Keys.ToList();
@@ -278,7 +278,7 @@ namespace EDSProj.Diagnostics
 
                 if (data.Count > 0)
                 {
-                    
+
                     DiagDBEntities diagDB = new DiagDBEntities();
 
                     PuskStopData first = data.First();
@@ -330,7 +330,8 @@ namespace EDSProj.Diagnostics
                     SortedList<DateTime, PuskStopInfo> dataDB = new SortedList<DateTime, PuskStopInfo>();
                     foreach (PuskStopInfo pi in req)
                     {
-                        dataDB.Add(pi.TimeOn, pi);
+                        if (!dataDB.ContainsKey(pi.TimeOn))
+                            dataDB.Add(pi.TimeOn, pi);
                     }
 
                     foreach (PuskStopData rec in data)
@@ -365,21 +366,21 @@ namespace EDSProj.Diagnostics
             DiagDBEntities diagDB = new DiagDBEntities();
             for (int gg = 1; gg <= 10; gg++)
             {
-                
+
                 IEnumerable<PuskStopInfo> reqGG = from r in diagDB.PuskStopInfoes
                                                   where r.GG == gg && r.TypeData.StartsWith("GG_") &&
                                                   r.TimeOn < DateEnd && r.TimeOff > DateStart
                                                   select r;
-                Logger.Info(String.Format("GG {0} - {1}", gg,reqGG.Count()));
-                foreach (PuskStopInfo rec in reqGG)                
+                Logger.Info(String.Format("GG {0} - {1}", gg, reqGG.Count()));
+                foreach (PuskStopInfo rec in reqGG)
                 {
-                    
+
                     IEnumerable<PuskStopInfo> reqPI = from r in diagDB.PuskStopInfoes
                                                       where r.GG == gg && (!r.TypeData.StartsWith("GG")) &&
-                                                     
+
                                                       r.TimeOn >= rec.TimeOn && r.TimeOff <= rec.TimeOff
                                                       select r;
-                    Logger.Info(String.Format("GG {0} {1} - {2}", rec.TypeData, rec.TimeOn,reqPI.Count()));
+                    Logger.Info(String.Format("GG {0} {1} - {2}", rec.TypeData, rec.TimeOn, reqPI.Count()));
                     foreach (PuskStopInfo pi in reqPI)
                     {
                         if (!pi.Comment.Contains(rec.TypeData))
@@ -391,25 +392,29 @@ namespace EDSProj.Diagnostics
             }
         }
 
-        public static void CheckCrossData(DateTime DateStart, DateTime DateEnd)
+        public static bool CheckCrossData(DateTime DateStart, DateTime DateEnd)
         {
             DiagDBEntities diagDB = new DiagDBEntities();
             for (int gg = 1; gg <= 10; gg++)
             {
                 Logger.Info(String.Format("GG {0}", gg));
                 List<PuskStopInfo> data = (
-                    from d in diagDB.PuskStopInfoes where d.TimeOn <= DateEnd && d.TimeOff >= DateStart && 
-                    d.GG==gg && d.TypeData.Contains("GG") select d).ToList();
+                    from d in diagDB.PuskStopInfoes
+                    where d.TimeOn <= DateEnd && d.TimeOff >= DateStart &&
+                        d.GG == gg && d.TypeData.Contains("GG")
+                    select d).ToList();
                 List<int> removedItems = new List<int>();
                 foreach (PuskStopInfo pi in data)
                 {
                     if (removedItems.Contains(pi.ID))
                         continue;
-                    IEnumerable<PuskStopInfo> crossData = from d in diagDB.PuskStopInfoes where
-                                                          d.GG == pi.GG && d.TypeData == pi.TypeData && d.ID != pi.ID &&
-                                                          (d.TimeOff>=pi.TimeOn && d.TimeOff<=pi.TimeOff ||
-                                                          d.TimeOn >= pi.TimeOn && d.TimeOn <= pi.TimeOff) select d;
-                    if (crossData.Count() > 0 )
+                    IEnumerable<PuskStopInfo> crossData = from d in data
+                                                          where
+                          d.GG == pi.GG && d.TypeData == pi.TypeData && d.ID != pi.ID &&
+                          (d.TimeOff >= pi.TimeOn && d.TimeOff <= pi.TimeOff ||
+                          d.TimeOn >= pi.TimeOn && d.TimeOn <= pi.TimeOff)
+                                                          select d;
+                    if (crossData.Count() > 0)
                     {
                         Logger.Info(String.Format("Delete {0}", crossData.Count()));
                         foreach (PuskStopInfo d in crossData)
@@ -423,12 +428,13 @@ namespace EDSProj.Diagnostics
                     }
                     diagDB.SaveChanges();
                 }
-                
+
             }
-            
+            return true;
+
         }
 
-        public static async Task<bool> FillAnalogData(DateTime DateStart, DateTime DateEnd,List<string>Types)
+        public static async Task<bool> FillAnalogData(DateTime DateStart, DateTime DateEnd, List<string> Types)
         {
             DiagDBEntities diagDB = new DiagDBEntities();
             for (int gg = 1; gg <= 10; gg++)
@@ -444,9 +450,11 @@ namespace EDSProj.Diagnostics
                 List<PuskStopPoint> points = (from p in diagDB.PuskStopPoints
                                               where p.gg == gg && p.analog == true && Types.Contains(p.pointType)
                                               select p).ToList();
-                List<AnalogData> existData = (from a in diagDB.AnalogDatas where
-                                              a.gg == gg && Types.Contains(a.pointType) &&
-                                              a.Date >= DateStart && a.Date <= DateEnd select a).ToList();
+                List<AnalogData> existData = (from a in diagDB.AnalogDatas
+                                              where
+                 a.gg == gg && Types.Contains(a.pointType) &&
+                 a.Date >= DateStart && a.Date <= DateEnd
+                                              select a).ToList();
                 Dictionary<string, string> pointsDict = new Dictionary<string, string>();
                 foreach (String type in Types)
                 {
@@ -468,11 +476,11 @@ namespace EDSProj.Diagnostics
                         d.GG == gg && d.TypeData.Contains("GG_RUN")
                     select d).ToList();
 
-                
+
                 foreach (PuskStopInfo ggRec in data)
                 {
 
-                    Logger.Info(String.Format("GG {0} {1} -{2}", gg,ggRec.TimeOn,ggRec.TimeOff));
+                    Logger.Info(String.Format("GG {0} {1} -{2}", gg, ggRec.TimeOn, ggRec.TimeOff));
                     foreach (string type in Types)
                     {
                         if (string.IsNullOrEmpty(pointsDict[type]))
@@ -491,14 +499,44 @@ namespace EDSProj.Diagnostics
                                 dat.value = await EDSClass.getValFromServer(pointsDict[type], dt);
                             }
                             else
-                            {                                
+                            {
                                 dat = datas.First();
                             }
-                            
-                        }                        
+
+                        }
                     }
                     diagDB.SaveChanges();
                 }
+
+                /*DateTime date = DateTime.Parse(DateStart.ToString("dd.MM.yyyy HH:00"));
+                while (date <= DateEnd)
+                {
+                    Logger.Info(String.Format("GG {0} {1} ", gg, date));
+                    foreach (string type in Types)
+                    {
+                        if (string.IsNullOrEmpty(pointsDict[type]))
+                            continue;
+
+                        IEnumerable<AnalogData> datas = (from a in existData where a.Date == date && a.pointType == type select a);
+                        AnalogData dat = null;
+                        if (datas.Count() == 0)
+                        {
+                            dat = new AnalogData();
+                            diagDB.AnalogDatas.Add(dat);
+                            dat.pointType = type;
+                            dat.gg = gg;
+                            dat.Date = date;
+                            dat.value = await EDSClass.getValFromServer(pointsDict[type], date);
+                        }
+                        else
+                        {
+                            dat = datas.First();
+                        }
+                    }
+                    date = date.AddHours(3);
+
+                }*/
+
             }
             return true;
 
