@@ -13,12 +13,8 @@
   <EDSPassword>Ovation123</EDSPassword>
   
   <AOMail>autooper_votges@rushydro.ru</AOMail>
-
-  <DiadDBServer>sr-votges-015\sqlexpress</DiadDBServer>
-  <DiagDBPassword>psWD!159!</DiagDBPassword>
-  <DiagDBUser>sa</DiagDBUser>
-  <DiagDBName>Diagnostics</DiagDBName>
-  <DiagFolder>\\10.7.227.12\c$\EDSReports\pump\csv\</DiagFolder>
+  <DiagMail>chekunovamv@rushydro.ru</DiagMail>
+  <DiagFolder>C:\wrk</DiagFolder>
 
   <LogPath>c:/edscalc/logs</LogPath> 
 

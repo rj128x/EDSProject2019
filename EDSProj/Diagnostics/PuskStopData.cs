@@ -12,6 +12,11 @@ namespace EDSProj.Diagnostics
 
     public class PuskStopData
     {
+        public PuskStopData()
+        {
+            Comment = "";
+            TypeData = "";
+        }
         public DateTime TimeOn { get; set; }
         public DateTime TimeOff { get; set; }
         public double Length { get; set; }
@@ -22,7 +27,7 @@ namespace EDSProj.Diagnostics
         public string Comment { get; set; }
 
         public PuskStopData PrevRecord { get; set; }
-        public PuskStopData NextRecord { get; set; }
+
 
         public string TypeData { get; set; }
     }

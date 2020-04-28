@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,7 +25,7 @@ namespace DiagCondoleApp
             {
                 DateTime now = DateTime.Now;
 
-                    DateTime date = now.Date.AddHours(now.Hour);
+                    DateTime date = now.Date;
 
                     date = date.AddHours(val);
                     return date;
@@ -52,7 +53,7 @@ namespace DiagCondoleApp
             Settings.init("Data/Settings.xml");
             Logger.InitFileLogger("C:/diagLog", "diag");
 
-            /*DateTime DateStart = DateTime.Now.Date.AddHours(DateTime.Now.Hour).AddHours(-5);
+            DateTime DateStart = DateTime.Now.Date.AddHours(DateTime.Now.Hour).AddHours(-5);
             DateTime DateEnd = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
             int type=0;
             if (args.Count() == 0)
@@ -65,6 +66,9 @@ namespace DiagCondoleApp
                 Console.WriteLine("считать данные-0:");
                 Console.WriteLine("исправить перескающиеся данные-1:");
                 Console.WriteLine("заполнить дополнительные данные-2:");
+                Console.WriteLine("1-2-3 -100:");
+                Console.WriteLine("отчет по МНУ-201:");
+                Console.WriteLine("отчет по ДН-202:");
                 type = Int32.Parse(Console.ReadLine());
             }
             if (args.Count() == 3)
@@ -78,12 +82,12 @@ namespace DiagCondoleApp
 
 
             Task<bool>res= run(DateStart, DateEnd, type);
-            res.Wait();*/
+            res.Wait();
 
 
-            CreateReport(DateTime.Parse("01.01.2019"), DateTime.Parse("20.04.2020"));
+
             //fillDBPoints();
-
+            //Console.ReadLine();
 
         }
 
@@ -110,6 +114,12 @@ namespace DiagCondoleApp
                     PuskStopReader.CheckCrossData(DateStart, DateEnd);
                     ok = await PuskStopReader.FillAnalogData(DateStart, DateEnd, (new string[] { "DN", "LN" }).ToList());
                     Logger.Info(ok.ToString());
+                    break;
+                case 201:
+                    CreateReport(DateStart,DateEnd,"MNU");
+                    break;
+                case 202:
+                    CreateReport(DateStart, DateEnd, "DN");
                     break;
             }
             return ok;
@@ -147,11 +157,11 @@ namespace DiagCondoleApp
             }
         }
 
-        public static async void CreateReport(DateTime dateStart, DateTime dateEnd)
+        public static async void CreateReport(DateTime dateStart, DateTime dateEnd,string type)
         {
-            int nasosCount = 2;
-            string type = "DN";
+            int nasosCount = type=="MNU"?3:2;
             string typeRunGG = "GG_RUN";
+            
 
             string FileNameFull = String.Format("c:/wrk/test{0}.xlsx", type);
             XLWorkbook wbFull = new XLWorkbook();
@@ -192,6 +202,8 @@ namespace DiagCondoleApp
                 int weekNumber = 0;
                 while (ds < dateEnd)
                 {
+                    if (type == "MNU" && ds.Year >= 2020)
+                        typeRunGG = "GG_UST";
                     Logger.Info(String.Format("{0}: {1}", gg, ds));
                     DateTime de = ds.AddDays(7);
                     DiagNasos diag = new DiagNasos(ds, de, gg);
@@ -214,8 +226,8 @@ namespace DiagCondoleApp
                         shFull.Cell(row, 5).Value = pd.ValueEnd;
                         if (pd.PrevRecord != null)
                             shFull.Cell(row, 6).Value = pd.PrevRecord.TimeOff;
-                        if (pd.NextRecord != null)
-                            shFull.Cell(row, 7).Value = pd.NextRecord.TimeOn;
+                        /*if (pd.NextRecord != null)
+                            shFull.Cell(row, 7).Value = pd.NextRecord.TimeOn;*/
                         shFull.Cell(row, 8).Value = pd.Comment;
                         shFull.Cell(row, 9).Value = (pd.TimeOff - pd.TimeOn).TotalSeconds / 60;
                         if (pd.PrevRecord != null)
@@ -303,8 +315,10 @@ namespace DiagCondoleApp
                 sheetTemp.Delete();
                 sheet.CopyTo(wbFull, sheet.Name);
                 wb.SaveAs(FileName);
+                
             }
             wbFull.SaveAs(FileNameFull);
+            sendDiagData(FileNameFull);
         }
 
         public static async Task<bool> process(DateTime dateStart, DateTime dateEnd)
@@ -591,7 +605,53 @@ namespace DiagCondoleApp
 
         }
 
-        
+        public static void sendDiagData(string FileName)
+        {
+            try
+            {
+               
+                /*TextWriter writer = new StreamWriter(fn, false, Encoding.ASCII);				
+				foreach (string str in AutooperData) {
+					writer.WriteLine(str);					
+				}
+				writer.Close();*/
+
+
+                System.Net.Mail.MailMessage mess = new System.Net.Mail.MailMessage();
+
+                mess.From = new MailAddress(Settings.Single.SMTPFrom);
+
+                mess.Subject = "Диагностика";
+                mess.Body = "диагностика работы насосов";
+                string[] messTo = Settings.Single.DiagMail.Split(new char[] { ';' });
+                foreach (string mt in messTo)
+                 mess.To.Add(mt);
+                mess.Attachments.Add(new Attachment(FileName));
+
+                mess.SubjectEncoding = System.Text.Encoding.UTF8;
+                mess.BodyEncoding = System.Text.Encoding.UTF8;
+                mess.IsBodyHtml = false;
+                System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient(Settings.Single.SMTPServer, Settings.Single.SMTPPort);
+                client.EnableSsl = true;
+                if (string.IsNullOrEmpty(Settings.Single.SMTPUser))
+                {
+                    client.UseDefaultCredentials = true;
+                }
+                else
+                {
+                    client.Credentials = new System.Net.NetworkCredential(Settings.Single.SMTPUser, Settings.Single.SMTPPassword, Settings.Single.SMTPDomain);
+                }
+                // Отправляем письмо
+                client.Send(mess);
+                Logger.Info("Данные в  отправлены успешно");
+
+            }
+            catch (Exception e)
+            {
+                Logger.Error(String.Format("Ошибка при отправке почты: {0}", e.ToString()), Logger.LoggerSource.server);
+                Logger.Info("Данные в  не отправлены");
+            }
+        }
 
 
     }

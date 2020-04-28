@@ -253,8 +253,7 @@ namespace EDSProj.Diagnostics
                 dat.TypeData = pi.TypeData;
                 dat.Comment = "";
                 dat.PrevRecord = prevData;
-                if (dat.PrevRecord != null)
-                    dat.PrevRecord.NextRecord = dat;
+                
                 prevData = dat;
 
                 result.Add(dat);
@@ -265,29 +264,7 @@ namespace EDSProj.Diagnostics
                 last = dat;
             }
 
-            PuskStopData nextDataLast = null;
-            if (last!=null  && last.TimeOff < DateEnd)
-            {
-
-                try
-                {
-                    PuskStopInfo rl =
-                        (from pi in diagDB.PuskStopInfoes
-                         where
-                                 pi.GG == GG && pi.TypeData.Contains(type_data) &&
-                                 pi.TimeOn > DateEnd
-                         orderby pi.TimeOn
-                         select pi).First();
-
-                    nextDataLast = new PuskStopData();
-                    nextDataLast.TimeOn = rl.TimeOn;
-                    nextDataLast.ValueStart = rl.ValueStart;
-                    nextDataLast.ValueEnd = rl.ValueEnd;
-                    last.NextRecord = nextDataLast;
-
-                }
-                catch { }
-            }
+            
 
 
             return result;
@@ -361,7 +338,7 @@ namespace EDSProj.Diagnostics
                     {
                         double v1 = (from a in diagDB.AnalogDatas where a.Date == ggRec.TimeOn &&
                                      a.pointType == NasosType && a.gg==GG select a.value).First();
-                        double v2 = (from a in diagDB.AnalogDatas where a.Date == ggRec.TimeOff && a.pointType == NasosType select a.value).First();
+                        double v2 = (from a in diagDB.AnalogDatas where a.Date == ggRec.TimeOff && a.gg == GG && a.pointType == NasosType select a.value).First();
                         if (v1 != 0 && v2 != 0)
                         {
                             double v = (v2 - v1) / (ggRec.TimeOff - ggRec.TimeOn).TotalSeconds;
@@ -393,7 +370,7 @@ namespace EDSProj.Diagnostics
                                             select nd;
             foreach (PuskStopData nr in req)
             {
-                DateTime d1 = nr.PrevRecord != null  ?
+                DateTime d1 = (nr.PrevRecord != null )  ?
                     nr.PrevRecord.TimeOff : DateStart;
                 DateTime d2 =nr.TimeOn ;
                 DateTime d3 = nr.TimeOff ;
@@ -418,7 +395,7 @@ namespace EDSProj.Diagnostics
 
                 
 
-                if (nr.PrevRecord != null && nr.TimeOn > nr.PrevRecord.TimeOff)
+                if (nr.PrevRecord != null && nr.TimeOn > nr.PrevRecord.TimeOff&& nr.PrevRecord.Comment.Contains(typeGG))
                 {
                     double l1 = nr.PrevRecord.ValueEnd;
                     double l2 = nr.ValueStart;
@@ -429,16 +406,7 @@ namespace EDSProj.Diagnostics
                 }
                 last = nr;
             }
-            if (last != null && last.NextRecord != null && last.NextRecord.TimeOn > last.TimeOff)
-            {
-                double l1 = last.ValueEnd;
-                double l2 = last.NextRecord.ValueStart;
-                double tim = (last.NextRecord.TimeOn - last.TimeOff).TotalSeconds;
-                double avgV = (l2 - l1) / tim;
-
-                result["SVOD"].VInfo.Add(last.TimeOff, avgV);
-
-            }
+           
 
             UpdateGGData(typeGG,result["SVOD"]);
             foreach (string key in result.Keys)
