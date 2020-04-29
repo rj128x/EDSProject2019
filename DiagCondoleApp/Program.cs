@@ -25,10 +25,10 @@ namespace DiagCondoleApp
             {
                 DateTime now = DateTime.Now;
 
-                    DateTime date = now.Date;
+                DateTime date = now.Date;
 
-                    date = date.AddHours(val);
-                    return date;
+                date = date.AddHours(val);
+                return date;
             }
             else
             {
@@ -55,7 +55,7 @@ namespace DiagCondoleApp
 
             DateTime DateStart = DateTime.Now.Date.AddHours(DateTime.Now.Hour).AddHours(-5);
             DateTime DateEnd = DateTime.Now.Date.AddHours(DateTime.Now.Hour);
-            int type=0;
+            int type = 0;
             if (args.Count() == 0)
             {
                 Console.WriteLine("Введите дату начала выгрузки: ");
@@ -73,7 +73,7 @@ namespace DiagCondoleApp
             }
             if (args.Count() == 3)
             {
-                DateStart =  GetDate(args[0]);
+                DateStart = GetDate(args[0]);
                 DateEnd = GetDate(args[1]);
                 type = Int32.Parse(args[2]);
             }
@@ -81,7 +81,7 @@ namespace DiagCondoleApp
 
 
 
-            Task<bool>res= run(DateStart, DateEnd, type);
+            Task<bool> res = run(DateStart, DateEnd, type);
             res.Wait();
 
 
@@ -91,21 +91,21 @@ namespace DiagCondoleApp
 
         }
 
-        public static async Task<bool>  run(DateTime DateStart, DateTime DateEnd, int type)
+        public static async Task<bool> run(DateTime DateStart, DateTime DateEnd, int type)
         {
             bool ok = true;
             switch (type)
             {
                 case 0:
-                    ok= await process(DateStart, DateEnd);
+                    ok = await process(DateStart, DateEnd);
                     Logger.Info(ok.ToString());
                     break;
                 case 1:
-                    ok= PuskStopReader.CheckCrossData(DateStart, DateEnd);
+                    ok = PuskStopReader.CheckCrossData(DateStart, DateEnd);
                     Logger.Info(ok.ToString());
                     break;
                 case 2:
-                    ok=await PuskStopReader.FillAnalogData(DateStart, DateEnd, (new string[] { "DN", "LN" }).ToList());
+                    ok = await PuskStopReader.FillAnalogData(DateStart, DateEnd, (new string[] { "DN", "LN" }).ToList());
                     Logger.Info(ok.ToString());
                     break;
                 case 100:
@@ -116,14 +116,17 @@ namespace DiagCondoleApp
                     Logger.Info(ok.ToString());
                     break;
                 case 201:
-                    CreateReport(DateStart,DateEnd,"MNU");
+                    CreateReport(DateStart, DateEnd, "MNU", "Насосы МНУ");
                     break;
                 case 202:
-                    CreateReport(DateStart, DateEnd, "DN");
+                    CreateReport(DateStart, DateEnd, "DN", "Дренажные насосы");
+                    break;
+                case 203:
+                    CreateReport(DateStart, DateEnd, "LN", "Лекажные насосы");
                     break;
             }
             return ok;
-            
+
         }
 
 
@@ -157,16 +160,16 @@ namespace DiagCondoleApp
             }
         }
 
-        public static async void CreateReport(DateTime dateStart, DateTime dateEnd,string type)
+        public static async void CreateReport(DateTime dateStart, DateTime dateEnd, string type, string Header)
         {
-            int nasosCount = type=="MNU"?3:2;
+            int nasosCount = type == "MNU" ? 3 : 2;
             string typeRunGG = "GG_RUN";
-            
+
 
             string FileNameFull = String.Format("c:/wrk/test{0}.xlsx", type);
             XLWorkbook wbFull = new XLWorkbook();
-
-
+            IXLWorksheet sheetSvodGG = null;
+            int stepDays = 7;
             for (int gg = 1; gg <= 10; gg++)
             {
                 string FileNameTem = String.Format("c:/wrk/template3.xlsx", nasosCount);
@@ -182,12 +185,27 @@ namespace DiagCondoleApp
 
                 IXLWorksheet sheetTemp = null;
                 bool ok = wb.TryGetWorksheet("GGTemplate", out sheetTemp);
-
+                if (nasosCount == 2)
+                {
+                    sheetTemp.Range(1, 18, 20, 30).Clear();
+                    sheetTemp.Range(1, 4, 1, 17).Merge();
+                }
                 IXLWorksheet sheet = sheetTemp.CopyTo(String.Format("GG {0}", gg));
+                
+                if (gg == 1)
+                {
+                    sheetSvodGG = sheetTemp.CopyTo(wbFull, "Свод");
+                    sheetSvodGG.Cell(1, 1).Value = "ГГ";
+                    sheetSvodGG.Cell(1, 4).Value = "ГГ в работе или простое";
+                    sheetSvodGG.Range(sheetSvodGG.Cell(1, 1), sheetSvodGG.Cell(4, 100)).CopyTo(sheetSvodGG.Cell(4 + 13, 1));
+                    sheetSvodGG.Range(sheetSvodGG.Cell(1, 1), sheetSvodGG.Cell(4, 100)).CopyTo(sheetSvodGG.Cell(8 + 25, 1));
+                    sheetSvodGG.Cell(4 + 13, 4).Value = "ГГ в работе";
+                    sheetSvodGG.Cell(8 + 25, 4).Value = "ГГ в простое";
+                }
                 sheetTemp.Delete();
                 IXLWorksheet sheetSvod = wb.AddWorksheet("GG SVOD");
 
-                int RowCount = (int)((dateEnd - dateStart).TotalDays / 7 + 7);
+                int RowCount = (int)((dateEnd - dateStart).TotalDays / stepDays + 7);
 
                 sheet.Range(sheet.Cell(1, 1), sheet.Cell(4, 100)).CopyTo(sheet.Cell(RowCount + 1, 1));
                 sheet.Range(sheet.Cell(1, 1), sheet.Cell(4, 100)).CopyTo(sheet.Cell(RowCount * 2 + 1, 1));
@@ -202,10 +220,15 @@ namespace DiagCondoleApp
                 int weekNumber = 0;
                 while (ds < dateEnd)
                 {
+
+
+                    DateTime de = ds.AddDays(7);
                     if (type == "MNU" && ds.Year >= 2020)
                         typeRunGG = "GG_UST";
-                    Logger.Info(String.Format("{0}: {1}", gg, ds));
-                    DateTime de = ds.AddDays(7);
+                    else
+                        typeRunGG = "GG_RUN";
+
+                    Logger.Info(String.Format("{0}: {1}", gg, de));
                     DiagNasos diag = new DiagNasos(ds, de, gg);
 
                     diag.ReadData(type, nasosCount, typeRunGG);
@@ -305,7 +328,12 @@ namespace DiagCondoleApp
 
                             col += 4;
                         }
-
+                        if (de >= dateEnd)
+                        {
+                            int rowdesc = (i + 1) * 4 + i * 12 + gg;
+                            sheet.Range(row, 2, row, 100).CopyTo(sheetSvodGG.Cell(rowdesc , 2));
+                            sheetSvodGG.Cell(rowdesc, 1).Value = String.Format("ГГ-{0}", gg);
+                        }
 
                     }
                     ds = de.AddSeconds(0);
@@ -315,10 +343,10 @@ namespace DiagCondoleApp
                 sheetTemp.Delete();
                 sheet.CopyTo(wbFull, sheet.Name);
                 wb.SaveAs(FileName);
-                
+
             }
             wbFull.SaveAs(FileNameFull);
-            sendDiagData(FileNameFull);
+            sendDiagData(FileNameFull,Header);
         }
 
         public static async Task<bool> process(DateTime dateStart, DateTime dateEnd)
@@ -326,10 +354,10 @@ namespace DiagCondoleApp
             DateTime date = dateStart.AddSeconds(0); ;
             DateTime start = DateTime.Now;
             DiagDBEntities diagDB = new DiagDBEntities();
-            Dictionary<int,List<PuskStopReader.PuskStopReaderRecord> > requestsDict=new Dictionary<int, List<PuskStopReader.PuskStopReaderRecord>>() ;
+            Dictionary<int, List<PuskStopReader.PuskStopReaderRecord>> requestsDict = new Dictionary<int, List<PuskStopReader.PuskStopReaderRecord>>();
             for (int gg = 1; gg <= 10; gg++)
             {
-                
+
                 List<PuskStopReader.PuskStopReaderRecord> request = new List<PuskStopReader.PuskStopReaderRecord>();
                 IEnumerable<PuskStopPoint> req = from p in diagDB.PuskStopPoints where p.gg == gg && p.analog == false select p;
                 foreach (PuskStopPoint pt in req)
@@ -347,7 +375,7 @@ namespace DiagCondoleApp
                     }
                     request.Add(rec);
                 }
-                requestsDict.Add(gg, request);                
+                requestsDict.Add(gg, request);
             }
 
             while (date < dateEnd)
@@ -359,7 +387,7 @@ namespace DiagCondoleApp
                     if (gg == 5 && date < DateTime.Parse("01.06.2019"))
                         continue;
                     Logger.Info(String.Format("ГГ {0} Дата {1}", gg, date));
-                    List<PuskStopReader.PuskStopReaderRecord> request = requestsDict[gg];                  
+                    List<PuskStopReader.PuskStopReaderRecord> request = requestsDict[gg];
 
                     bool ok = await PuskStopReader.FillPuskStopData(request, date, date.AddHours(3));
 
@@ -376,7 +404,7 @@ namespace DiagCondoleApp
         {
 
             List<PuskStopReader.PuskStopReaderRecord> request = new List<PuskStopReader.PuskStopReaderRecord>();
-            foreach (string gg in new string[] { "04", "05", "07","03" })
+            foreach (string gg in new string[] { "04", "05", "07", "03" })
             {
                 int ggInt = Int32.Parse(gg);
                 request.Add(new PuskStopReader.PuskStopReaderRecord()
@@ -476,7 +504,7 @@ namespace DiagCondoleApp
                 int ggInt = Int32.Parse(gg);
                 string suffix = "";
                 suffix = ggInt <= 2 ? ".UNIT01@BLOCK1" : ggInt <= 6 ? ".UNIT05@BLOCK3" : ggInt <= 8 ? ".UNIT07@BLOCK4" : ".UNIT09@BLOCK5";
-                
+
 
                 request.Add(new PuskStopReader.PuskStopReaderRecord()
                 {
@@ -569,7 +597,7 @@ namespace DiagCondoleApp
                     int pos = rec.DBRecord.IndexOf("_");
                     typeAnalog = rec.DBRecord.Substring(0, pos);
                 }
-                IEnumerable<PuskStopPoint> req = from p in diagDB.PuskStopPoints where p.gg==gg && (p.pointType==rec.DBRecord ||p.pointType==typeAnalog) select p;
+                IEnumerable<PuskStopPoint> req = from p in diagDB.PuskStopPoints where p.gg == gg && (p.pointType == rec.DBRecord || p.pointType == typeAnalog) select p;
                 if (req.Count() > 0)
                 {
                     foreach (PuskStopPoint p in req)
@@ -605,27 +633,22 @@ namespace DiagCondoleApp
 
         }
 
-        public static void sendDiagData(string FileName)
+        public static void sendDiagData(string FileName,string Header)
         {
             try
             {
-               
-                /*TextWriter writer = new StreamWriter(fn, false, Encoding.ASCII);				
-				foreach (string str in AutooperData) {
-					writer.WriteLine(str);					
-				}
-				writer.Close();*/
+
 
 
                 System.Net.Mail.MailMessage mess = new System.Net.Mail.MailMessage();
 
                 mess.From = new MailAddress(Settings.Single.SMTPFrom);
 
-                mess.Subject = "Диагностика";
+                mess.Subject = "Диагностика. "+Header;
                 mess.Body = "диагностика работы насосов";
                 string[] messTo = Settings.Single.DiagMail.Split(new char[] { ';' });
                 foreach (string mt in messTo)
-                 mess.To.Add(mt);
+                    mess.To.Add(mt);
                 mess.Attachments.Add(new Attachment(FileName));
 
                 mess.SubjectEncoding = System.Text.Encoding.UTF8;

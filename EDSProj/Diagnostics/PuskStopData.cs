@@ -513,10 +513,18 @@ namespace EDSProj.Diagnostics
                     diagDB.SaveChanges();
                 }
 
-                /*DateTime date = DateTime.Parse(DateStart.ToString("dd.MM.yyyy HH:00"));
+                if (gg == 3)
+                    continue;
+                DateTime date = DateTime.Parse(DateStart.ToString("dd.MM.yyyy HH:00"));
                 while (date <= DateEnd)
                 {
+                    
                     Logger.Info(String.Format("GG {0} {1} ", gg, date));
+                    if (gg == 5 && date < DateTime.Parse("01.06.2019"))
+                    {
+                        date = DateTime.Parse("01.06.2019");
+                        continue;
+                    }
                     foreach (string type in Types)
                     {
                         if (string.IsNullOrEmpty(pointsDict[type]))
@@ -540,7 +548,7 @@ namespace EDSProj.Diagnostics
                     }
                     date = date.AddHours(3);
 
-                }*/
+                }
 
             }
             return true;
