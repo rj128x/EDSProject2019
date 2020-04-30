@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using ZedControl;
 using ZedGraph;
 
 namespace ChartZedControl
@@ -25,7 +26,7 @@ namespace ChartZedControl
         private bool _isNotAuto;
         public bool IsNotAuto {
             get => _isNotAuto; set {
-                _isNotAuto = value;
+                _isNotAuto =   value;
                 item.Scale.MinAuto = !value;
                 item.Scale.MaxAuto = !value;
                 Parent.RefreshAll();
@@ -175,6 +176,7 @@ namespace ChartZedControl
     /// </summary>
     public partial class ChartZedControl : UserControl, INotifyPropertyChanged
     {
+        public ZedControlWin chartControl =>  _chartControl;
         public ZedGraphControl chart;
         public System.Drawing.Color BGColor { get; set; }
         public System.Drawing.Color FontColor { get; set; }

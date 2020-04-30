@@ -118,7 +118,7 @@
             </Grid>
             <Border Grid.Column="1" Name="brd">
                 <WindowsFormsHost>
-                    <zed:ZedControlWin x:Name="chartControl"/>
+                    <zed:ZedControlWin x:Name="_chartControl"/>
                 </WindowsFormsHost>
             </Border>
         </Grid>

@@ -14,7 +14,9 @@ namespace EDSProj.Diagnostics
     {
         public class AvgInfo
         {
-            protected SortedList<DateTime, double> data;
+            public  SortedList<DateTime, double> data;
+            public SortedList<DateTime, double> lens;
+
             public List<double> sorted;
             public List<double> filtered;
 
@@ -23,6 +25,7 @@ namespace EDSProj.Diagnostics
             public AvgInfo()
             {
                 data = new SortedList<DateTime, double>();
+                lens = new SortedList<DateTime, double>();
                 sorted = new List<double>();
                 filtered = new List<double>();
 
@@ -36,6 +39,25 @@ namespace EDSProj.Diagnostics
 
                 }
                 data.Add(dt, val);
+                lens.Add(dt, val);
+            }
+
+            public void AddV(DateTime ds,DateTime de, double v1,double v2,int sign=1)
+            {
+                bool cross = false;
+                foreach (KeyValuePair<DateTime,double> kv in data)
+                {
+                    DateTime d1 = kv.Key;
+                    DateTime d2 = d1.AddSeconds(lens[kv.Key]);
+                    if (d1 <= de && d2 >= ds)
+                       return;
+                }
+                double v = v2 - v1;
+                if (v * sign > 0)
+                {
+                    data.Add(ds, v / (de - ds).TotalSeconds);
+                    lens.Add(ds, (de - ds).TotalSeconds);
+                }
             }
 
             public void calcAVG()
@@ -46,7 +68,7 @@ namespace EDSProj.Diagnostics
                 sorted = data.Values.ToList();
                 sorted.Sort();
                 filtered = (from d in sorted select d).ToList();
-                if (data.Count <= 10)
+                if (data.Count <= 3)
                 {
                     MathO = sorted.Average();
                     return;
@@ -68,9 +90,33 @@ namespace EDSProj.Diagnostics
                 filtered = (from d in filtered where d * mid > 0 select d).ToList();
 
                 if (filtered.Count > 0)
+                {
+
                     MathO = filtered.Average();
+                }
 
             }
+
+            public void calcAVGV()
+            {
+                MathO = double.NaN;
+                if (data.Count == 0)
+                    return;
+                sorted = data.Values.ToList();
+                sorted.Sort();
+                filtered = (from d in sorted select d).ToList();
+                double sumV=0;
+                double sumLen=0;
+                foreach (KeyValuePair<DateTime,double> kv in data)
+                {
+                    sumV += kv.Value * lens[kv.Key];
+                    sumLen += lens[kv.Key];
+                }
+                MathO = sumV / sumLen;
+
+            }
+
+
 
         }
 
@@ -93,7 +139,7 @@ namespace EDSProj.Diagnostics
         {
             StayInfo.calcAVG();
             RunInfo.calcAVG();
-            VInfo.calcAVG();
+            VInfo.calcAVGV();
             sumTime = StayInfo.filtered.Sum() + RunInfo.filtered.Sum(); ;
 
         }
@@ -167,6 +213,71 @@ namespace EDSProj.Diagnostics
                 result.Add(ds.AddMilliseconds(1), 1);
                 result.Add(de, 1);
                 result.Add(de.AddMilliseconds(1), 0);
+            }
+            return result;
+        }
+
+        public SortedList<DateTime, double> GetSerieDataAvg(DateTime dateStart, DateTime dateEnd, AnalizeNasosData.AvgInfo data)
+        {
+            SortedList<DateTime, double> result = new SortedList<DateTime, double>();
+            foreach (KeyValuePair<DateTime,double> rec in data.data)
+            {
+                DateTime ds =  rec.Key ;
+                DateTime de = ds.AddSeconds(data.lens[rec.Key]);
+                while (result.ContainsKey(ds) || result.ContainsKey(ds.AddMilliseconds(1)))
+                    ds = ds.AddSeconds(1);
+                while (result.ContainsKey(de) || result.ContainsKey(de.AddMilliseconds(1)))
+                    de = de.AddSeconds(-1);
+                de = de < dateEnd ? de : dateEnd;
+
+                    result.Add(ds, 0);
+                    result.Add(ds.AddMilliseconds(1), rec.Value);
+                    result.Add(de, rec.Value);
+                    result.Add(de.AddMilliseconds(1), 0);
+
+            }
+            return result;
+        }
+
+        public SortedList<DateTime, double> GetSerieDataAdd(DateTime dateStart, DateTime dateEnd)
+        {
+            DiagDBEntities diagDB = new DiagDBEntities();
+            IEnumerable<AnalogData> req = from a in diagDB.AnalogDatas where a.pointType.Contains(NasosType) &&
+                                          a.gg == GG && a.Date >= dateStart && a.Date <= dateEnd select a;
+            SortedList<DateTime, double> result = new SortedList<DateTime, double>();
+            
+            foreach (AnalogData rec in req)
+            {
+                DateTime dt = rec.Date;
+                if (result.ContainsKey(dt))
+                    while (result.ContainsKey(dt))
+                        dt = dt.AddMilliseconds(1);
+                result.Add(dt, rec.value);
+            }
+
+            bool first = true;
+            foreach (PuskStopData nd in FullNasosData)
+            {
+                DateTime dt = nd.TimeOn;
+                if (result.ContainsKey(dt))
+                    while (result.ContainsKey(dt))
+                        dt = dt.AddMilliseconds(1);
+                result.Add(dt, nd.ValueStart);
+
+                if (first && nd.PrevRecord != null)
+                {
+                     dt = nd.PrevRecord.TimeOff;
+                    if (result.ContainsKey(dt))
+                        while (result.ContainsKey(dt))
+                            dt = dt.AddMilliseconds(1);
+                    result.Add(dt, nd.PrevRecord.ValueEnd);
+                }
+                first = false;
+                 dt = nd.TimeOff;
+                if (result.ContainsKey(dt))
+                    while (result.ContainsKey(dt))
+                        dt = dt.AddMilliseconds(1);
+                result.Add(dt, nd.ValueEnd);
             }
             return result;
         }
@@ -362,11 +473,7 @@ namespace EDSProj.Diagnostics
                         double v2 = vals.Last().Value;
                         DateTime d1 = vals.First().Key;
                         DateTime d2 = vals.Last().Key;
-                        double v = v2 - v1;
-                        if (v * sign > 0)
-                        {
-                            nasosData.VInfo.Add(d1, v / (d2 - d1).TotalSeconds);
-                        }
+                        nasosData.VInfo.AddV(d1, d2, v1, v2, sign);
                     }
                 }
                 else
@@ -381,11 +488,7 @@ namespace EDSProj.Diagnostics
                             double v2 = first.ValueStart;
                             DateTime d1 = vals.First().Key;
                             DateTime d2 = first.TimeOn;
-                            double v = v2 - v1;
-                            if (v * sign > 0 && (d2 - d1).TotalHours > 1)
-                            {
-                                nasosData.VInfo.Add(d1, v / (d2 - d1).TotalSeconds);
-                            }
+                            nasosData.VInfo.AddV(d1, d2, v1, v2, sign);
                         }
                         PuskStopData last = list.Last();
                         if (last.TimeOff < vals.Last().Key)
@@ -395,10 +498,7 @@ namespace EDSProj.Diagnostics
                             DateTime d1 = last.TimeOff;
                             DateTime d2 = vals.Last().Key;
                             double v = v2 - v1;
-                            if (v * sign > 0 && (d2 - d1).TotalHours > 1)
-                            {
-                                nasosData.VInfo.Add(d1, v / (d2 - d1).TotalSeconds);
-                            }
+                            nasosData.VInfo.AddV(d1, d2, v1, v2, sign);
                         }
                     }
                 }
@@ -456,9 +556,7 @@ namespace EDSProj.Diagnostics
                     double tim = (nr.TimeOn - nr.PrevRecord.TimeOff).TotalSeconds;
                     double v = l2 - l1;
 
-                    double avgV = (l2 - l1) / tim;
-                    if (v*sign>0)
-                        result["SVOD"].VInfo.Add(nr.PrevRecord.TimeOff, avgV);
+                    result["SVOD"].VInfo.AddV(nr.PrevRecord.TimeOff, nr.TimeOn, l1, l2, sign);
                 }
             }
 

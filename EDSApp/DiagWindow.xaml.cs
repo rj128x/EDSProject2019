@@ -468,28 +468,20 @@ namespace EDSApp
 
         private async void MNUBUtttonCreate_Click(object sender, RoutedEventArgs e)
         {
-            /* if (!EDSClass.Single.Ready)
-             {
-                 MessageBox.Show("ЕДС сервер не готов");
-                 return;
-             }
-             EDSClass.Disconnect();
-             EDSClass.Connect();*/
-
             DateTime dt = _DateStart;
             ObservableCollection<DiagNasos> CurrentMNU = new ObservableCollection<DiagNasos>();
             
             while (dt < _DateEnd)
             {
 
-                DiagNasos diag = new DiagNasos(dt, dt.AddDays(1), Int32.Parse(txtGG.Text));
-                bool ok = diag.ReadData("MNU",3);
+                DiagNasos diag = new DiagNasos(dt, dt.AddDays(7), Int32.Parse(txtGG.Text));
+                //bool ok = diag.ReadData("DN",2,"GG_RUN");
+                //bool ok = diag.ReadData("MNU", 3, "GG_UST");
+                bool ok = diag.ReadData("LN", 2, "GG_RUN");
                 CurrentMNU.Add(diag);
-                dt = dt.AddDays(1);
+                dt = dt.AddDays(7);
             }
             MNUGrid.ItemsSource = CurrentMNU;
-
-
         }
 
         private async void MNUGrid_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -505,23 +497,41 @@ namespace EDSApp
             winMNU.chart.AddSerie("RUN", record.GetSerieData(record.DateStart, record.DateEnd, record.DataGG["GG_RUN"]),
                 System.Drawing.Color.Red, true, false, true, -1, true);
             winMNU.chart.AddSerie("Ust", record.GetSerieData(record.DateStart, record.DateEnd, record.DataGG["GG_UST"]),
-                System.Drawing.Color.LightBlue, true, false, true, -1, true);
-
-            /*bool ok = await record.GetSerieLEDSData();            
-            winMNU.chart.AddSerie("L", record.dataLvl,   System.Drawing.Color.Orange, true, false, true, 1, true);
-            winMNU.chart.AddSerie("P", record.dataP, System.Drawing.Color.Yellow, true, false, true, 2, true);*/
-
-            
-            
+                System.Drawing.Color.LightBlue, true, false, true, -1, false);
+            winMNU.chart.AddSerie("L", record.GetSerieDataAdd(record.DateStart, record.DateEnd),
+           System.Drawing.Color.Orange, true, false, true, 1, true);
 
             winMNU.chart.init(true, "dd.MM HH");
             winMNU.chart.setY2AxisCount(winMNU.chart.CurrentGraphPane, 3);
-            winMNU.chart.AddSerie("MNU A", record.GetSerieData(record.DateStart, record.DateEnd, record.DataNasos["MNU_1"]),
+           
+            winMNU.chart.AddSerie("VRun", record.GetSerieDataAvg(record.DateStart, record.DateEnd,record.NasosRunGG["SVOD"].VInfo),
+                System.Drawing.Color.Yellow, true, false, true, -1, true);
+            winMNU.chart.AddSerie("VStay", record.GetSerieDataAvg(record.DateStart, record.DateEnd, record.NasosStopGG["SVOD"].VInfo),
+                System.Drawing.Color.Yellow, true, false, true, -1, true);
+
+            winMNU.chart.AddSerie("SRun", record.GetSerieDataAvg(record.DateStart, record.DateEnd, record.NasosRunGG["SVOD"].StayInfo),
+                System.Drawing.Color.Red, true, false, true, 0, true);
+            winMNU.chart.AddSerie("SStay", record.GetSerieDataAvg(record.DateStart, record.DateEnd, record.NasosStopGG["SVOD"].StayInfo),
+                System.Drawing.Color.Red, true, false, true, 0, true);
+
+            winMNU.chart.AddSerie("RRun", record.GetSerieDataAvg(record.DateStart, record.DateEnd, record.NasosRunGG["SVOD"].RunInfo),
+                System.Drawing.Color.Green, true, false, true, 1, true);
+            winMNU.chart.AddSerie("RStay", record.GetSerieDataAvg(record.DateStart, record.DateEnd, record.NasosStopGG["SVOD"].RunInfo),
+                System.Drawing.Color.Green, true, false, true, 1, true);
+
+
+            winMNU.chart.init(true, "dd.MM HH");
+            winMNU.chart.setY2AxisCount(winMNU.chart.CurrentGraphPane, 3);
+            
+            winMNU.chart.AddSerie("Насос1", record.GetSerieData(record.DateStart, record.DateEnd, record.DataNasos[record.NasosType+"_1"]),
                 System.Drawing.Color.Red, true, false, true, -1, true, 0, 3);
-            winMNU.chart.AddSerie("MNU B", record.GetSerieData(record.DateStart, record.DateEnd, record.DataNasos["MNU_1"]),
+            winMNU.chart.AddSerie("Насос2", record.GetSerieData(record.DateStart, record.DateEnd, record.DataNasos[record.NasosType + "_2"]),
                 System.Drawing.Color.Green, true, false, true, 0, true, -1, 2);
-            winMNU.chart.AddSerie("MNU C", record.GetSerieData(record.DateStart, record.DateEnd, record.DataNasos["MNU_1"]),
-                System.Drawing.Color.Yellow, true, false, true, 1, true, -2, 1);
+            if (record.NasosType == "MNU")
+            {
+                winMNU.chart.AddSerie("Насос3", record.GetSerieData(record.DateStart, record.DateEnd, record.DataNasos["MNU_3"]),
+                    System.Drawing.Color.Yellow, true, false, true, 1, true, -2, 1);
+            }
 
 
             
