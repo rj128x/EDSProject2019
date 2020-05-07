@@ -170,10 +170,12 @@ namespace DiagCondoleApp
             XLWorkbook wbFull = new XLWorkbook();
             IXLWorksheet sheetSvodGG = null;
             int stepDays = 7;
-            for (int gg = 1; gg <= 10; gg++)
+            int[] GGArr = new int[] { 3, 4, 5, 7, 1, 2, 6, 8, 9, 10 };
+            for (int ggInd = 1; ggInd <= 10; ggInd++)
             {
+                int ggNum = GGArr[ggInd - 1];
                 string FileNameTem = String.Format("c:/wrk/template3.xlsx", nasosCount);
-                string FileName = String.Format("c:/wrk/test{0}_GG{1}.xlsx", type, gg);
+                string FileName = String.Format("c:/wrk/test{0}_GG{1}.xlsx", type, ggNum);
                 try
                 {
                     File.Delete(FileName);
@@ -190,9 +192,9 @@ namespace DiagCondoleApp
                     sheetTemp.Range(1, 18, 20, 30).Clear();
                     sheetTemp.Range(1, 4, 1, 17).Merge();
                 }
-                IXLWorksheet sheet = sheetTemp.CopyTo(String.Format("GG {0}", gg));
+                IXLWorksheet sheet = sheetTemp.CopyTo(String.Format("GG {0}", ggNum));
                 
-                if (gg == 1)
+                if (ggInd == 1)
                 {
                     sheetSvodGG = sheetTemp.CopyTo(wbFull, "Свод");
                     sheetSvodGG.Cell(1, 1).Value = "ГГ";
@@ -228,14 +230,14 @@ namespace DiagCondoleApp
                     else
                         typeRunGG = "GG_RUN";
 
-                    Logger.Info(String.Format("{0}: {1}", gg, de));
-                    DiagNasos diag = new DiagNasos(ds, de, gg);
+                    Logger.Info(String.Format("{0}: {1}", ggNum, de));
+                    DiagNasos diag = new DiagNasos(ds, de, ggNum);
 
                     diag.ReadData(type, nasosCount, typeRunGG);
                     Logger.Info("read");
 
                     ok = wb.TryGetWorksheet("GGFullData", out sheetTemp);
-                    IXLWorksheet shFull = sheetTemp.CopyTo(String.Format("GG{0}_{1}", gg, ds.ToString("ddMM")));
+                    IXLWorksheet shFull = sheetTemp.CopyTo(String.Format("GG{0}_{1}", ggNum, ds.ToString("ddMM")));
 
 
                     int row = 2;
@@ -330,9 +332,9 @@ namespace DiagCondoleApp
                         }
                         if (de >= dateEnd)
                         {
-                            int rowdesc = (i + 1) * 4 + i * 12 + gg;
+                            int rowdesc = (i + 1) * 4 + i * 12 + ggInd;
                             sheet.Range(row, 2, row, 100).CopyTo(sheetSvodGG.Cell(rowdesc , 2));
-                            sheetSvodGG.Cell(rowdesc, 1).Value = String.Format("ГГ-{0}", gg);
+                            sheetSvodGG.Cell(rowdesc, 1).Value = String.Format("ГГ-{0}", ggNum);
                         }
 
                     }
@@ -383,7 +385,7 @@ namespace DiagCondoleApp
                 Logger.Info(date.ToString());
                 for (int gg = 1; gg <= 10; gg++)
                 {
-                    if (gg == 3) continue;
+                    if (gg == 3 && date < DateTime.Parse("07.05.2020")) continue;
                     if (gg == 5 && date < DateTime.Parse("01.06.2019"))
                         continue;
                     Logger.Info(String.Format("ГГ {0} Дата {1}", gg, date));

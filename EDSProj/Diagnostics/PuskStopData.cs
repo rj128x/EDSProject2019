@@ -513,8 +513,7 @@ namespace EDSProj.Diagnostics
                     diagDB.SaveChanges();
                 }
 
-                if (gg == 3)
-                    continue;
+
                 DateTime date = DateTime.Parse(DateStart.ToString("dd.MM.yyyy HH:00"));
                 while (date <= DateEnd)
                 {
@@ -523,6 +522,11 @@ namespace EDSProj.Diagnostics
                     if (gg == 5 && date < DateTime.Parse("01.06.2019"))
                     {
                         date = DateTime.Parse("01.06.2019");
+                        continue;
+                    }
+                    if (gg == 3 && date < DateTime.Parse("07.05.2020"))
+                    {
+                        date = DateTime.Parse("07.05.2020");
                         continue;
                     }
                     foreach (string type in Types)
