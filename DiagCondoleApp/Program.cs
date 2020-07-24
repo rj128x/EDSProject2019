@@ -357,7 +357,7 @@ namespace DiagCondoleApp
             DateTime start = DateTime.Now;
             DiagDBEntities diagDB = new DiagDBEntities();
             Dictionary<int, List<PuskStopReader.PuskStopReaderRecord>> requestsDict = new Dictionary<int, List<PuskStopReader.PuskStopReaderRecord>>();
-            for (int gg = 1; gg <= 10; gg++)
+            for (int gg = 2; gg <= 10; gg++)
             {
 
                 List<PuskStopReader.PuskStopReaderRecord> request = new List<PuskStopReader.PuskStopReaderRecord>();
@@ -383,7 +383,7 @@ namespace DiagCondoleApp
             while (date < dateEnd)
             {
                 Logger.Info(date.ToString());
-                for (int gg = 1; gg <= 10; gg++)
+                for (int gg = 2; gg <= 10; gg++)
                 {
                     if (gg == 3 && date < DateTime.Parse("07.05.2020")) continue;
                     if (gg == 5 && date < DateTime.Parse("01.06.2019"))

@@ -79,19 +79,19 @@ namespace EDSProj
             AllPoints = allPoints;
             PointsRef = new Dictionary<string, EDSPointInfo>();
 
-            PointsRef.Add("PZad", AllPoints["11VT_GP00A-003.MCR@GRARM"]);
-            PointsRef.Add("PPlan", AllPoints["11VT_GP00A-043.MCR@GRARM"]);
-            PointsRef.Add("PZVN", AllPoints["11VT_GP00AP-125.MCR@GRARM"]);
-            PointsRef.Add("PPerv", AllPoints["11VT_GP00AP-119.MCR@GRARM"]);
-            PointsRef.Add("PFakt", AllPoints["11VT_GP00A-136.MCR@GRARM"]);
+            PointsRef.Add("PZad", AllPoints["11VT_GP00A-003.MCR@GRARM"]);//+?
+            PointsRef.Add("PPlan", AllPoints["11VT_GP00AP-043.MCR@GRARM"]);//+
+            PointsRef.Add("PZVN", AllPoints["11VT_GP00AP-125.MCR@GRARM"]);//+
+            PointsRef.Add("PPerv", AllPoints["11VT_GP00AP-119.MCR@GRARM"]);//+?
+            PointsRef.Add("PFakt", AllPoints["11VT_GP00A-136.MCR@GRARM"]);//+
 
-            PointsRef.Add("PMinMaket", AllPoints["PBR_GES_MIN.EDS@CALC"]);
-            PointsRef.Add("PMaxMaket", AllPoints["PBR_GES_MAX.EDS@CALC"]);
+            PointsRef.Add("PMinMaket", AllPoints["PBR_GES_MIN.EDS@CALC"]);//+
+            PointsRef.Add("PMaxMaket", AllPoints["PBR_GES_MAX.EDS@CALC"]);//+
 
-            PointsRef.Add("ResursZagr", AllPoints["11VT_GP00AP-131.MCR@GRARM"]);
-            PointsRef.Add("ResursRazgr", AllPoints["11VT_GP00AP-132.MCR@GRARM"]);
+            PointsRef.Add("ResursZagr", AllPoints["11VT_GP00AP-ZVMINCR.MCR@GRARM"]);//+
+            PointsRef.Add("ResursRazgr", AllPoints["11VT_GP00AP-ZVMDECR.MCR@GRARM"]);//+
 
-            PointsRef.Add("GGCount", AllPoints["11VT_GP00AP-151.MCR@GRARM"]);
+            PointsRef.Add("GGCount", AllPoints["11VT_GP00AP-ZCOUNT.MCR@GRARM"]);//+
 
         }
         public Dictionary<DateTime, AVRCHMRecord> Data { get; set; }
@@ -394,10 +394,10 @@ namespace EDSProj
 
                 string name = String.Format("11VT_GG{0}{1}AP-031.MCR@GRARM", gg < 10 ? "0" : "", gg);
                 report.addRequestField(AllPoints[name], EDSReportFunction.val);
-                name = String.Format("11VT_GG{0}{1}AP-040.MCR@GRARM", gg < 10 ? "0" : "", gg);
+                name = String.Format("11VT_GG{0}{1}AP-ZVM.MCR@GRARM", gg < 10 ? "0" : "", gg);
                 report.addRequestField(AllPoints[name], EDSReportFunction.val);
 
-                name = String.Format("11VT_GG{0}{1}AP-043.MCR@GRARM", gg < 10 ? "0" : "", gg);
+                name = String.Format("11VT_GG{0}{1}AP-PDG.MCR@GRARM", gg < 10 ? "0" : "", gg);
                 report.addRequestField(AllPoints[name], EDSReportFunction.val);
 
                 /*name = String.Format("11VT_GG{0}{1}AP-502.MCR@GRARM", gg < 10 ? "0" : "", gg);

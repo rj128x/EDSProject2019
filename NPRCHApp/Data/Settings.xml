@@ -9,6 +9,6 @@
   <FTPPassword>V0t#1Nt</FTPPassword>
   <FTPFolder></FTPFolder>
   <!--<BlocksString>10~100~35~100~48;04~115~40~115~44;</BlocksString>-->
-  <BlocksString>10~100~35~100~48;</BlocksString>
+  <BlocksString>10~100~35~100~48;04~115~40~115~44;05~115~40~115~44;07~115~40~115~44;</BlocksString>
 
 </Settings>

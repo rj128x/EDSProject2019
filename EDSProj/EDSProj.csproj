@@ -56,8 +56,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\MODES082019\Infrastructure.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\libs\log4net\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\EDSProj\libs\MODES082019\log4net.dll</HintPath>
     </Reference>
     <Reference Include="ModesApiExternal, Version=1.4.7.12, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -113,6 +114,7 @@
     <Compile Include="EDS\EDSReport.cs" />
     <Compile Include="FTPClass.cs" />
     <Compile Include="Impersonator.cs" />
+    <Compile Include="GRARMPBRData.cs" />
     <Compile Include="ModesCentre\MCPBRData.cs" />
     <Compile Include="ModesCentre\MCServerReader.cs" />
     <Compile Include="ModesCentre\MCSettings.cs" />

@@ -9,6 +9,6 @@
   <FTPPassword>!Ovation1!</FTPPassword>
   <FTPFolder>NPRCH/GenData</FTPFolder>
   <!--<BlocksString>10~100~35~100~48;07~115~45~115~44;</BlocksString>-->
-  <BlocksString>10~100~35~100~48;</BlocksString>
+  <BlocksString>10~100~35~100~48;04~115~40~115~44;05~115~40~115~44;07~115~40~115~44;</BlocksString>
 
 </Settings>

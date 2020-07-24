@@ -442,7 +442,7 @@ namespace EDSProj.Diagnostics
         public static async Task<bool> FillAnalogData(DateTime DateStart, DateTime DateEnd, List<string> Types)
         {
             DiagDBEntities diagDB = new DiagDBEntities();
-            for (int gg = 1; gg <= 10; gg++)
+            for (int gg = 2; gg <= 10; gg++)
             {
                 try
                 {

@@ -63,7 +63,7 @@ namespace EDSProj.ModesCentre
 					ok = ok && getPlan(obj);
 				}
 
-				if (ok) {
+				/*if (ok) {
 					if (ProcessedPBRS.Count != 8) {
 						Logger.Info("Количество ПБР !=7. Отправка в автооператор не производится");
 					} else {
@@ -85,7 +85,7 @@ namespace EDSProj.ModesCentre
 							Logger.Info("Неверное количество данных в АО");
 						}
 					}
-				}
+				}*/
 				//return;
 
 				if (ok) {
@@ -234,6 +234,7 @@ namespace EDSProj.ModesCentre
 
         public void sendAutooperData()
         {
+			return;
             try
             {
                 string fn = "pbr-0000" + (NPBR < 10 ? "0" : "") + NPBR.ToString() + "-" + Date.ToString("yyyyMMdd") + ".csv";
