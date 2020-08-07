@@ -1152,6 +1152,10 @@ namespace NPRCHApp
         protected Dictionary<DateTime, Record> Data { get; set; }
 
         public string Date { get; set; }
+        public int Hour { get; set; }
+        public string GG { get; set; }
+        public string utc { get; set; }
+
         protected string TextFile { get; set; }
         public string FileName { get; set; }
         public int cntPower { get; set; }
@@ -1187,6 +1191,9 @@ namespace NPRCHApp
         {
 
             Date = date.ToString("dd.MM.yyyy HH:00");
+            Hour = date.Hour + 1;
+            GG = blockData.BlockNumber;
+            utc = String.Format("{0}-{1}", date.AddHours(-DiffHour).ToString("HH"), date.AddHours(-DiffHour + 1).ToString("HH"));
             string fn = "";
             List<string> data = FTPClass.ReadFile(date.AddHours(-DiffHour), blockData.BlockNumber, out fn);
             FileName = fn;
@@ -1335,14 +1342,15 @@ namespace NPRCHApp
             F_gc = F_ob / fNom * 50;
             Date = dt.AddSeconds(sec);
 
-            if (F_gc > 49.8)
+            double mp = 0.02;
+            if (F_gc > 49)
             {
                 double diffF = F_gc - 50;
-                if (Math.Abs(diffF) > 0.02)
+                if (Math.Abs(diffF) > mp)
                 {
                     try
                     {
-                        double d = F_gc > 50.02 ? F_gc - 50.02 : F_gc - 49.98;
+                        double d = F_gc > (50+mp) ? F_gc - (50+mp) : F_gc - (50-mp);
                         P_perv = -2.0 / 5.0 * d*pNom;
                     }
                     catch
@@ -1350,7 +1358,27 @@ namespace NPRCHApp
                     }
                 }
             }
-            //P_fakt = P_plan + P_zvn + P_perv;
+
+            /*double mpReal = 0.010;
+            double ppervReal = 0;
+            if (F_gc > 49)
+            {
+                double diffF = F_gc - 50;
+                if (Math.Abs(diffF) > mpReal)
+                {
+                    try
+                    {
+                        double d = F_gc > (50 + mpReal) ? F_gc - (50 + mpReal) : F_gc - (50 - mpReal);
+                        ppervReal = -2.0 / 5.0 * d * pNom;
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            P_perv = ppervReal;*/
+
+            //P_fakt = P_plan + P_zvn + ppervReal;
             //P_zvn = 0;
             prevPperv.Add(P_perv);
             P_planFull = P_plan + P_zvn + P_perv;

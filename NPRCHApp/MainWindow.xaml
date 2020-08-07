@@ -78,9 +78,11 @@
                             <DataGrid  Name="grdDayData" AutoGenerateColumns="False" CanUserResizeColumns="True" MouseDoubleClick="grdDayData_MouseDoubleClick"
                                        SelectionMode="Single" SelectionUnit="FullRow" IsReadOnly="True">
                                 <DataGrid.Columns>
-                                    
                                     <DataGridTextColumn Header="Дата" Binding="{Binding Date}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="ГГ" Binding="{Binding GG}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="час" Binding="{Binding Hour}" ></DataGridTextColumn>
                                     <DataGridTextColumn Header="Файл" Binding="{Binding FileName}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="utc" Binding="{Binding utc}" ></DataGridTextColumn>
                                     <DataGridTextColumn Header="P[>100]" Binding="{Binding cntPower}" ></DataGridTextColumn>
                                     <DataGridTextColumn Header="F[>100]" Binding="{Binding cntFreq}" ></DataGridTextColumn>
                                     <DataGridTextColumn Header="P[&lt;60]" Binding="{Binding TRepeatPower}" ></DataGridTextColumn>

@@ -82,7 +82,7 @@ namespace EDSProj
             PointsRef.Add("PZad", AllPoints["11VT_GP00A-003.MCR@GRARM"]);//+?
             PointsRef.Add("PPlan", AllPoints["11VT_GP00AP-043.MCR@GRARM"]);//+
             PointsRef.Add("PZVN", AllPoints["11VT_GP00AP-125.MCR@GRARM"]);//+
-            PointsRef.Add("PPerv", AllPoints["11VT_GP00AP-119.MCR@GRARM"]);//+?
+            PointsRef.Add("PPerv", AllPoints["11VT_GP00AP-019.MCR@GRARM"]);//+?
             PointsRef.Add("PFakt", AllPoints["11VT_GP00A-136.MCR@GRARM"]);//+
 
             PointsRef.Add("PMinMaket", AllPoints["PBR_GES_MIN.EDS@CALC"]);//+
@@ -91,7 +91,7 @@ namespace EDSProj
             PointsRef.Add("ResursZagr", AllPoints["11VT_GP00AP-ZVMINCR.MCR@GRARM"]);//+
             PointsRef.Add("ResursRazgr", AllPoints["11VT_GP00AP-ZVMDECR.MCR@GRARM"]);//+
 
-            PointsRef.Add("GGCount", AllPoints["11VT_GP00AP-ZCOUNT.MCR@GRARM"]);//+
+            PointsRef.Add("GGCount", AllPoints["11VT_GP00AP-UCOUNT.MCR@GRARM"]);//+
 
         }
         public Dictionary<DateTime, AVRCHMRecord> Data { get; set; }
