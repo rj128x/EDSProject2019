@@ -129,6 +129,7 @@
     <Compile Include="PuskStopPoint.cs">
       <DependentUpon>DiagDB.tt</DependentUpon>
     </Compile>
+    <Compile Include="SDPMDKReport.cs" />
     <Compile Include="Water\InerpolationRashod.cs" />
     <Compile Include="Service References\EDSWebService\Reference.cs">
       <AutoGen>True</AutoGen>

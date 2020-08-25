@@ -625,6 +625,8 @@ namespace NPRCHApp
             YdyAvg = calcAVG(Ydy, w2);
             X1dxAvg = calcAVG(X1dx, w2);
             Y1dyAvg = calcAVG(Y1dy, w2);
+            /*XdxAvg = X1dxAvg;
+            YdyAvg = Y1dyAvg;*/
 
             int dt = 30;
 
@@ -652,8 +654,9 @@ namespace NPRCHApp
                     if (Msub.Count == 0)
                         continue;
                     double mMin = Msub.Min();
+                    double mMax = Msub.Max();
 
-                    if ((mMin >= 0.016) && (Math.Abs(XdxAvg[i]) >= 0.007))
+                    if ((mMin >= 0.0155) && (Math.Abs(XdxAvg[i]) >= 0.0065))
                     {
                         NoReactArr[i] = 1;
                         Marr.Add(mMin);
@@ -682,6 +685,7 @@ namespace NPRCHApp
                     {
                         if ((!res.ContainsKey(i - 1)) || (i == res.Keys.Last()))
                         {
+                            Msub.Add(res[i]);
                             NoReactComment += String.Format("({0}:{1}-{2}:{3} [{4:0.000}])", start / 60, start % 60, prevI / 60, prevI % 60, Msub.Max());
                             Msub.Clear();
                             Msub.Add(res[i]);
@@ -1351,7 +1355,7 @@ namespace NPRCHApp
                     try
                     {
                         double d = F_gc > (50+mp) ? F_gc - (50+mp) : F_gc - (50-mp);
-                        P_perv = -2.0 / 5.0 * d*pNom;
+                        P_perv = -2.0 / 5 * d*pNom;
                     }
                     catch
                     {
@@ -1359,7 +1363,7 @@ namespace NPRCHApp
                 }
             }
 
-            /*double mpReal = 0.010;
+            /*double mpReal = 0.017;
             double ppervReal = 0;
             if (F_gc > 49)
             {

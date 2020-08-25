@@ -58,5 +58,12 @@ namespace EDSApp
             win.Show();
             this.Close();
         }
+
+        private void buttonDK_Click(object sender, RoutedEventArgs e)
+        {
+            SDPMDKWindow win = new SDPMDKWindow();
+            win.Show();
+            this.Close();
+        }
     }
 }
