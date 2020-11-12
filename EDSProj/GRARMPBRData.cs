@@ -86,7 +86,7 @@ namespace EDSProj
 			return hh;
 		}
 
-        protected SortedList<DateTime, double> createSmoothData()
+        protected SortedList<DateTime, double> createSmoothData(bool processPuskStop=true)
         {
             SortedList<DateTime, double> hh = new SortedList<DateTime, double>();
             int index = 0;
@@ -102,10 +102,36 @@ namespace EDSProj
                 int mins = (int)ts.TotalMinutes;
                 double v2 = Data[d2];
                 double v1 = Data[d1];
-                for (int i = 0; i < mins; i++)
+				bool isPusk = (v2 > 40 && v1 < 1);
+				bool isStop = (v1 > 40 && v2 < 1);
+				double tPusk = 0;
+				double tStop = 0;
+				if (isPusk)
+				{					
+					tPusk = 60 * 40.0 / 2.0 / v2;
+				}
+				if (isStop)
+				{
+					tStop = 60-60 * 40.0 / 2.0 / v1;
+
+				}
+				for (int i = 0; i < mins; i++)
                 {
                     DateTime d = d1.AddMinutes(i);
                     double val = v1+ (v2 - v1) / mins * i;
+
+					if (processPuskStop)
+					{
+						if (isPusk && val < 40)
+							val = 40;
+						if (isPusk && i < tPusk)
+							val = 0;
+						if (isStop &&  val < 40)
+							val = 40;
+						if (isStop && i > tStop)
+							val = 0;
+					}
+
                     if (!hh.ContainsKey(d))
                     {
                         hh.Add(d, val);
