@@ -26,7 +26,7 @@ namespace EDSProj
 
 		public GRARMPBRData(string _PointName, string _SmoothPointName, bool _WriteIntegratedData = false) {
 
-			PointName = PointName;
+			PointName = _PointName;
 
             SmoothPointName = _SmoothPointName;
 			WriteIntegratedData = _WriteIntegratedData;

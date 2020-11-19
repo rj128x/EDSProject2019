@@ -43,11 +43,12 @@ namespace EDSPBR
             /*DateTime date = new DateTime(2019, 10, 01);
             while (date <= DateTime.Now.Date)
             {*/
-                MCServerReader reader = new MCServerReader(DateTime.Now.Date);
-             /*   date = date.AddDays(1);
-            }*/
+                MCServerReader reader = new MCServerReader(DateTime.Now.Date.AddDays(1));
+				reader = new MCServerReader(DateTime.Now.Date.AddDays(0));
+			/*   date = date.AddDays(1);
+		   }*/
 
-            EDSClass.Disconnect();
+			EDSClass.Disconnect();
             //Console.ReadLine();
 		}
 	}

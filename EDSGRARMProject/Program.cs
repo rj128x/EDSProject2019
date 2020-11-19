@@ -26,9 +26,9 @@ namespace EDSGRARMProject
             }
             foreach (FileInfo fi in files.Values)
             {
-                GRARMPBRData PBR_gtp1 = new GRARMPBRData("", "GRARM_PBR_GTP1_SMOOTH.EDS@CALC", false);
-                GRARMPBRData PBR_gtp2 = new GRARMPBRData("", "GRARM_PBR_GTP2_SMOOTH.EDS@CALC", false);
-                GRARMPBRData PBR_ges = new GRARMPBRData("", "GRARM_PBR_GES_SMOOTH.EDS@CALC", true);
+                GRARMPBRData PBR_gtp1 = new GRARMPBRData("PBR_GTP1.EDS@CALC", "GRARM_PBR_GTP1_SMOOTH.EDS@CALC", false);
+                GRARMPBRData PBR_gtp2 = new GRARMPBRData("PBR_GTP2.EDS@CALC", "GRARM_PBR_GTP2_SMOOTH.EDS@CALC", false);
+                GRARMPBRData PBR_ges = new GRARMPBRData("PBR_GES.EDS@CALC", "GRARM_PBR_GES_SMOOTH.EDS@CALC", true);
                 PBR_ges.IntegratedEDSPoint = "GRARM_PBR_GES_VYR_PLAN.EDS@CALC";
                 StreamReader sr = new StreamReader(fi.FullName);
                 String text = sr.ReadToEnd();
