@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EDSApp"
         mc:Ignorable="d"
-        Title="SDPMDKWindow" Height="450" Width="800">
+        Title="SDPMDKWindow" Height="450" Width="974">
     <Grid>
         <Grid Margin="0,20,0,0">
             <Grid.ColumnDefinitions>
@@ -21,8 +21,8 @@
                 <Border Height="230"  VerticalAlignment="Top">
                     <StackPanel Grid.Row="0" Grid.Column="0">
                         <Calendar Name="clndDate"/>
-                        <Button Content="Сформировать" Name="btnCreate" Click="btnCreate_Click" Height="25"/>
-                        <Button Content="Прервать" Name="btnAbort" Click="btnAbort_Click" Height="25"/>
+                        <Button Content="Сформировать" Name="btnCreate"  Click="btnCreate_Click" Height="25"/>
+                        <Button Content="Прервать" Name="btnAbort" Height="25"/>
 
                     </StackPanel>
                 </Border>
@@ -32,27 +32,51 @@
             <Grid Grid.Column="1" Grid.Row="0" >
                 <DataGrid Name="grdEvents" Grid.Row="1" CanUserAddRows="False" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" SelectionMode="Single" SelectionUnit="FullRow">
                     <DataGrid.Columns >
-                        <DataGridTemplateColumn Header="Date" SortMemberPath="Date" Width="150">
+                        <DataGridTemplateColumn Header="Trigger" SortMemberPath="DKTrigger" Width="150">
                             <DataGridTemplateColumn.CellTemplate >
                                 <DataTemplate >
-                                    <TextBlock Text="{Binding Date, Mode=OneTime}" />
+                                    <TextBlock Text="{Binding DKTrigger, StringFormat='dd.MM.yyyy HH:mm:ss'}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Desc" SortMemberPath="TypeRecord" Width="300">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding TypeRecord, Mode=OneTime}"/>
+                        <DataGridTemplateColumn Header="GOU" SortMemberPath="GOU" Width="120">
+                            <DataGridTemplateColumn.CellTemplate >
+                                <DataTemplate >
+                                    <TextBlock Text="{Binding GOU, Mode=OneTime}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="HasError" SortMemberPath="HasError" Width="*">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding HasError, Mode=OneTime}"/>
+                        <DataGridTemplateColumn Header="DKTime" SortMemberPath="DKTime" Width="100">
+                            <DataGridTemplateColumn.CellTemplate >
+                                <DataTemplate >
+                                    <TextBlock Text="{Binding DKTime, StringFormat='dd.MM.yyyy HH:mm'}" />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="DK" SortMemberPath="DK" Width="150">
+                            <DataGridTemplateColumn.CellTemplate >
+                                <DataTemplate >
+                                    <TextBlock Text="{Binding DK, Mode=OneTime}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        
+
+                        <DataGridTemplateColumn Header="DKStartTime" SortMemberPath="DKStartTime" Width="100">
+                            <DataGridTemplateColumn.CellTemplate >
+                                <DataTemplate >
+                                    <TextBlock Text="{Binding DKStartTime, StringFormat='dd.MM.yyyy HH:mm'}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="DKEndTime" SortMemberPath="DKEndTime" Width="100">
+                            <DataGridTemplateColumn.CellTemplate >
+                                <DataTemplate >
+                                    <TextBlock Text="{Binding DKEndTime, StringFormat='dd.MM.yyyy HH:mm'}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

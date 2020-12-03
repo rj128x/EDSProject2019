@@ -213,7 +213,7 @@ namespace EDSProj.ModesCentre
                 for (int i = 0; i < 24; i++)
                 {
                     object val = vp.GetValue(i);
-                    pbr.AddNPRCHValue(dt1.SystemToLocalHqEx().AddHours(i).AddHours(-1), (bool)val?1:0);                    
+                    pbr.AddNPRCHValue(dt1.SystemToLocalHqEx().AddHours(i), (bool)val?1:0);                    
                 }
                 ProcessedPBRS.Add(pbr.Item, pbr);
 

@@ -30,6 +30,7 @@
                         <TextBox Name="txtDiffHour" Width="50" HorizontalAlignment="Right" FontSize="20"/>
                     </StackPanel>
                     <Calendar Name="clndDate"  IsTodayHighlighted="False"/>
+                    <CheckBox Content="Считывать участие НПРЧ по макету" x:Name="chbNPRCHMaket" IsChecked="True"/>
 
                     <Button Name="btnLoadFiles" Click="btnLoadFiles_Click" Content="Получить файлы" Height="30" />
                 </StackPanel>
@@ -91,6 +92,7 @@
                                     <DataGridTextColumn Header="+-7[&lt;60]" Binding="{Binding TNoRezerv}" ></DataGridTextColumn>
                                     <DataGridTextColumn Header="План[&lt;60]" Binding="{Binding cntBadPower}" ></DataGridTextColumn>
                                     <DataGridTextColumn Header="Реакц" Binding="{Binding NoReactComment}" Width="150"  ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="НПРЧ" Binding="{Binding NPRCHMaket}" Width="20"  ></DataGridTextColumn>
                                     <DataGridTextColumn Header="CC" Binding="{Binding KolebComment}" Width="150" ></DataGridTextColumn>
                                     <DataGridTextColumn Header="NA" Binding="{Binding NoAutoComment}" Width="150" ></DataGridTextColumn>
 
@@ -119,10 +121,36 @@
                 </TabItem>
 
             </TabControl>
-            <StatusBar  Grid.Row="1" Grid.ColumnSpan="2" Name="statusBar" >
-                <TextBlock Name="txtStatus"  Text="{Binding StatusText, Mode=OneWay}"/>
-            </StatusBar>
+            <Grid Grid.Row="1" Grid.ColumnSpan="2" Name="grdStatus">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.Column="0">
+                    <TextBlock Text="Подключение: "/>
+                    <TextBlock Text="{Binding ConnectInfo, Mode=OneWay}" Name="txtConnectInfo" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="1">
+                    <TextBlock Text="Запрос: "/>
+                    <TextBlock Text="{Binding GlobalInfo, Mode=OneWay}" Name="txtGlobalInfo" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Column="2">
+                    <TextBlock Text="Состояние: "/>
+                    <TextBlock Text="{Binding ProcessInfo, Mode=OneWay}" Name="txtProcessInfo" />
+                </StackPanel>
+                <StatusBar Name="statusBar" Grid.Row="1">
+                    <TextBlock Name="txtStatus"  Text="{Binding StatusText, Mode=OneWay}" />
+                </StatusBar>
+                
+            
         </Grid>
+
+    </Grid>
 
     </Grid>
 

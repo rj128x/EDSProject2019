@@ -1,4 +1,8 @@
-﻿using System;
+﻿using EDSProj;
+using EDSProj.EDS;
+using EDSProj.EDSWebService;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -65,11 +69,17 @@ namespace NPRCHApp
             }
         }
 
-        public MainWindow()
-        {
+        public  MainWindow()
+        {            
             InitializeComponent();
             Settings.init(System.AppDomain.CurrentDomain.BaseDirectory + "/Data/settings.xml");
             Logger.InitFileLogger(System.AppDomain.CurrentDomain.BaseDirectory + "/logs/", "nprch");
+            SettingsNPRCH.init(System.AppDomain.CurrentDomain.BaseDirectory + "/Data/SettingsNPRCH.xml");
+            grdStatus.DataContext = EDSClass.Single;
+            init();
+            
+
+
             Logger.Info("start");
             txtDiffHour.Text = "3";
             //chart.init();
@@ -101,6 +111,10 @@ namespace NPRCHApp
 
         }*/
 
+         public  async void init()
+        {
+            bool ok=await RecordHour.initEDS();
+        }
         private void btnLoad_Click(object sender, RoutedEventArgs e)
         {
 
@@ -109,8 +123,8 @@ namespace NPRCHApp
         private void btnLoadFiles_Click(object sender, RoutedEventArgs e)
         {
             StatusText = "Загрузка";
-            string FN = chbReserv.IsChecked.Value ? "/Data/settingsReserv.xml" : "/Data/settings.xml";
-            Settings.init(System.AppDomain.CurrentDomain.BaseDirectory + FN);
+            string FN = chbReserv.IsChecked.Value ? "/Data/settingsNPRCHReserv.xml" : "/Data/settingsNPRCH.xml";
+            SettingsNPRCH.init(System.AppDomain.CurrentDomain.BaseDirectory + FN);
             btnLoadFiles.IsEnabled = false;
             Application.Current.Dispatcher.Invoke(
                     DispatcherPriority.Background,
@@ -124,7 +138,7 @@ namespace NPRCHApp
         }
 
 
-        private bool LoadFiles()
+        private async Task<bool> LoadFiles()
         {
             DateTime date = clndDate.SelectedDate.Value;
             FTPData = new Dictionary<string, DateTime>();
@@ -133,9 +147,30 @@ namespace NPRCHApp
             List<RecordHour> hoursData = new List<RecordHour>();
             RecordHour.DataSDay = new Dictionary<string, List<Record>>();
             RecordHour prev = null;
+            SortedList<string, EDSReportRequestRecord> EDSData = new SortedList<string, EDSReportRequestRecord>();
+            EDSReport report = null;
+            if (chbNPRCHMaket.IsChecked.Value)
+            {
+                try
+                {
+                    EDSClass.Disconnect();
+                }
+                catch { }
+                EDSClass.Connect();
+                report = new EDSReport(date.AddHours(-DiffHour + 5), date.AddHours(-DiffHour + 5 + 24),EDSReportPeriod.hour);
+
+                foreach (KeyValuePair<string, BlockData> de in SettingsNPRCH.BlocksDict)
+                {
+                    int gg = Int32.Parse(de.Key);
+                    string iess = String.Format("MC_NPRCH_GG{0}.EDS@CALC", gg);
+                    EDSReportRequestRecord rec=report.addRequestField(RecordHour.EDSPoints[iess], EDSReportFunction.val);
+                    EDSData.Add(de.Key, rec);
+                }
+                bool ok=await report.ReadData();
+            }
             for (int hour = 0; hour <= 23; hour++)
             {
-                foreach (KeyValuePair<string, BlockData> de in Settings.BlocksDict)
+                foreach (KeyValuePair<string, BlockData> de in SettingsNPRCH.BlocksDict)
                 {
                     StatusText = "Загрузка " + hour.ToString();
                     DateTime dt = date.AddHours(hour);
@@ -148,7 +183,13 @@ namespace NPRCHApp
                         RecordHour rh = new RecordHour(de.Value);
                         rh.Header = header;
                         rh.processFile(dt, DiffHour, false);
+                        if (chbNPRCHMaket.IsChecked.Value)
+                        {
+                            double val=report.ResultData[report.DateStart.AddHours(hour)][EDSData[de.Key].Id];
+                            rh.NPRCHMaket = val > 0 ? "+" : " ";                            
+                        }
                         hoursData.Add(rh);
+
                         prev = rh;
                     }
                 }
@@ -196,14 +237,14 @@ namespace NPRCHApp
         }
 
 
-        private void loadDayData(DateTime date,string block)
+        private  void  loadDayData(DateTime date,string block)
         {
             /* try
              {           */
             Dictionary<DateTime, Record> Data;
 
-            RecordHour recHour = new RecordHour(Settings.BlocksDict[block]);
-            recHour.processFile(date, DiffHour, true);
+            RecordHour recHour = new RecordHour(SettingsNPRCH.BlocksDict[block]);
+             recHour.processFile(date, DiffHour, true);
             txtFile.Text = recHour.getText();
             Data = recHour.getData();
 
@@ -218,6 +259,8 @@ namespace NPRCHApp
             SortedList<DateTime, double> list_Pzvn = new SortedList<DateTime, double>();
             SortedList<DateTime, double> list_X = new SortedList<DateTime, double>();
             SortedList<DateTime, double> list_Y = new SortedList<DateTime, double>();
+            SortedList<DateTime, double> list_Xdx = new SortedList<DateTime, double>();
+            SortedList<DateTime, double> list_Ydy = new SortedList<DateTime, double>();
             SortedList<DateTime, double> list_NR = new SortedList<DateTime, double>();
             list_Fmin.Add(date, 49.98);
             list_Fmin.Add(date.AddHours(1), 49.98);
@@ -235,6 +278,8 @@ namespace NPRCHApp
                 list_Pzvn.Add(rec.Date, rec.P_zvn);
                 list_X.Add(rec.Date, rec.X_avg);
                 list_Y.Add(rec.Date, rec.Y_avg);
+                list_Xdx.Add(rec.Date, rec.Xdx_avg);
+                list_Ydy.Add(rec.Date, rec.Ydy_avg);
                 list_NR.Add(rec.Date, rec.NoReact);
 
             }
@@ -249,22 +294,26 @@ namespace NPRCHApp
             //prepareChart(chart.chart);
             chart.AddSerie("P факт", list_P, System.Drawing.Color.Red, true, false,false,0);
             chart.AddSerie("P плн", list_Pzad, System.Drawing.Color.Orange, true, false, false, 0);
-            chart.AddSerie("P мин", list_Pmin, System.Drawing.Color.Pink, true, false, false, 0);
-            chart.AddSerie("P макс", list_Pmax, System.Drawing.Color.Pink, true, false, false, 0);
-            chart.AddSerie("F мин", list_Fmin, System.Drawing.Color.LightBlue, true, false,false, 1);
-            chart.AddSerie("F макс", list_Fmax, System.Drawing.Color.LightBlue, true, false,false, 1);
+            chart.AddSerie("P мин", list_Pmin, System.Drawing.Color.Pink, true, false, true, 0);
+            chart.AddSerie("P макс", list_Pmax, System.Drawing.Color.Pink, true, false, true, 0);
+            chart.AddSerie("F мин", list_Fmin, System.Drawing.Color.LightBlue, true, false,true, 1);
+            chart.AddSerie("F макс", list_Fmax, System.Drawing.Color.LightBlue, true, false,true, 1);
 
             chart.AddSerie("F", list_F, System.Drawing.Color.Blue, true, false,false, 1);
 
             chart.AddSerie("P плн сум", list_Pperv, System.Drawing.Color.Purple, true,false, false,0);
-            chart.AddSerie("P звн", list_Pzvn, System.Drawing.Color.Gray, true, false,false, 0, true);
 
-            chart.init(true, "HH:mm:ss");
-            chart.AddSerie("X", list_X, System.Drawing.Color.Green, true, false,false, 1, true);
-            chart.AddSerie("Y", list_Y, System.Drawing.Color.Gray, true, false,false, 1, true);
-            chart.AddSerie("NR", list_NR, System.Drawing.Color.IndianRed, true, false,false, 1, true);
+            chart.AddSerie("P звн", list_Pzvn, System.Drawing.Color.Orange, true, false, false, 2, true);
+
+            chart.init(true, "HH:mm:ss");            
+            chart.AddSerie("X", list_X, System.Drawing.Color.LightGreen, true, false,true, 0, true);
+            chart.AddSerie("Y", list_Y, System.Drawing.Color.LightYellow, true, false,true, 0, true);
+            chart.AddSerie("Xdx", list_Xdx, System.Drawing.Color.Green, true, false, false, 1, true);
+            chart.AddSerie("Ydy", list_Ydy, System.Drawing.Color.Yellow, true, false, false, 1, true);
+            chart.AddSerie("NR", list_NR, System.Drawing.Color.IndianRed, true, false,false, 2, true);
 
             
+
             tabHour.IsSelected = true;
 
 
@@ -299,9 +348,9 @@ namespace NPRCHApp
             //RecordHour.calcSTATIZM(RecordHour.DataSDay, ref statizm, ref mp, ref pSgl,ref step);
 
 
-            RecordHour.calcSTATIZMFast(RecordHour.DataSDay[block], ref statizm, ref mp, ref pSgl,Settings.BlocksDict[block]);
+            RecordHour.calcSTATIZMFast(RecordHour.DataSDay[block], ref statizm, ref mp, ref pSgl,SettingsNPRCH.BlocksDict[block]);
             if (calcSecond)
-                RecordHour.calcSTATIZMRegr(RecordHour.DataSDay[block], ref statizm2, ref mp2, ref pSgl, Settings.BlocksDict[block]);
+                RecordHour.calcSTATIZMRegr(RecordHour.DataSDay[block], ref statizm2, ref mp2, ref pSgl, SettingsNPRCH.BlocksDict[block]);
 
 
             txtStatizm.Text = String.Format("S={0:0.00}, MP={1:0.000}, P={2:0.000}", statizm, mp, pSgl);

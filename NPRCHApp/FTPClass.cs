@@ -1,4 +1,5 @@
 ﻿using BytesRoad.Net.Ftp;
+using EDSProj;
 using Ionic.Zip;
 using System;
 using System.Collections.Generic;
@@ -23,19 +24,19 @@ namespace NPRCHApp
            
             if (clients == null)
                 clients = new Dictionary<string, FtpClient>();
-            if (!clients.ContainsKey(Settings.Single.FTPServer))
+            if (!clients.ContainsKey(SettingsNPRCH.Single.FTPServer))
             {
                 client = new FtpClient();
-                client.PassiveMode = !Settings.Single.FTPActive;
-                clients.Add(Settings.Single.FTPServer, client);
+                client.PassiveMode = !SettingsNPRCH.Single.FTPActive;
+                clients.Add(SettingsNPRCH.Single.FTPServer, client);
             }
-            client = clients[Settings.Single.FTPServer];
+            client = clients[SettingsNPRCH.Single.FTPServer];
             if (!client.IsConnected)
             {
-                Logger.Info("try connect " + Settings.Single.FTPServer);
-                client.Connect(timeout, Settings.Single.FTPServer, Settings.Single.FTPPort);
+                Logger.Info("try connect " + SettingsNPRCH.Single.FTPServer);
+                client.Connect(timeout, SettingsNPRCH.Single.FTPServer, SettingsNPRCH.Single.FTPPort);
                 Logger.Info("try login");
-                client.Login(timeout, Settings.Single.FTPUser, Settings.Single.FTPPassword);
+                client.Login(timeout, SettingsNPRCH.Single.FTPUser, SettingsNPRCH.Single.FTPPassword);
                 Logger.Info("login");
             }
 
@@ -62,7 +63,7 @@ namespace NPRCHApp
                     }
                     catch { }
 
-                    string path = String.Format("/{0}/{1}/{2}/{3}/{4}", Settings.Single.FTPFolder, block, date.ToString("yyyy"), date.ToString("MM"), date.ToString("dd"));
+                    string path = String.Format("/{0}/{1}/{2}/{3}/{4}", SettingsNPRCH.Single.FTPFolder, block, date.ToString("yyyy"), date.ToString("MM"), date.ToString("dd"));
                     string fn = String.Format("{0}{1}{2}{3}{4}.txt.zip", block, date.ToString("yyyy"), date.ToString("MM"), date.ToString("dd"), date.ToString("HH"));
                     fileName = fn;
                     client.ChangeDirectory(timeout, path);
@@ -128,7 +129,7 @@ namespace NPRCHApp
                     FtpClient client = getClient();
 
 
-                    string path = String.Format("/{0}/{1}/{2}/{3}/{4}", Settings.Single.FTPFolder, block, date.ToString("yyyy"), date.ToString("MM"), date.ToString("dd"));
+                    string path = String.Format("/{0}/{1}/{2}/{3}/{4}", SettingsNPRCH.Single.FTPFolder, block, date.ToString("yyyy"), date.ToString("MM"), date.ToString("dd"));
                     string fn = String.Format("{0}{1}{2}{3}{4}.txt.zip", block, date.ToString("yyyy"), date.ToString("MM"), date.ToString("dd"), date.ToString("HH"));
                     client.ChangeDirectory(timeout, path);
                     FtpItem[] files = client.GetDirectoryList(timeout);

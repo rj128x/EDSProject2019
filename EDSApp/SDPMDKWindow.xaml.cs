@@ -1,6 +1,7 @@
 ﻿using EDSProj;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,10 +28,12 @@ namespace EDSApp
         public SDPMDKWindow()
         {
             InitializeComponent();
+             init();
         }
 
         public async Task<bool> init()
         {
+            grdStatus.DataContext = EDSClass.Single;
             AllPoints = new SortedList<string, EDSPointInfo>();
             bool ok = true;
             ok &= await EDSPointsClass.getPointsArr("11VT.*", AllPoints);
@@ -39,5 +42,15 @@ namespace EDSApp
             return true;
         }
 
+        private async void btnCreate_Click(object sender, RoutedEventArgs e)
+        {
+            SDPMDKReport report = new SDPMDKReport();
+            DateTime date = clndDate.SelectedDate.Value;
+            DateTime dateEnd = date.AddDays(1);
+            dateEnd = dateEnd > DateTime.Now ? DateTime.Now.AddMinutes(-10) : dateEnd;
+            bool ok=await report.ReadData(date, dateEnd);
+            
+            grdEvents.ItemsSource=report.DKDataFull.Values;
+        }
     }
 }

@@ -44,7 +44,7 @@
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\log4net\log4net.dll</HintPath>
+      <HintPath>..\..\EDSProj\libs\MODES082019\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -72,7 +72,7 @@
     <Compile Include="FTPClass.cs" />
     <Compile Include="OutputLog.cs" />
     <Compile Include="RecordClass.cs" />
-    <Compile Include="Settings.cs" />
+    <Compile Include="SettingsNPRCH.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -113,11 +113,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\SettingsReserv.xml">
+    <Content Include="Data\SettingsNPRCHReserv.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Data\Settings.xml">
+    <Content Include="Data\SettingsNPRCH.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -125,6 +125,10 @@
     <ProjectReference Include="..\ChartZedControl\ChartZedControl.csproj">
       <Project>{e899099b-e685-40d1-b53a-f0683f2fb87f}</Project>
       <Name>ChartZedControl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EDSProj\EDSProj.csproj">
+      <Project>{794ec6df-678b-48aa-9071-967725ea2b64}</Project>
+      <Name>EDSProj</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

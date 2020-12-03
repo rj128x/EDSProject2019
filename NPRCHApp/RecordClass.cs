@@ -1,8 +1,11 @@
-﻿using System;
+﻿using EDSProj;
+using EDSProj.EDSWebService;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace NPRCHApp
 {
@@ -579,6 +582,9 @@ namespace NPRCHApp
 
             List<double> NoReactArr = new List<double>();
 
+            int cnt0 = 0;
+            int cntNot0 = 0;
+
             for ( int i=0;i<dataS.Count;i++)
             {
                 Record rec = dataS[i];
@@ -593,7 +599,24 @@ namespace NPRCHApp
                 X1dx.Add(0);
                 Y1dy.Add(0);
 
+                if (rec.P_fakt < 10)
+                    cnt0++;
+                if (rec.P_fakt > 10)
+                    cntNot0++;
+                
+                    
                 NoReactArr.Add(0);
+            }
+
+            if (cnt0 > 30 && cntNot0<30)
+            {
+                NoReactComment = "Простой";
+                return;
+            }
+            else if (cnt0 > 30 )
+            {
+                NoReactComment = "Пуск/Стоп";
+                return;
             }
 
 
@@ -623,6 +646,7 @@ namespace NPRCHApp
 
             XdxAvg = calcAVG(Xdx, w2);
             YdyAvg = calcAVG(Ydy, w2);
+
             X1dxAvg = calcAVG(X1dx, w2);
             Y1dyAvg = calcAVG(Y1dy, w2);
             /*XdxAvg = X1dxAvg;
@@ -709,8 +733,10 @@ namespace NPRCHApp
                 for (int i = 0; i < X.Count; i++)
                 {
 
-                    Data[ds.AddSeconds(i)].X_avg = XdxAvg[i];
-                    Data[ds.AddSeconds(i)].Y_avg = YdyAvg[i];
+                    Data[ds.AddSeconds(i)].X_avg = Xavg[i];
+                    Data[ds.AddSeconds(i)].Y_avg = Yavg[i];
+                    Data[ds.AddSeconds(i)].Xdx_avg = XdxAvg[i];
+                    Data[ds.AddSeconds(i)].Ydy_avg = YdyAvg[i];
                     Data[ds.AddSeconds(i)].NoReact = NoReactArr[i];
 
                 }
@@ -892,7 +918,7 @@ namespace NPRCHApp
         public void calcKoleb(List<Record> dataS, bool fillData)
         {
             return;
-            string name = "out_" + this.Date.Replace(":", "_");
+            //string name = "out_" + this.Date.Replace(":", "_");
             //OutputData.InitOutput(name);
             List<double> P = new List<double>();
             List<double> P1 = new List<double>();
@@ -1004,7 +1030,7 @@ namespace NPRCHApp
                     {
                         double RP = calcAKFLag(DictO[oi], T);
                         double RF = calcAKFLag(DictF[oi], T);
-                        if (RP>0.6 && RF>0.5  && oi!=KeysDict.Last())
+                        if (RP>0.5 && RF>0.5  && oi!=KeysDict.Last())
                         {
                             if (start == -1)
                                 start = oi*winStep;
@@ -1179,6 +1205,7 @@ namespace NPRCHApp
         public double PSGL { get; set; }
         public static bool created = false;
         public BlockData blockData;
+        
 
         public RecordHour(BlockData blockData)            
         {
@@ -1291,7 +1318,7 @@ namespace NPRCHApp
 
 
             }
-
+            
             //RHO = calcRHO(dataS);
             calcReact(dataS, fillData);
             NoAutoComment = calcNoAuto(dataS);
@@ -1306,6 +1333,27 @@ namespace NPRCHApp
         {
             return TextFile;
         }
+
+
+        public static SortedList<string, EDSPointInfo> EDSPoints;
+        public static async Task<bool> initEDS()
+        {
+            try
+            {                
+                EDSPoints = new SortedList<string, EDSPointInfo>();
+                EDSClass.Connect();
+                bool ok =await EDSPointsClass.getPointsArr("MC_NPRCH_GG.*EDS@CALC", EDSPoints);
+                return true;
+            }
+            catch
+            {
+                MessageBox.Show("Не удалось подключиться к ЕДС");
+                return false;
+            }
+        }
+
+        public string NPRCHMaket { get; set; }
+
     }
 
     public class Record
@@ -1322,6 +1370,8 @@ namespace NPRCHApp
         public double P_max { get; set; }
         public double X_avg { get; set; }
         public double Y_avg { get; set; }
+        public double Xdx_avg { get; set; }
+        public double Ydy_avg { get; set; }
         public double O { get; set; }
         public double NoReact { get; set; }
 

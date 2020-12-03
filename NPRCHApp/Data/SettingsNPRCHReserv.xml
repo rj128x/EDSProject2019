@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<SettingsNPRCH xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 			 xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
   <FTPActive>false</FTPActive>
@@ -11,4 +11,4 @@
   <!--<BlocksString>10~100~35~100~48;07~115~45~115~44;</BlocksString>-->
   <BlocksString>10~100~35~100~48;04~115~40~115~44;05~115~40~115~44;07~115~40~115~44;</BlocksString>
 
-</Settings>
+</SettingsNPRCH>
