@@ -53,7 +53,7 @@ namespace EDSProj
 
 		public string LogPath { get; set; }
 
-        public string AOMail { get; set; }
+        public string DKMail { get; set; }
 
 		public string DiagFolder { get; set; }
 		public string DiagMail { get; set; }

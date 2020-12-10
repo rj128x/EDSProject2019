@@ -11,7 +11,7 @@ namespace EDSGRARMProject
 {
     class Program
     {
-        static void Main(string[] args)
+        public static async Task<bool> PBRExport()
         {
             Settings.init("Data/Settings.xml");
             Logger.InitFileLogger(Settings.Single.LogPath, "pbrExport");
@@ -117,8 +117,52 @@ namespace EDSGRARMProject
 
                 sr.Close();
                 fi.Delete();
-
             }
+            return true;
+        }
+
+        public static async Task<bool> DKSend(int d1, int d2)
+        {
+            Settings.init("Data/Settings.xml");
+            Logger.InitFileLogger(Settings.Single.LogPath, "DKSend");
+
+            SortedList<string, EDSPointInfo> AllPoints = new SortedList<string, EDSPointInfo>();
+            bool ok = true;
+            ok &= await EDSPointsClass.getPointsArr("11VT.*", AllPoints);
+
+            SDPMDKReport.init(AllPoints);
+
+            SDPMDKReport report = new SDPMDKReport();
+            DateTime date = DateTime.Now.Date.AddDays(-d1);
+            DateTime dateEnd = DateTime.Now.Date.AddDays(-d2); ;
+            dateEnd = dateEnd > DateTime.Now ? DateTime.Now.AddMinutes(-10) : dateEnd;
+             ok = await report.ReadData(date, dateEnd);
+            report.sendDKData();
+            return ok;
+        }
+
+        static  void  Main(string[] args)
+        {
+
+
+            if (args.Count() == 0 || args[0]=="pbr")
+            {
+                Task<bool> res = PBRExport();
+                res.Wait();
+            }
+            else if (args[0]=="dk")
+            {
+                int d1 = 1;
+                int d2 = 0;
+                if (args.Count() > 1)
+                {
+                    d1 = Int32.Parse(args[1]);
+                    d2 = Int32.Parse(args[2]);
+                }
+                Task<bool> res= DKSend(d1,d2);
+                res.Wait();
+            }
+            
         }
     }
 }

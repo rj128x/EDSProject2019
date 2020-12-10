@@ -2,17 +2,17 @@
 <Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 			 xmlns:xsd="http://www.w3.org/2001/XMLSchema">  
   <SMTPServer>mx-votges-021.corp.gidroogk.com</SMTPServer>
-  <SMTPUser>is</SMTPUser>
-  <SMTPPassword>12345</SMTPPassword>
+  <SMTPUser>chekunovamv</SMTPUser>
+  <SMTPPassword>Qz159753</SMTPPassword>
   <SMTPDomain>CORP</SMTPDomain>
-  <SMTPFrom>is@votges.rushydro.ru</SMTPFrom>
-  <SMTPTo>chekunovaMV@votges.rushydro.ru</SMTPTo>
+  <SMTPFrom>is@rushydro.ru</SMTPFrom>
+  <SMTPTo>chekunovaMV@rushydro.ru</SMTPTo>
   <SMTPPort>25</SMTPPort>
 
   <EDSUser>admin</EDSUser>
   <EDSPassword>Ovation123</EDSPassword>
   
-  <AOMail>autooper_votges@rushydro.ru</AOMail>
+  <DKMail>chekunovamv@rushydro.ru</DKMail>
   <DiagMail>chekunovamv@rushydro.ru</DiagMail>
   <DiagFolder>C:\wrk</DiagFolder>
 

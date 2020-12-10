@@ -296,63 +296,7 @@ namespace EDSProj.ModesCentre
 
 		}*/
 
-        public void sendAutooperData()
-        {
-            return;
-            try
-            {
-                string fn = "pbr-0000" + (NPBR < 10 ? "0" : "") + NPBR.ToString() + "-" + Date.ToString("yyyyMMdd") + ".csv";
-
-                string body = String.Join("\r\n", AutooperData);
-                /*TextWriter writer = new StreamWriter(fn, false, Encoding.ASCII);				
-				foreach (string str in AutooperData) {
-					writer.WriteLine(str);					
-				}
-				writer.Close();*/
-
-                StreamWriter sw = new StreamWriter("c:/int/ftpfolder/" + fn, false);
-                sw.WriteLine(body);
-                sw.Close();
-
-                //FileInfo file = new FileInfo("c:/int/ftpfolder/"+fn);
-                System.Net.Mail.MailMessage mess = new System.Net.Mail.MailMessage();
-
-                mess.From = new MailAddress(Settings.Single.SMTPFrom);
-
-                mess.Subject = "pbr-0000" + (NPBR < 10 ? "0" : "") + NPBR.ToString() + "-" + Date.ToString("yyyyMMdd");
-                mess.Body = body;
-                mess.To.Add(Settings.Single.AOMail);
-                Logger.Info(Settings.Single.AOMail);
-                //mess.Attachments.Add(new Attachment(fn));
-
-                mess.SubjectEncoding = System.Text.Encoding.Default;
-                mess.BodyEncoding = System.Text.Encoding.Default;
-                mess.IsBodyHtml = false;
-                System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient(Settings.Single.SMTPServer, Settings.Single.SMTPPort);
-                client.EnableSsl = true;
-                if (string.IsNullOrEmpty(Settings.Single.SMTPUser))
-                {
-                    client.UseDefaultCredentials = true;
-                }
-                else
-                {
-                    client.Credentials = new System.Net.NetworkCredential(Settings.Single.SMTPUser, Settings.Single.SMTPPassword, Settings.Single.SMTPDomain);
-                }
-                // Отправляем письмо
-                client.Send(mess);
-                Logger.Info("Данные в автооператор отправлены успешно");
-                /*try
-                {
-                    file.Delete();
-                }
-                catch { };*/
-            }
-            catch (Exception e)
-            {
-                Logger.Error(String.Format("Ошибка при отправке почты: {0}", e.ToString()), Logger.LoggerSource.server);
-                Logger.Info("Данные в автооператор не отправлены");
-            }
-        }
+        
 
     }
 }

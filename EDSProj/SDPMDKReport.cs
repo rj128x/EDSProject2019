@@ -3,6 +3,7 @@ using EDSProj.EDS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,13 +37,17 @@ namespace EDSProj
         public Dictionary<DateTime, SDPMDKRecord> DKDataGOU1045Accept { get; set; }
         public Dictionary<DateTime, SDPMDKRecord> DKDataGOU1948Accept { get; set; }
         public SortedList<DateTime, SDPMDKRecord> DKDataFull { get; set; }
+
+        public DateTime DateStart { get; set; }
+        public DateTime DateEnd { get; set; }
         public static void init(SortedList<String, EDSPointInfo> allPoints)
         {
             AllPoints = allPoints;
             Points1948New = new Dictionary<string, EDSPointInfo>();
             Points1045New = new Dictionary<string, EDSPointInfo>();
 
-            Points1948New.Add("DKID", AllPoints["11VT_SPDG00A_1948-280.MCR@GRARM"]);//+
+            Points1948New.Add("DKCRC", AllPoints["11VT_SPDG00A_1948-281.MCR@GRARM"]);
+            //Points1948New.Add("DKID", AllPoints["11VT_SPDG00A_1948-036.MCR@GRARM"]);//+
 
             Points1948New.Add("DKDay", AllPoints["11VT_SPDG00A_1948-105.MCR@GRARM"]);//+
             Points1948New.Add("DKMonth", AllPoints["11VT_SPDG00A_1948-106.MCR@GRARM"]);//+
@@ -75,7 +80,7 @@ namespace EDSProj
             Points1045Accept = new Dictionary<string, EDSPointInfo>();
 
 
-            Points1948Accept.Add("DKID", AllPoints["11VT_SPDG00A_1948-120.MCR@GRARM"]);//+
+            Points1948Accept.Add("DKCRC", AllPoints["11VT_SPDG00A_1948-077.MCR@GRARM"]);//Дата время действ
 
             Points1948Accept.Add("DKDay", AllPoints["11VT_SPDG00A_1948-066.MCR@GRARM"]);//+
             Points1948Accept.Add("DKMonth", AllPoints["11VT_SPDG00A_1948-067.MCR@GRARM"]);//+
@@ -119,6 +124,8 @@ namespace EDSProj
 
         public async Task<bool> ReadData(DateTime dateStart, DateTime dateEnd)
         {
+            DateStart = dateStart;
+            DateEnd = dateEnd;
             DKDataGOU1045New = await ReadDataGOU(dateStart, dateEnd, "ГТП 110 Новая", Points1045New);
             DKDataGOU1948New = await ReadDataGOU(dateStart, dateEnd, "ГТП 220 Новая", Points1948New);
             DKDataGOU1045Accept = await ReadDataGOU(dateStart, dateEnd, "ГТП 110 Акцепт", Points1045Accept);
@@ -164,8 +171,7 @@ namespace EDSProj
         protected async Task<Dictionary<DateTime, SDPMDKRecord> > ReadDataGOU(DateTime dateStart, DateTime dateEnd,string GOU , Dictionary<string, EDSPointInfo> PointsRef)
         {
             EDSReport report = new EDSReport(dateStart, dateEnd, EDSReportPeriod.sec);
-            EDSReportRequestRecord recDKID = report.addRequestField(PointsRef["DKID"], EDSReportFunction.val);
-
+            EDSReportRequestRecord recDKCRC = report.addRequestField(PointsRef["DKCRC"], EDSReportFunction.val);
             bool ok = await report.ReadData();
 
             List<DateTime> dates = report.ResultData.Keys.ToList();
@@ -174,9 +180,9 @@ namespace EDSProj
             double prevID = -1;
             foreach (DateTime date in dates)
             {
-                double id = report.ResultData[date][recDKID.Id];
+                double id = report.ResultData[date][recDKCRC.Id];
 
-                if (id != prevID && prevID != -1 && id>0)
+                if (id != prevID && prevID != -1 && id!=0 )
                 {
                     DKDates.Add(date, true);
                 }
@@ -186,7 +192,7 @@ namespace EDSProj
             Dictionary<DateTime, SDPMDKRecord> ResultData = new Dictionary<DateTime, SDPMDKRecord>();
             foreach (DateTime date in DKDates.Keys)
             {
-                EDSReport repDK = new EDSReport(date, date.AddSeconds(2), EDSReportPeriod.sec);
+                EDSReport repDK = new EDSReport(date, date.AddSeconds(3), EDSReportPeriod.sec);
                 Dictionary<string, EDSReportRequestRecord> repRecords = new Dictionary<string, EDSReportRequestRecord>();
                 foreach (KeyValuePair<string, EDSPointInfo> de in PointsRef)
                 {
@@ -197,17 +203,17 @@ namespace EDSProj
 
                 SDPMDKRecord DKRecord = new SDPMDKRecord();
                 DKRecord.DKTrigger = date;
-                DKRecord.DKTime = readDateFromGRARM(repDK, date.AddSeconds(1),
+                DKRecord.DKTime = readDateFromGRARM(repDK, date.AddSeconds(2),
                     repRecords["DKYear"], repRecords["DKMonth"], repRecords["DKDay"],
                     repRecords["DKHour"], repRecords["DKMin"]);
-                DKRecord.DKStartTime = readDateFromGRARM(repDK, date.AddSeconds(1),
+                DKRecord.DKStartTime = readDateFromGRARM(repDK, date.AddSeconds(2),
                     repRecords["DKStartYear"], repRecords["DKStartMonth"], repRecords["DKStartDay"],
                     repRecords["DKStartHour"], repRecords["DKStartMin"]);
-                DKRecord.DKEndTime = readDateFromGRARM(repDK, date.AddSeconds(1),
+                DKRecord.DKEndTime = readDateFromGRARM(repDK, date.AddSeconds(2),
                     repRecords["DKEndYear"], repRecords["DKEndMonth"], repRecords["DKEndDay"],
                     repRecords["DKEndHour"], repRecords["DKEndMin"]);
-                DKRecord.DKVal = repDK.ResultData[date.AddSeconds(1)][repRecords["DKVal"].Id];
-                DKRecord.DKNum = (int)repDK.ResultData[date.AddSeconds(1)][repRecords["DKNum"].Id];
+                DKRecord.DKVal = repDK.ResultData[date.AddSeconds(2)][repRecords["DKVal"].Id];
+                DKRecord.DKNum = (int)repDK.ResultData[date.AddSeconds(2)][repRecords["DKNum"].Id];
                 DKRecord.GOU = GOU;
                 ResultData.Add(date, DKRecord);
 
@@ -229,6 +235,68 @@ namespace EDSProj
 
             }
             return ResultData;
+        }
+
+        public void sendDKData()
+        {
+            try
+            {
+                string header = "<tr><th>Дата<br/>получения</th><th>Время<br/>команды</th><th>ГОУ</th><th>Команда</th><th>Время<br/>начала</th><th>Время</br>конца</th>";
+                string table = "";
+                foreach (SDPMDKRecord rec in DKDataFull.Values)
+                {
+                    string s = "";
+                    s += String.Format("<td>{0}</td>", rec.DKTrigger.ToString("dd.MM HH:mm:ss"));
+                    s += String.Format("<td>{0}</td>", rec.DKTime.ToString("dd.MM HH:mm"));
+                    s += String.Format("<td>{0}</td>", rec.GOU);
+                    s += String.Format("<td>{0}</td>", rec.DK);
+                    s += String.Format("<td>{0}</td>", rec.DKStartTime.ToString("dd.MM HH:mm"));
+                    s += String.Format("<td>{0}</td>", rec.DKEndTime.ToString("dd.MM HH:mm"));
+                    s = string.Format("<tr>{0}</tr>", s);
+                    table += s;
+                }
+                table = string.Format("<table border='1'>{0}{1}</table></html>", header, table);
+
+
+                //FileInfo file = new FileInfo("c:/int/ftpfolder/"+fn);
+                System.Net.Mail.MailMessage mess = new System.Net.Mail.MailMessage();
+
+                mess.From = new MailAddress(Settings.Single.SMTPFrom);
+
+                mess.Subject = String.Format("Диспетчерские команды {0} - {1}", DateStart.ToString("dd.MM.yyyy"), DateEnd.ToString("dd.MM.yyyy"));
+                mess.Body = String.Format("<html><h1>{0}</h1>{1}</html>", mess.Subject, table);
+                
+                string[] mails = Settings.Single.DKMail.Split(';');
+                foreach (string mail in mails)
+                {
+                    mess.To.Add(mail);
+                }
+                
+                //mess.Attachments.Add(new Attachment(fn));
+
+                mess.SubjectEncoding = System.Text.Encoding.UTF8;
+                mess.BodyEncoding = System.Text.Encoding.UTF8;
+                mess.IsBodyHtml = true;
+                System.Net.Mail.SmtpClient client = new System.Net.Mail.SmtpClient(Settings.Single.SMTPServer, Settings.Single.SMTPPort);
+                client.EnableSsl = false;
+                if (string.IsNullOrEmpty(Settings.Single.SMTPUser))
+                {
+                    client.UseDefaultCredentials = true;
+                }
+                else
+                {
+                    client.Credentials = new System.Net.NetworkCredential(Settings.Single.SMTPUser, Settings.Single.SMTPPassword, Settings.Single.SMTPDomain);
+                }
+                // Отправляем письмо
+                client.Send(mess);
+                Logger.Info("Данные в автооператор отправлены успешно");
+
+            }
+            catch (Exception e)
+            {
+                Logger.Error(String.Format("Ошибка при отправке почты: {0}", e.ToString()), Logger.LoggerSource.server);
+                Logger.Info("Данные в автооператор не отправлены");
+            }
         }
     }
 }
