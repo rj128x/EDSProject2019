@@ -22,6 +22,8 @@ namespace EDSProj
         public double DKVal { get; set; }
         public string GOU { get; set; }
         public string DK { get; set; }
+
+        public bool AutoDK { get; set; }
     }
     public class SDPMDKReport
     {
@@ -80,7 +82,9 @@ namespace EDSProj
             Points1045Accept = new Dictionary<string, EDSPointInfo>();
 
 
-            Points1948Accept.Add("DKCRC", AllPoints["11VT_SPDG00A_1948-077.MCR@GRARM"]);//Дата время действ
+            //Points1948Accept.Add("DKCRC", AllPoints["11VT_SPDG00A_1948-077.MCR@GRARM"]);//Дата время действ
+            Points1948Accept.Add("DKIDMan", AllPoints["11VT_SPDG00A_1948-350.MCR@GRARM"]);
+            Points1948Accept.Add("DKIDAuto", AllPoints["11VT_SPDG00A_1948-120.MCR@GRARM"]);
 
             Points1948Accept.Add("DKDay", AllPoints["11VT_SPDG00A_1948-066.MCR@GRARM"]);//+
             Points1948Accept.Add("DKMonth", AllPoints["11VT_SPDG00A_1948-067.MCR@GRARM"]);//+
@@ -109,8 +113,8 @@ namespace EDSProj
             }
         }
 
-        protected static DateTime readDateFromGRARM(EDSReport rep,DateTime dtRep,
-            EDSReportRequestRecord rYear, EDSReportRequestRecord rMonth,  EDSReportRequestRecord rDay, 
+        protected static DateTime readDateFromGRARM(EDSReport rep, DateTime dtRep,
+            EDSReportRequestRecord rYear, EDSReportRequestRecord rMonth, EDSReportRequestRecord rDay,
             EDSReportRequestRecord rHour, EDSReportRequestRecord rMin)
         {
             int year = (int)rep.ResultData[dtRep][rYear.Id];
@@ -126,12 +130,12 @@ namespace EDSProj
         {
             DateStart = dateStart;
             DateEnd = dateEnd;
-            DKDataGOU1045New = await ReadDataGOU(dateStart, dateEnd, "ГТП 110 Новая", Points1045New);
-            DKDataGOU1948New = await ReadDataGOU(dateStart, dateEnd, "ГТП 220 Новая", Points1948New);
-            DKDataGOU1045Accept = await ReadDataGOU(dateStart, dateEnd, "ГТП 110 Акцепт", Points1045Accept);
-            DKDataGOU1948Accept = await ReadDataGOU(dateStart, dateEnd, "ГТП 220 Акцепт", Points1948Accept);
+            DKDataGOU1045New = await ReadDataGOU(dateStart, dateEnd, "ГТП 110 Новая",false, Points1045New);
+            DKDataGOU1948New = await ReadDataGOU(dateStart, dateEnd, "ГТП 220 Новая",false, Points1948New);
+            DKDataGOU1045Accept = await ReadDataGOU(dateStart, dateEnd, "ГТП 110 Акцепт",true, Points1045Accept);
+            DKDataGOU1948Accept = await ReadDataGOU(dateStart, dateEnd, "ГТП 220 Акцепт",true, Points1948Accept);
             DKDataFull = new SortedList<DateTime, SDPMDKRecord>();
-            foreach (KeyValuePair<DateTime,SDPMDKRecord> de in DKDataGOU1045New)
+            foreach (KeyValuePair<DateTime, SDPMDKRecord> de in DKDataGOU1045New)
             {
                 DKDataFull.Add(de.Key, de.Value);
             }
@@ -142,7 +146,7 @@ namespace EDSProj
                 {
                     dt = dt.AddMilliseconds(1);
                 }
-                    
+
                 DKDataFull.Add(dt, de.Value);
             }
             foreach (KeyValuePair<DateTime, SDPMDKRecord> de in DKDataGOU1045Accept)
@@ -168,25 +172,59 @@ namespace EDSProj
             return true;
         }
 
-        protected async Task<Dictionary<DateTime, SDPMDKRecord> > ReadDataGOU(DateTime dateStart, DateTime dateEnd,string GOU , Dictionary<string, EDSPointInfo> PointsRef)
+        protected async Task<Dictionary<DateTime, SDPMDKRecord>> ReadDataGOU(DateTime dateStart, DateTime dateEnd, string GOU, bool accept, Dictionary<string, EDSPointInfo> PointsRef)
         {
             EDSReport report = new EDSReport(dateStart, dateEnd, EDSReportPeriod.sec);
-            EDSReportRequestRecord recDKCRC = report.addRequestField(PointsRef["DKCRC"], EDSReportFunction.val);
+            EDSReportRequestRecord recDKCRC = null;
+            EDSReportRequestRecord recDKIDAuto = null;
+            EDSReportRequestRecord recDKIDMan = null;
+            if (accept)
+            {
+                recDKIDAuto = report.addRequestField(PointsRef["DKIDAuto"], EDSReportFunction.val);
+                recDKIDMan = report.addRequestField(PointsRef["DKIDMan"], EDSReportFunction.val);
+            }
+            else
+            {
+                recDKCRC = report.addRequestField(PointsRef["DKCRC"], EDSReportFunction.val);
+            }
             bool ok = await report.ReadData();
 
             List<DateTime> dates = report.ResultData.Keys.ToList();
 
             SortedList<DateTime, bool> DKDates = new SortedList<DateTime, bool>();
             double prevID = -1;
+            double prevIDMan = -1;
+            double prevIDAuto = -1;
             foreach (DateTime date in dates)
             {
-                double id = report.ResultData[date][recDKCRC.Id];
-
-                if (id != prevID && prevID != -1 && id!=0 )
+                if (accept)
                 {
-                    DKDates.Add(date, true);
+                    double idMan = report.ResultData[date][recDKIDMan.Id];
+                    double idAuto = report.ResultData[date][recDKIDAuto.Id];
+                    if (idMan != prevIDMan && prevIDMan != -1 && idMan != 0)
+                    {
+                        DKDates.Add(date, false);
+                        
+                    }
+
+                    if (idAuto != prevIDAuto && prevIDAuto != -1 && idAuto != 0)
+                    {
+                        DKDates.Add(date, true);
+                    }
+                    prevIDMan = idMan;
+                    prevIDAuto = idAuto;
                 }
-                prevID = id;
+                else
+                {
+                    double id = report.ResultData[date][recDKCRC.Id];
+
+                    if (id != prevID && prevID != -1 && id != 0)
+                    {
+                        DKDates.Add(date, true);
+                    }
+                    prevID = id;
+                }
+
             }
 
             Dictionary<DateTime, SDPMDKRecord> ResultData = new Dictionary<DateTime, SDPMDKRecord>();
@@ -196,8 +234,8 @@ namespace EDSProj
                 Dictionary<string, EDSReportRequestRecord> repRecords = new Dictionary<string, EDSReportRequestRecord>();
                 foreach (KeyValuePair<string, EDSPointInfo> de in PointsRef)
                 {
-                    EDSReportRequestRecord rec=repDK.addRequestField(PointsRef[de.Key], EDSReportFunction.val);
-                    repRecords.Add(de.Key, rec);                    
+                    EDSReportRequestRecord rec = repDK.addRequestField(PointsRef[de.Key], EDSReportFunction.val);
+                    repRecords.Add(de.Key, rec);
                 }
                 ok = await repDK.ReadData();
 
@@ -215,6 +253,7 @@ namespace EDSProj
                 DKRecord.DKVal = repDK.ResultData[date.AddSeconds(2)][repRecords["DKVal"].Id];
                 DKRecord.DKNum = (int)repDK.ResultData[date.AddSeconds(2)][repRecords["DKNum"].Id];
                 DKRecord.GOU = GOU;
+                DKRecord.AutoDK = DKDates[date];
                 ResultData.Add(date, DKRecord);
 
                 switch (DKRecord.DKNum)
@@ -223,7 +262,7 @@ namespace EDSProj
                         DKRecord.DK = "Работать по ПДГ";
                         break;
                     case 2:
-                        DKRecord.DK = String.Format("На {0:0.0} МВт выше ПДГ",DKRecord.DKVal);
+                        DKRecord.DK = String.Format("На {0:0.0} МВт выше ПДГ", DKRecord.DKVal);
                         break;
                     case 3:
                         DKRecord.DK = String.Format("На {0:0.0} МВт ниже ПДГ", DKRecord.DKVal);
@@ -241,12 +280,12 @@ namespace EDSProj
         {
             try
             {
-                string header = "<tr><th>Дата<br/>получения</th><th>Время<br/>команды</th><th>ГОУ</th><th>Команда</th><th>Время<br/>начала</th><th>Время</br>конца</th>";
+                string header = "<tr><th>Дата<br/>получения</th><th>Время<br/>команды</th><th>ГОУ</th><th>Команда</th><th>Время<br/>начала</th><th>Время</br>окончания</th>";
                 string table = "";
                 foreach (SDPMDKRecord rec in DKDataFull.Values)
                 {
                     string s = "";
-                    s += String.Format("<td>{0}</td>", rec.DKTrigger.ToString("dd.MM HH:mm:ss"));
+                    s += String.Format("<td>{0}{1}</td>", rec.DKTrigger.ToString("dd.MM HH:mm:ss"),(rec.AutoDK?"":"<br/>Экспресс"));
                     s += String.Format("<td>{0}</td>", rec.DKTime.ToString("dd.MM HH:mm"));
                     s += String.Format("<td>{0}</td>", rec.GOU);
                     s += String.Format("<td>{0}</td>", rec.DK);
@@ -265,13 +304,13 @@ namespace EDSProj
 
                 mess.Subject = String.Format("Диспетчерские команды {0} - {1}", DateStart.ToString("dd.MM.yyyy"), DateEnd.ToString("dd.MM.yyyy"));
                 mess.Body = String.Format("<html><h1>{0}</h1>{1}</html>", mess.Subject, table);
-                
+
                 string[] mails = Settings.Single.DKMail.Split(';');
                 foreach (string mail in mails)
                 {
                     mess.To.Add(mail);
                 }
-                
+
                 //mess.Attachments.Add(new Attachment(fn));
 
                 mess.SubjectEncoding = System.Text.Encoding.UTF8;
