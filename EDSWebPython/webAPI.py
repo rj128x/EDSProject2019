@@ -1,3 +1,4 @@
+# -*- coding: cp1251 -*-
 from suds import client
 import logging
 import time
@@ -7,7 +8,7 @@ import logging
 from logging import handlers
 import os
 
-#ĞšĞ»Ğ°ÑÑ Ğ½Ğ° Ğ¾ÑĞ½Ğ¾Ğ²Ğµ Ğ¿Ñ€Ğ¾ĞµĞºÑ‚Ğ° Ğ¸Ğ½Ñ‚ĞµĞ³Ñ€Ğ°Ñ†Ğ¸Ğ¸ ĞĞ˜Ğ˜Ğ¡ĞšĞ£Ğ­
+#Êëàññ íà îñíîâå ïğîåêòà èíòåãğàöèè ÀÈÈÑÊÓİ
 class EdsWebApi():	
 	def __init__(self):
 		self.auth_str = ''
@@ -18,7 +19,7 @@ class EdsWebApi():
 		self.out=self.initMainOut()
 
 	def initLogging(self):
-                #Ğ˜Ğ½Ğ¸Ñ†Ğ¸Ğ°Ğ»Ğ¸Ğ·Ğ°Ñ†Ğ¸Ñ Ğ»Ğ¾Ğ³Ğ³Ğ¸Ñ€Ğ¾Ğ²Ğ°Ğ½Ğ¸Ñ Ğ² Ğ¿Ğ°Ğ¿ĞºÑƒ logs
+                #Èíèöèàëèçàöèÿ ëîããèğîâàíèÿ â ïàïêó logs
 		logger = logging.getLogger('eds')
 		logger.setLevel("DEBUG")
 		if not os.path.exists('logs'):
@@ -26,22 +27,22 @@ class EdsWebApi():
 		log_file = handlers.RotatingFileHandler(filename='logs\eds.log',
 			maxBytes=10000000,
 			backupCount=10)
-		#Ñ„Ğ¾Ñ€Ğ¼Ğ°Ñ‚ Ğ»Ğ¾Ğ³Ğ° Ğ±ÑƒĞ´ĞµÑ‚ "Ğ´Ğ°Ñ‚Ğ° ÑĞ¾Ğ¾Ğ±Ñ‰ĞµĞ½Ğ¸Ğµ"
+		#ôîğìàò ëîãà áóäåò "äàòà ñîîáùåíèå"
 		log_formater = logging.Formatter('%(asctime)s %(message)s')
 		log_file.setFormatter(log_formater)
 		logger.addHandler(log_file)
-		#Ğ¿Ğ¸ÑˆĞµĞ¼ Ñ‚ĞµÑÑ‚Ğ¾Ğ²ÑƒÑ ÑÑ‚Ñ€Ğ¾ĞºÑƒ Ğ² Ğ»Ğ¾Ğ³
+		#ïèøåì òåñòîâóş ñòğîêó â ëîã
 		logger.debug('init')	
 		return logger
 
 	def initMainOut(self):
-                #Ğ´Ğ»Ñ ÑƒĞ¿Ñ€Ğ¾Ñ‰ĞµĞ½Ğ¸Ñ Ğ²Ñ‹Ğ²Ğ¾Ğ´Ğ° Ğ² Ñ‚ĞµĞºÑÑ‚Ğ¾Ğ²Ñ‹Ğ¹ Ñ„Ğ°Ğ¹Ğ» Ğ² ĞºĞ°Ñ‡ĞµÑÑ‚Ğ²Ğµ Ğ²Ñ‹Ñ…Ğ¾Ğ´Ğ½Ğ¾Ğ³Ğ¾ Ñ„Ğ°Ğ¹Ğ»Ğ° Ğ¸ÑĞ¿Ğ¾Ğ»ÑŒĞ·ÑƒĞµÑ‚ÑÑ Ñ‚Ğ°ĞºĞ¶Ğµ Ñ„Ğ°Ğ¹Ğ» Ğ»Ğ¾Ğ³Ğ° Ğ½Ğ¾ Ñ„Ğ¾Ñ€Ğ¼Ğ°Ñ‚Ğ¸Ñ€Ğ¾Ğ²Ğ°Ğ½Ğ¸Ğµ Ğ²Ğ¸Ğ´Ğ° "ÑĞ¾Ğ¾Ğ±Ñ‰ĞµĞ½Ğ¸Ğµ"
-                #Ğ¸Ğ¼Ñ Ñ„Ğ°Ğ¹Ğ»Ğ° Ğ±ÑƒĞ´ĞµÑ‚ Ğ²Ğ¸Ğ´Ğ° out_[Ğ²Ñ€ĞµĞ¼Ñ_Ğ·Ğ°Ğ¿ÑƒÑĞºĞ°_Ğ¿Ñ€Ğ¸Ğ»Ğ¾Ğ¶ĞµĞ½Ğ¸Ñ]
-                #ÑÑÑ‹Ğ»ĞºĞ° Ğ½Ğ° Ğ»Ğ¾Ğ³Ğ³ĞµÑ€ ÑĞ²Ğ»ÑĞµÑ‚ÑÑ Ñ‡Ğ»ĞµĞ½Ğ¾Ğ¼ ĞºĞ»Ğ°ÑÑĞ° Ñ Ğ¸Ğ¼ĞµĞ½ĞµĞ¼ out
+                #äëÿ óïğîùåíèÿ âûâîäà â òåêñòîâûé ôàéë â êà÷åñòâå âûõîäíîãî ôàéëà èñïîëüçóåòñÿ òàêæå ôàéë ëîãà íî ôîğìàòèğîâàíèå âèäà "ñîîáùåíèå"
+                #èìÿ ôàéëà áóäåò âèäà out_[âğåìÿ_çàïóñêà_ïğèëîæåíèÿ]
+                #ññûëêà íà ëîããåğ ÿâëÿåòñÿ ÷ëåíîì êëàññà ñ èìåíåì out
 		s='outEDS_{0}.txt'.format(time.time())
 		logger = logging.getLogger(s)
 		logger.setLevel("INFO")
-		#Ğ²ÑĞµ Ğ²Ñ‹Ñ…Ğ¾Ğ´Ğ½Ñ‹Ğµ Ñ„Ğ°Ğ¹Ğ»Ñ‹ Ğ¿Ğ¸ÑˆÑƒÑ‚ÑÑ Ğ² Ğ¿Ğ°Ğ¿ĞºÑƒ out
+		#âñå âûõîäíûå ôàéëû ïèøóòñÿ â ïàïêó out
 		if not os.path.exists('out'):
 			os.makedirs('out')
 		log_file = handlers.WatchedFileHandler("out/{0}".format(s))
@@ -53,9 +54,9 @@ class EdsWebApi():
 
 
 	def initOut(self,name):
-                #Ğ•ÑĞ»Ğ¸ Ğ² Ğ¾Ğ´Ğ½Ğ¾Ğ¼ Ğ¿Ñ€Ğ¸Ğ»Ğ¾Ğ¶ĞµĞ½Ğ¸Ğ¸ Ñ‚Ñ€ĞµĞ±ÑƒĞµÑ‚ÑÑ Ğ½ĞµÑĞºĞ¾Ğ»ÑŒĞºĞ¾ Ğ²Ñ‹Ñ…Ğ¾Ğ´Ğ½Ñ‹Ñ… Ñ„Ğ°Ğ¹Ğ»Ğ¾Ğ², Ğ¾Ğ½Ğ¸ Ğ¸Ğ½Ğ¸Ñ†Ğ¸Ğ°Ğ»Ğ¸Ğ·Ğ¸Ñ€ÑƒÑÑ‚ÑÑ Ñ Ğ¸Ğ¼ĞµĞ½ĞµĞ¼ name
-                #Ğ¾ÑÑ‚Ğ°Ğ»ÑŒĞ½Ğ¾Ğµ Ğ°Ğ½Ğ°Ğ»Ğ¾Ğ³Ğ¸Ñ‡Ğ½Ğ¾ mainOut
-                #Ğ²ÑĞµ ÑÑÑ‹Ğ»ĞºĞ¸ Ğ½Ğ° Ğ»Ğ¾Ğ³Ğ³ĞµÑ€Ñ‹ Ğ¿Ğ¾Ğ¼ĞµÑ‰ÑÑÑ‚ÑÑ Ğ² ÑĞ»Ğ¾Ğ²Ğ°Ñ€ÑŒ outs
+                #Åñëè â îäíîì ïğèëîæåíèè òğåáóåòñÿ íåñêîëüêî âûõîäíûõ ôàéëîâ, îíè èíèöèàëèçèğóşòñÿ ñ èìåíåì name
+                #îñòàëüíîå àíàëîãè÷íî mainOut
+                #âñå ññûëêè íà ëîããåğû ïîìåùÿşòñÿ â ñëîâàğü outs
 		s='outEDS_{1}_{0}.txt'.format(time.time(),name)
 		logger = logging.getLogger(s)
 		logger.setLevel("INFO")
@@ -70,17 +71,17 @@ class EdsWebApi():
 		return logger
 	
 	def outString(self,name,s):
-                #Ğ²Ñ‹Ğ²Ğ¾Ğ´Ğ¸Ñ‚ ÑÑ‚Ñ€Ğ¾ĞºÑƒ Ğ² out Ñ„Ğ°Ğ¹Ğ» Ñ Ğ¸Ğ¼ĞµĞ½ĞµĞ¼ name
+                #âûâîäèò ñòğîêó â out ôàéë ñ èìåíåì name
 		out=self.outs[name]
 		out.info(s)
 
 	def connect(self):
-                #ĞŸĞ¾Ğ´ĞºĞ»ÑÑ‡Ğ°ĞµĞ¼ÑÑ Ğº SOAP
+                #Ïîäêëş÷àåìñÿ ê SOAP
 		eds_wsdl = '%s://%s:%i/eds.wsdl' % (config.EDS_WEB_PROTOCOL,config.EDS_HOST,config.EDS_WEB_PORT)
 		connected = False
 		authorized = False
 		try:
-                        #Ğ¿Ğ¾Ğ»ÑƒÑ‡Ğ°ĞµĞ¼ ÑÑÑ‹Ğ»ĞºÑƒ Ğ½Ğ° ĞºĞ»Ğ¸ĞµĞ½Ñ‚Ğ° Ñ Ğ½Ğ°ÑÑ‚Ñ€Ğ¾Ğ¹ĞºĞ°Ğ¼Ğ¸ Ğ¸Ğ· Ñ„Ğ°Ğ¹Ğ»Ğ° config.py
+                        #ïîëó÷àåì ññûëêó íà êëèåíòà ñ íàñòğîéêàìè èç ôàéëà config.py
 			self.soap_cln = client.Client(eds_wsdl)
 			self.logger.debug('[EDS_connector] Successfully connected to EDS')
 			connected = True
@@ -88,7 +89,7 @@ class EdsWebApi():
 			self.logger.debug('[EDS_connector] WSDL connection error to %s, %s' % (eds_wsdl, conn_error))
 		if connected:
 			try:
-                                #Ğ°Ğ²Ñ‚Ğ¾Ñ€Ğ¸Ğ·ÑƒĞµĞ¼ÑÑ Ğ½Ğ° ĞºĞ»Ğ¸ĞµĞ½Ñ‚Ğµ Ğ¸ Ğ¿Ğ¾Ğ»ÑƒÑ‡Ğ°ĞµÑ‚ÑÑ ÑÑÑ‹Ğ»ĞºÑƒ Ğ½Ğ° ÑÑ‚Ñ€Ğ¾ĞºÑƒ Ğ°Ğ²Ñ‚Ğ¾Ñ€Ğ¸Ğ·Ğ°Ñ†Ğ¸Ğ¸ Ğ´Ğ»Ñ Ñ€Ğ°Ğ±Ğ¾Ñ‚Ñ‹ Ñ Ñ„ÑƒĞ½ĞºÑ†Ğ¸ÑĞ¼Ğ¸
+                                #àâòîğèçóåìñÿ íà êëèåíòå è ïîëó÷àåòñÿ ññûëêó íà ñòğîêó àâòîğèçàöèè äëÿ ğàáîòû ñ ôóíêöèÿìè
 				self.auth_str = self.soap_cln.service.login(config.EDS_USER, config.EDS_PWD)
 				self.logger.debug('[EDS_connector] Successfully authorized in EDS')
 				authorized = True
@@ -98,7 +99,7 @@ class EdsWebApi():
 				self.connected = True
 
 	def eds_logout(self):
-                #Ğ¾Ñ‚ĞºĞ»ÑÑ‡ĞµĞ½Ğ¸Ğµ Ğ¾Ñ‚ ĞºĞ»Ğ¸ĞµĞ½Ñ‚Ğ°
+                #îòêëş÷åíèå îò êëèåíòà
 		try:
 			self.soap_cln.service.logout(self.auth_str)
 		except Exception as logour_error:
@@ -107,12 +108,12 @@ class EdsWebApi():
 			self.connected = False
 
 	def runRequest(self,reqId):
-                #Ğ—Ğ°Ğ¿ÑƒÑĞº Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑĞ° Ğ¸ Ğ¾Ğ¶Ğ¸Ğ´Ğ°Ğ½Ğ¸Ğµ Ğ·Ğ°Ğ²ĞµÑ€ÑˆĞµĞ½Ğ¸Ñ
+                #Çàïóñê çàïğîñà è îæèäàíèå çàâåğøåíèÿ
 		if reqId is not None:
-                        #ĞĞ¶Ğ¸Ğ´Ğ°ĞµĞ¼ Ğ¸Ğ·Ğ¼ĞµĞ½ĞµĞ½Ğ¸Ñ ÑĞ¾ÑÑ‚Ğ¾ÑĞ½Ğ¸Ğµ Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑĞ° Ğ½Ğ° Ğ²Ñ‹Ğ¿Ğ¾Ğ»Ğ½ĞµĞ½Ğ¾ Ğ² Ñ‚ĞµÑ‡ĞµĞ½Ğ¸Ğ¸ TIMEOUT
+                        #Îæèäàåì èçìåíåíèÿ ñîñòîÿíèå çàïğîñà íà âûïîëíåíî â òå÷åíèè TIMEOUT
 			for i in range(1000 * config.TIMEOUT):
 				try:
-                                        #Ğ£Ğ·Ğ½Ğ°ĞµĞ¼ ÑÑ‚Ğ°Ñ‚ÑƒÑ Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑĞ°
+                                        #Óçíàåì ñòàòóñ çàïğîñà
 					eds_request_status = self.soap_cln.service.getRequestStatus(self.auth_str, reqId)
 				except Exception as request_error:
 					self.logger.debug(u'[EDS_WebAPI_read]  EDS API problem: %s' % (str(request_error).encode('utf8')))						
@@ -125,7 +126,7 @@ class EdsWebApi():
 				time.sleep(0.1)
 
 	def createRequest(self,dateStart,dateEnd,period,items):
-                #Ğ¡Ğ¾Ğ·Ğ´Ğ°ĞµĞ¼ Ğ·Ğ°Ğ³Ğ¾Ñ‚Ğ¾Ğ²ĞºÑƒ Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑĞ° Ñ Ğ¾Ğ±Ñ‰Ğ¸Ğ¼Ğ¸ Ğ¿Ğ¾Ğ»ÑĞ¼Ğ¸
+                #Ñîçäàåì çàãîòîâêó çàïğîñà ñ îáùèìè ïîëÿìè
 		request = {
 			'period':{
 				'from':{
@@ -143,12 +144,12 @@ class EdsWebApi():
 		return request
 
 	def getDateChange(self,dateStart,dateEnd,tag,func,params):
-                #Ğ¤ÑƒĞ½ĞºÑ†Ğ¸Ñ Ğ´Ğ»Ñ Ğ¾Ğ¿Ñ€ĞµĞ´ĞµĞ»ĞµĞ½Ğ¸Ñ ÑĞ»ĞµĞ´ÑƒÑÑ‰ĞµĞ³Ğ¾ Ğ¿ĞµÑ€ĞµĞ´Ğ°Ğ²Ğ°ĞµĞ¼Ğ¾Ğ³Ğ¾ Ñ‚ÑĞ³Ğ°
-                #Ğ¿Ğ¾Ğ»ÑƒÑ‡ĞµĞ°ĞµÑ‚ Ğ³Ñ€Ğ°Ğ½Ğ¸Ñ†Ñ‹ Ğ´Ğ°Ñ‚ Ğ´Ğ»Ñ Ğ°Ğ½Ğ°Ğ»Ğ¸Ğ·Ğ°                
-                #tag - Ñ‚Ğ¾Ñ‡ĞºĞ° Ğ´Ğ»Ñ Ğ°Ğ½Ğ°Ğ»Ğ¸Ğ·Ğ°
-                #Ñ„ÑƒĞ½ĞºÑ†Ğ¸Ñ - Ğ½-Ñ€ F_INTOOVER_DT
-                #Ğ¿Ğ°Ñ€Ğ°Ğ¼ĞµÑ‚Ñ€ Ğ½ĞµĞ¾Ğ±Ñ…Ğ¾Ğ´Ğ¸Ğ¼Ñ‹Ğ¹ Ğ´Ğ»Ñ Ñ€Ğ°Ğ±Ğ¾Ñ‚Ñ‹ Ğ´Ğ°Ğ½Ğ½Ğ¾Ğ¹ Ñ„ÑƒĞ½ĞºÑ†Ğ¸Ğ¸ (ÑĞ¼ Ğ´Ğ¾ĞºÑƒĞ¼ĞµĞ½Ñ‚Ğ°Ñ†Ğ¸Ñ)
-		items=[]		
+                #Ôóíêöèÿ äëÿ îïğåäåëåíèÿ ñëåäóşùåãî ïåğåäàâàåìîãî òıãà
+                #ïîëó÷åàåò ãğàíèöû äàò äëÿ àíàëèçà                
+                #tag - òî÷êà äëÿ àíàëèçà
+                #ôóíêöèÿ - í-ğ F_INTOOVER_DT
+                #ïàğàìåòğ íåîáõîäèìûé äëÿ ğàáîòû äàííîé ôóíêöèè (ñì äîêóìåíòàöèş)
+		items=[]
 		item={
 			'function':func,
 			'pointId':{
@@ -156,8 +157,8 @@ class EdsWebApi():
 				},
 			'params':params
 			}
-		items.append(item)#Ğ¤Ğ¾Ñ€Ğ¼Ğ¸Ñ€ÑƒĞµĞ¼ Ğ¼Ğ°ÑÑĞ¸Ğ² Ñ‚ÑĞ³Ğ¾Ğ² Ğ¸Ğ· Ğ¾Ğ´Ğ½Ğ¾Ğ³Ğ¾ ÑĞ»ĞµĞ¼ĞµĞ½Ñ‚Ğ°
-		step=dateEnd.timestamp()-dateStart.timestamp()#ÑˆĞ°Ğ³ Ğ·Ğ°Ğ¿Ñ€Ğ¾ÑĞ° Ğ±ÑƒĞ´ĞµÑ‚ Ñ€Ğ°Ğ²ĞµĞ½ Ğ²ÑĞµĞ¼Ñƒ Ğ¸Ğ½Ñ‚ĞµÑ€Ğ²Ğ°Ğ»Ñƒ 
+		items.append(item)#Ôîğìèğóåì ìàññèâ òıãîâ èç îäíîãî ıëåìåíòà
+		step=dateEnd.timestamp()-dateStart.timestamp()#øàã çàïğîñà áóäåò ğàâåí âñåìó èíòåğâàëó 
 		request = {
 			'period':{
 				'from':{
@@ -172,30 +173,30 @@ class EdsWebApi():
 				},
 			'items':items
 		}
-		#Ğ—Ğ°Ğ¿Ñ€Ğ°ÑˆĞ¸Ğ²Ğ°ĞµĞ¼ Ñ‚Ğ°Ğ±Ğ»Ğ¸Ñ‡Ğ½Ñ‹Ğ¹ Ñ‚Ñ€ĞµĞ½Ğ´, Ğ½Ğ¾ Ñ‚.Ğº. ÑˆĞ°Ğ³ Ñ€Ğ°Ğ²ĞµĞ½ Ğ²ÑĞµĞ¼Ñƒ Ğ¸Ğ½Ñ‚ĞµÑ€Ğ²Ğ°Ğ»Ñƒ, Ğ¼Ğ¾Ğ¶ĞµĞ¼ Ğ¿Ğ¾Ğ»ÑƒÑ‡Ğ¸Ñ‚ÑŒ Ñ‚Ğ¾Ğ»ÑŒĞºĞ¾ 1 ÑÑ‚Ñ€Ğ¾ĞºÑƒ Ñ€ĞµĞ·ÑƒĞ»ÑŒÑ‚Ğ°Ñ‚Ğ°
+		#Çàïğàøèâàåì òàáëè÷íûé òğåíä, íî ò.ê. øàã ğàâåí âñåìó èíòåğâàëó, ìîæåì ïîëó÷èòü òîëüêî 1 ñòğîêó ğåçóëüòàòà
 		reqId=self.soap_cln.service.requestTabular(self.auth_str,request)
-		#Ğ—Ğ°Ğ¿ÑƒÑĞºĞ°ĞµĞ¼ Ğ·Ğ°Ğ¿Ñ€Ğ¾Ñ
+		#Çàïóñêàåì çàïğîñ
 		self.runRequest(reqId)
-		#ĞŸĞ¾Ğ»ÑƒÑ‡Ğ°ĞµĞ¼ Ğ¾Ñ‚Ğ²ĞµÑ‚ Ğ¾Ñ‚ ÑĞµÑ€Ğ²ĞµÑ€Ğ°
+		#Ïîëó÷àåì îòâåò îò ñåğâåğà
 		response=self.soap_cln.service.getTabular(self.auth_str,reqId)
 		rows=[]
 		rows=response['rows']
-		if len(rows)>0:	#Ğ•ÑĞ»Ğ¸ Ğ¾Ñ‚Ğ²ĞµÑ‚ Ğ¾Ñ‚ ÑĞµÑ€Ğ²ĞµÑ€Ğ° ÑĞ¾Ğ´ĞµÑ€Ğ¶Ğ¸Ñ‚ ÑÑ‚Ñ€Ğ¾ĞºĞ¸
-                        #ĞĞ°Ğ¼ Ğ½ÑƒĞ¶Ğ½Ğ° Ğ¿ĞµÑ€Ğ²Ğ°Ñ Ğ¸ ĞµĞ´Ğ¸Ğ½ÑÑ‚Ğ²ĞµĞ½Ğ½Ğ°Ñ ÑÑ‚Ñ€Ğ¾ĞºĞ°
+		if len(rows)>0:	#Åñëè îòâåò îò ñåğâåğà ñîäåğæèò ñòğîêè
+                        #Íàì íóæíà ïåğâàÿ è åäèíñòâåííàÿ ñòğîêà
 			row=rows[0]			
 			vals=row['values']
 			if len(vals)>0:
-                                #ĞÑƒĞ¶ĞµĞ½ Ğ¿ĞµÑ€Ğ²Ñ‹Ğ¹ Ğ¸ ĞµĞ´Ğ¸Ğ½ÑÑ‚Ğ²ĞµĞ½Ğ½Ñ‹Ğ¹ ÑÑ‚Ğ¾Ğ»Ğ±ĞµÑ†
+                                #Íóæåí ïåğâûé è åäèíñòâåííûé ñòîëáåö
 				try:
 					#print("0")
 					val=vals[0]['value'][0]
 					#print(val)
 					#print("1")
-					dt1=datetime.datetime.fromtimestamp(val)#ĞŸĞ¾Ğ»ÑƒÑ‡Ğ°ĞµĞ¼ Ñ‚Ñ€ĞµĞ±ÑƒĞµĞ¼ÑƒÑ Ğ´Ğ°Ñ‚Ñƒ					
+					dt1=datetime.datetime.fromtimestamp(val)#Ïîëó÷àåì òğåáóåìóş äàòó					
 					#print(dt1)
 					#print("2")
 					
-					#if dt1==dateStart:#Ğ•ÑĞ»Ğ¸ Ğ´Ğ°Ñ‚Ğ° Ğ½Ğµ Ğ²Ñ…Ğ¾Ğ´Ğ¸Ñ‚ Ğ² Ñ‚Ñ€ĞµĞ±ÑƒĞµĞ¼Ñ‹Ğ¹ Ğ¸Ğ½Ñ‚ĞµÑ€Ğ²Ğ°Ğ», Ğ·Ğ½Ğ°Ñ‡Ğ¸Ñ‚ Ñ„ÑƒĞ½ĞºÑ†Ğ¸Ñ Ğ½Ğµ ÑÑ€Ğ°Ğ±Ğ°Ñ‚Ñ‹Ğ²Ğ°Ğ»Ğ°, Ğ²Ğ¾Ğ·Ğ²Ñ€Ğ°Ñ‰Ğ°ĞµĞ¼ ĞºĞ¾Ğ½ĞµÑ† Ğ¸Ğ½Ñ‚ĞµÑ€Ğ²Ğ°Ğ»Ğ°
+					#if dt1==dateStart:#Åñëè äàòà íå âõîäèò â òğåáóåìûé èíòåğâàë, çíà÷èò ôóíêöèÿ íå ñğàáàòûâàëà, âîçâğàùàåì êîíåö èíòåğâàëà
 					#return dt1						
 					return dt1
 				except Exception:
@@ -209,7 +210,7 @@ class EdsWebApi():
 			return dateEnd
 
 	def getVal(self,dt,tag):
-                #Ğ¤ÑƒĞ½ĞºÑ†Ğ¸Ñ Ğ²Ğ¾Ğ·Ğ²Ñ€Ğ°Ñ‰Ğ°ĞµÑ‚ Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ğµ ÑƒĞºĞ°Ğ·Ğ°Ğ½Ğ½Ğ¾Ğ³Ğ¾ Ñ‚ÑĞ³Ğ° Ğ² Ğ¼Ğ¾Ğ¼ĞµĞ½Ñ‚ Ğ²Ñ€ĞµĞ¼ĞµĞ½Ğ¸ dt
+                #Ôóíêöèÿ âîçâğàùàåò çíà÷åíèå óêàçàííîãî òıãà â ìîìåíò âğåìåíè dt
 		#print('{0}'.format(dt))
 		items=[]
 		item={
@@ -218,7 +219,7 @@ class EdsWebApi():
 				'iess':tag 
 				}
 			}
-		items.append(item)#Ğ¤Ğ¾Ñ€Ğ¼Ğ¸Ñ€ÑƒĞµĞ¼ Ğ¼Ğ°ÑÑĞ¸Ğ² Ñ‚ÑĞ³Ğ¾Ğ² Ğ¸Ğ· Ğ¾Ğ´Ğ½Ğ¾Ğ³Ğ¾ ÑĞ»ĞµĞ¼ĞµĞ½Ñ‚Ğ°
+		items.append(item)#Ôîğìèğóåì ìàññèâ òıãîâ èç îäíîãî ıëåìåíòà
 		request = {
 			'period':{
 				'from':{
@@ -233,14 +234,14 @@ class EdsWebApi():
 				},
 			'items':items
 		}
-		#Ğ¤Ğ¾Ñ€Ğ¼Ğ¸Ñ€ÑƒĞµĞ¼ Ğ·Ğ°Ğ¿Ñ€Ğ¾Ñ Ñ‚Ğ°Ğ±Ğ»Ğ¸Ñ‡Ğ½Ğ¾Ğ³Ğ¾ Ñ‚Ñ€ĞµĞ½Ğ´Ğ° Ğ·Ğ° 10 ÑĞµĞºÑƒĞ½Ğ´ Ñ ÑˆĞ°Ğ³Ğ¾Ğ¼ 1 ÑĞµĞºÑƒĞ½Ğ´Ğ°. ĞĞ°Ğ¼ Ğ½ÑƒĞ¶ĞµĞ½ Ñ‚Ğ¾Ğ»ÑŒĞºĞ¾ Ñ€ĞµĞ·ÑƒĞ»ÑŒÑ‚Ğ°Ñ‚ 1 ÑÑ‚Ñ€Ğ¾ĞºĞ¸ - ÑÑ‚Ğ¾ Ğ¸ ĞµÑÑ‚ÑŒ Ñ‚Ñ€ĞµĞ±ÑƒĞµĞ¼Ğ¾Ğµ Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ğµ
+		#Ôîğìèğóåì çàïğîñ òàáëè÷íîãî òğåíäà çà 10 ñåêóíä ñ øàãîì 1 ñåêóíäà. Íàì íóæåí òîëüêî ğåçóëüòàò 1 ñòğîêè - ıòî è åñòü òğåáóåìîå çíà÷åíèå
 		reqId=self.soap_cln.service.requestTabular(self.auth_str,request)
 		self.runRequest(reqId)
 		
 		response=self.soap_cln.service.getTabular(self.auth_str,reqId)
 		rows=[]
 		rows=response['rows']
-		if len(rows)>0:#Ğ Ğ°Ğ·Ğ±Ğ¸Ñ€Ğ°ĞµĞ¼ Ğ¿ĞµÑ€Ğ²ÑƒÑ ÑÑ‚Ñ€Ğ¾ĞºÑƒ Ğ´Ğ»Ñ Ğ¿Ğ¾Ğ»ÑƒÑ‡ĞµĞ½Ğ¸Ñ Ñ€ĞµĞ·ÑƒĞ»ÑŒÑ‚Ğ°Ñ‚Ğ°                        
+		if len(rows)>0:#Ğàçáèğàåì ïåğâóş ñòğîêó äëÿ ïîëó÷åíèÿ ğåçóëüòàòà                        
 			row=rows[0]
 			ts=row['ts']['second']
 			dt=datetime.datetime.fromtimestamp(ts)
@@ -252,8 +253,8 @@ class EdsWebApi():
 
 
 	def getDateChangeFull(self,dateStart,dateEnd,tag,valInit):
-                #Ğ¤ÑƒĞ½ĞºÑ†Ğ¸Ñ Ğ´Ğ»Ñ Ğ°Ğ½Ğ°Ğ»Ğ¸Ğ·Ğ° Ğ»ÑĞ±Ğ¾Ğ³Ğ¾ Ğ¸Ğ·Ğ¼ĞµĞ½ĞµĞ½Ğ¸Ñ Ğ¿ĞµÑ€ĞµĞ´Ğ°Ğ²Ğ°ĞµĞ¼Ğ¾Ğ³Ğ¾ Ñ‚ÑĞ³Ğ°
-                #Ğ’Ğ¾Ğ·Ğ²Ñ€Ğ°Ñ‰Ğ°ĞµÑ‚ Ğ¼Ğ¸Ğ½Ğ¸Ğ¼Ğ°Ğ»ÑŒĞ½ÑƒÑ Ğ¸Ğ· Ğ´Ğ²ÑƒÑ… Ğ´Ğ°Ñ‚ - Ğ¸Ğ·Ğ¼ĞµĞ½ĞµĞ½Ğ¸Ğµ Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ñ Ğ²Ğ½Ğ¸Ğ· Ğ¸ Ğ²Ğ²ĞµÑ€Ñ… Ğ¾Ñ‚ valInit
+                #Ôóíêöèÿ äëÿ àíàëèçà ëşáîãî èçìåíåíèÿ ïåğåäàâàåìîãî òıãà
+                #Âîçâğàùàåò ìèíèìàëüíóş èç äâóõ äàò - èçìåíåíèå çíà÷åíèÿ âíèç è ââåğõ îò valInit
 		#print('{0}-{1} {2}'.format(dateStart,dateEnd,valInit))
 
 		dt1=self.getDateChange(dateStart,dateEnd,tag,"F_INTOOVER_DT",[valInit+0.1])
@@ -269,7 +270,7 @@ class EdsWebApi():
 		return dt
 
 	def eds_qualityToLetter(self, eds_quality):
-                #ĞŸÑ€ĞµĞ¾Ğ±Ñ€Ğ°Ğ·ÑƒĞµÑ‚ ĞºĞ°Ñ‡ĞµÑÑ‚Ğ²Ğ¾ Ñ‚Ğ¾Ñ‡ĞºĞ¸ Ğ² 1 Ğ±ÑƒĞºĞ²Ñƒ
+                #Ïğåîáğàçóåò êà÷åñòâî òî÷êè â 1 áóêâó
 		return_quality = ''
 		if eds_quality == 'QUALITY-BAD':
 			return_quality = 'B'
@@ -282,7 +283,7 @@ class EdsWebApi():
 		return return_quality
 
 	def getBitVal(self,val,bit):
-                #ĞĞ¿Ñ€ĞµĞ´ĞµĞ»ÑĞµÑ‚ Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ğµ Ğ±Ğ¸Ñ‚Ğ° bit Ğ² Ğ¿ĞµÑ€ĞµĞ´Ğ°Ğ½Ğ½Ğ¾Ğ¼ Ğ·Ğ½Ğ°Ñ‡ĞµĞ½Ğ¸Ğ¸ val
+                #Îïğåäåëÿåò çíà÷åíèå áèòà bit â ïåğåäàííîì çíà÷åíèè val
 		s=bin(val)
 		if (len(s)-2)>bit:
 			b=int(s[-bit-1])	

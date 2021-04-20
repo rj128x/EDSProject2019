@@ -24,6 +24,8 @@ namespace EDSProj
         public string DK { get; set; }
 
         public bool AutoDK { get; set; }
+
+        public string DKAutoStr { get; set; }
     }
     public class SDPMDKReport
     {
@@ -49,6 +51,7 @@ namespace EDSProj
             Points1045New = new Dictionary<string, EDSPointInfo>();
 
             Points1948New.Add("DKCRC", AllPoints["11VT_SPDG00A_1948-281.MCR@GRARM"]);
+            Points1948New.Add("DKManTrigger", AllPoints["11VT_SPDG00D_1948-002.MCR@GRARM"]);
             //Points1948New.Add("DKID", AllPoints["11VT_SPDG00A_1948-036.MCR@GRARM"]);//+
 
             Points1948New.Add("DKDay", AllPoints["11VT_SPDG00A_1948-105.MCR@GRARM"]);//+
@@ -122,9 +125,10 @@ namespace EDSProj
             int day = (int)rep.ResultData[dtRep][rDay.Id];
             int hour = (int)rep.ResultData[dtRep][rHour.Id];
             int min = (int)rep.ResultData[dtRep][rMin.Id];
-            DateTime result = new DateTime(year, month, day, hour, min, 0);
+            DateTime result = new DateTime(2000+year, month, day, hour, min, 0);
             return result;
         }
+
 
         public async Task<bool> ReadData(DateTime dateStart, DateTime dateEnd)
         {
@@ -174,8 +178,9 @@ namespace EDSProj
 
         protected async Task<Dictionary<DateTime, SDPMDKRecord>> ReadDataGOU(DateTime dateStart, DateTime dateEnd, string GOU, bool accept, Dictionary<string, EDSPointInfo> PointsRef)
         {
-            EDSReport report = new EDSReport(dateStart, dateEnd, EDSReportPeriod.sec);
+            EDSReport report = new EDSReport(dateStart, dateEnd.AddMinutes(1), EDSReportPeriod.sec);
             EDSReportRequestRecord recDKCRC = null;
+            EDSReportRequestRecord recDKManTrigger = null;
             EDSReportRequestRecord recDKIDAuto = null;
             EDSReportRequestRecord recDKIDMan = null;
             if (accept)
@@ -186,6 +191,7 @@ namespace EDSProj
             else
             {
                 recDKCRC = report.addRequestField(PointsRef["DKCRC"], EDSReportFunction.val);
+                recDKManTrigger = report.addRequestField(PointsRef["DKManTrigger"], EDSReportFunction.val);
             }
             bool ok = await report.ReadData();
 
@@ -195,21 +201,30 @@ namespace EDSProj
             double prevID = -1;
             double prevIDMan = -1;
             double prevIDAuto = -1;
+            double prevDKManTrigger = -1;
             foreach (DateTime date in dates)
             {
+                DateTime dt = date;
+                if (date > dateEnd)
+                    break;
                 if (accept)
                 {
                     double idMan = report.ResultData[date][recDKIDMan.Id];
                     double idAuto = report.ResultData[date][recDKIDAuto.Id];
+                    bool man = false;
                     if (idMan != prevIDMan && prevIDMan != -1 && idMan != 0)
                     {
-                        DKDates.Add(date, false);
-                        
+                        while (DKDates.ContainsKey(dt))
+                            dt = dt.AddMilliseconds(1);
+                        DKDates.Add(dt, false);
+                        man = true;
                     }
 
-                    if (idAuto != prevIDAuto && prevIDAuto != -1 && idAuto != 0)
+                    if (idAuto != prevIDAuto && prevIDAuto != -1 && idAuto != 0 && !man)
                     {
-                        DKDates.Add(date, true);
+                        while (DKDates.ContainsKey(dt))
+                            dt = dt.AddMilliseconds(1);
+                        DKDates.Add(dt, true);
                     }
                     prevIDMan = idMan;
                     prevIDAuto = idAuto;
@@ -217,20 +232,33 @@ namespace EDSProj
                 else
                 {
                     double id = report.ResultData[date][recDKCRC.Id];
-
+                    double dkManTrigger= report.ResultData[date][recDKManTrigger.Id];
+                    
                     if (id != prevID && prevID != -1 && id != 0)
                     {
-                        DKDates.Add(date, true);
+                        while (DKDates.ContainsKey(dt))
+                            dt = dt.AddMilliseconds(1);
+                        DKDates.Add(dt, true);
                     }
+
+                    if (dkManTrigger >0.9 && prevDKManTrigger < 0.9)
+                    {
+                        while (DKDates.ContainsKey(dt))
+                            dt = dt.AddMilliseconds(1);
+                        DKDates.Add(dt, false);
+                    }
+
                     prevID = id;
+                    prevDKManTrigger = dkManTrigger;
                 }
 
             }
 
             Dictionary<DateTime, SDPMDKRecord> ResultData = new Dictionary<DateTime, SDPMDKRecord>();
-            foreach (DateTime date in DKDates.Keys)
+            foreach (KeyValuePair<DateTime,bool> dd in DKDates)
             {
-                EDSReport repDK = new EDSReport(date, date.AddSeconds(3), EDSReportPeriod.sec);
+                DateTime date = dd.Key.AddMilliseconds(-dd.Key.Millisecond);
+                EDSReport repDK = new EDSReport(date, date.AddSeconds(5), EDSReportPeriod.sec);
                 Dictionary<string, EDSReportRequestRecord> repRecords = new Dictionary<string, EDSReportRequestRecord>();
                 foreach (KeyValuePair<string, EDSPointInfo> de in PointsRef)
                 {
@@ -241,19 +269,24 @@ namespace EDSProj
 
                 SDPMDKRecord DKRecord = new SDPMDKRecord();
                 DKRecord.DKTrigger = date;
-                DKRecord.DKTime = readDateFromGRARM(repDK, date.AddSeconds(2),
+                DKRecord.DKTime = readDateFromGRARM(repDK, date.AddSeconds(4),
                     repRecords["DKYear"], repRecords["DKMonth"], repRecords["DKDay"],
                     repRecords["DKHour"], repRecords["DKMin"]);
-                DKRecord.DKStartTime = readDateFromGRARM(repDK, date.AddSeconds(2),
+                DKRecord.DKStartTime = readDateFromGRARM(repDK, date.AddSeconds(4),
                     repRecords["DKStartYear"], repRecords["DKStartMonth"], repRecords["DKStartDay"],
                     repRecords["DKStartHour"], repRecords["DKStartMin"]);
-                DKRecord.DKEndTime = readDateFromGRARM(repDK, date.AddSeconds(2),
+                DKRecord.DKEndTime = readDateFromGRARM(repDK, date.AddSeconds(4),
                     repRecords["DKEndYear"], repRecords["DKEndMonth"], repRecords["DKEndDay"],
                     repRecords["DKEndHour"], repRecords["DKEndMin"]);
-                DKRecord.DKVal = repDK.ResultData[date.AddSeconds(2)][repRecords["DKVal"].Id];
-                DKRecord.DKNum = (int)repDK.ResultData[date.AddSeconds(2)][repRecords["DKNum"].Id];
+                DKRecord.DKVal = repDK.ResultData[date.AddSeconds(4)][repRecords["DKVal"].Id];
+                DKRecord.DKNum = (int)repDK.ResultData[date.AddSeconds(4)][repRecords["DKNum"].Id];
                 DKRecord.GOU = GOU;
-                DKRecord.AutoDK = DKDates[date];
+                DKRecord.AutoDK = dd.Value;
+                DKRecord.DKAutoStr = dd.Value ? "A" : "M";
+                while (ResultData.ContainsKey(date))
+                {
+                    date = date.AddMilliseconds(1);
+                }
                 ResultData.Add(date, DKRecord);
 
                 switch (DKRecord.DKNum)

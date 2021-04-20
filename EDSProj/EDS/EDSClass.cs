@@ -177,7 +177,8 @@ namespace EDSProj
             Logger.Info("Проверка состояния подключения");
             _authStr = "";
            
-            ConnectInfo = "Состояние подключения: откл" + Client.State;
+			if (Client!=null)
+				ConnectInfo = "Состояние подключения: откл" + Client.State;
             bool connected = false;
             Single.Ready = false;
             return false;

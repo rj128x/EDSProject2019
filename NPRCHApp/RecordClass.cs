@@ -660,7 +660,7 @@ namespace NPRCHApp
             List<double> Msub = new List<double>();
             for (int i = 0; i < n; i++)
             {
-                int i1 = i+1;
+                int i1 = i;
                 int i2 = i1 + dt;
                 if (i1 < 0)
                     i1 = 0;
@@ -670,7 +670,7 @@ namespace NPRCHApp
                 Msub.Clear();
                 if (i2 < n)
                 {
-                    for (int ii = i1; ii < i2; ii++)
+                    for (int ii = i1; ii <= i2; ii++)
                     {
                         double m = Math.Abs(XdxAvg[i] - YdyAvg[ii]);
                         Msub.Add(m);
@@ -680,7 +680,7 @@ namespace NPRCHApp
                     double mMin = Msub.Min();
                     double mMax = Msub.Max();
 
-                    if ((mMin >= 0.0155) && (Math.Abs(XdxAvg[i]) >= 0.0065))
+                    if ((mMin >= 0.0159) && (Math.Abs(XdxAvg[i]) >= 0.0069))
                     {
                         NoReactArr[i] = 1;
                         Marr.Add(mMin);
@@ -762,7 +762,7 @@ namespace NPRCHApp
                 if (i2 > n)
                     i2 = n;
 
-                if (i2 < n)
+                if (i2 <= n)
                 {
                     sum = 0;
                     cnt = 0;

@@ -477,7 +477,7 @@ namespace EDSApp
                 DiagNasos diag = new DiagNasos(dt, dt.AddDays(7), Int32.Parse(txtGG.Text));
                 //bool ok = diag.ReadData("DN",2,"GG_RUN");
                 //bool ok = diag.ReadData("MNU", 3, "GG_UST");
-                bool ok = diag.ReadData("LN", 2, "GG_RUN");
+                bool ok = diag.ReadData("DN", 2, "GG_RUN");
                 CurrentMNU.Add(diag);
                 dt = dt.AddDays(7);
             }

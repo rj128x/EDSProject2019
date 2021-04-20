@@ -114,9 +114,12 @@ namespace EDSGRARMProject
                     }
                 }
 
-
-                sr.Close();
-                fi.Delete();
+                try
+                {
+                    sr.Close();
+                    fi.Delete();
+                }
+                catch { }
             }
             return true;
         }

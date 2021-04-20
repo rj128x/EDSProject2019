@@ -32,6 +32,13 @@
             <Grid Grid.Column="1" Grid.Row="0" >
                 <DataGrid Name="grdEvents" Grid.Row="1" CanUserAddRows="False" AutoGenerateColumns="False" CanUserResizeRows="False" CanUserResizeColumns="False" SelectionMode="Single" SelectionUnit="FullRow">
                     <DataGrid.Columns >
+                        <DataGridTemplateColumn Header="A" SortMemberPath="DKAutoStr" Width="10">
+                            <DataGridTemplateColumn.CellTemplate >
+                                <DataTemplate >
+                                    <TextBlock Text="{Binding DKAutoStr}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="Trigger" SortMemberPath="DKTrigger" Width="150">
                             <DataGridTemplateColumn.CellTemplate >
                                 <DataTemplate >
