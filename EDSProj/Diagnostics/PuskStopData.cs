@@ -442,7 +442,7 @@ namespace EDSProj.Diagnostics
         public static async Task<bool> FillAnalogData(DateTime DateStart, DateTime DateEnd, List<string> Types)
         {
             DiagDBEntities diagDB = new DiagDBEntities();
-            for (int gg = 2; gg <= 10; gg++)
+            for (int gg = 1; gg <= 10; gg++)
             {
                 try
                 {
@@ -527,6 +527,11 @@ namespace EDSProj.Diagnostics
                     if (gg == 3 && date < DateTime.Parse("07.05.2020"))
                     {
                         date = DateTime.Parse("07.05.2020");
+                        continue;
+                    }
+                    if (gg == 1 && date < DateTime.Parse("21.04.2021"))
+                    {
+                        date = DateTime.Parse("21.04.2020");
                         continue;
                     }
                     foreach (string type in Types)

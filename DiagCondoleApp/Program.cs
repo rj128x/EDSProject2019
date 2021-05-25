@@ -86,8 +86,8 @@ namespace DiagCondoleApp
 
 
 
-            //fillDBPoints();
-            //Console.ReadLine();
+           /* fillDBPoints();
+            Console.ReadLine();*/
 
         }
 
@@ -170,12 +170,13 @@ namespace DiagCondoleApp
             XLWorkbook wbFull = new XLWorkbook();
             IXLWorksheet sheetSvodGG = null;
             int stepDays = 7;
-            int[] GGArr = new int[] { 3, 4, 5, 7, 1, 2, 6, 8, 9, 10 };
+            int[] GGArr = new int[] { 1, 3, 4, 5, 7,  2, 6, 8, 9, 10 };            
             for (int ggInd = 1; ggInd <= 10; ggInd++)
             {
                 int ggNum = GGArr[ggInd - 1];
                 string FileNameTem = String.Format("c:/wrk/template3.xlsx", nasosCount);
                 string FileName = String.Format("c:/wrk/test{0}_GG{1}.xlsx", type, ggNum);
+
                 try
                 {
                     File.Delete(FileName);
@@ -357,7 +358,7 @@ namespace DiagCondoleApp
             DateTime start = DateTime.Now;
             DiagDBEntities diagDB = new DiagDBEntities();
             Dictionary<int, List<PuskStopReader.PuskStopReaderRecord>> requestsDict = new Dictionary<int, List<PuskStopReader.PuskStopReaderRecord>>();
-            for (int gg = 2; gg <= 10; gg++)
+            for (int gg = 1; gg <= 10; gg++)
             {
 
                 List<PuskStopReader.PuskStopReaderRecord> request = new List<PuskStopReader.PuskStopReaderRecord>();
@@ -383,10 +384,12 @@ namespace DiagCondoleApp
             while (date < dateEnd)
             {
                 Logger.Info(date.ToString());
-                for (int gg = 2; gg <= 10; gg++)
+                for (int gg = 1; gg <= 10; gg++)
                 {
                     if (gg == 3 && date < DateTime.Parse("07.05.2020")) continue;
                     if (gg == 5 && date < DateTime.Parse("01.06.2019"))
+                        continue;
+                    if (gg == 1 && date < DateTime.Parse("21.04.2021"))
                         continue;
                     Logger.Info(String.Format("ГГ {0} Дата {1}", gg, date));
                     List<PuskStopReader.PuskStopReaderRecord> request = requestsDict[gg];
@@ -406,7 +409,7 @@ namespace DiagCondoleApp
         {
 
             List<PuskStopReader.PuskStopReaderRecord> request = new List<PuskStopReader.PuskStopReaderRecord>();
-            foreach (string gg in new string[] { "04", "05", "07", "03" })
+            foreach (string gg in new string[] {"01", "04", "05", "07", "03" })
             {
                 int ggInt = Int32.Parse(gg);
                 request.Add(new PuskStopReader.PuskStopReaderRecord()
@@ -501,7 +504,7 @@ namespace DiagCondoleApp
             }
 
 
-            foreach (string gg in new string[] { "01", "02", "06", "08", "09", "10" })
+            foreach (string gg in new string[] {  "02", "06", "08", "09", "10" })
             {
                 int ggInt = Int32.Parse(gg);
                 string suffix = "";
