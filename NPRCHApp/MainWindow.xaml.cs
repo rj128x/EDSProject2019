@@ -252,6 +252,8 @@ namespace NPRCHApp
             SortedList<DateTime, double> list_F = new SortedList<DateTime, double>();
             SortedList<DateTime, double> list_Fmin = new SortedList<DateTime, double>();
             SortedList<DateTime, double> list_Fmax = new SortedList<DateTime, double>();
+            SortedList<DateTime, double> list_FminReal = new SortedList<DateTime, double>();
+            SortedList<DateTime, double> list_FmaxReal = new SortedList<DateTime, double>();
             SortedList<DateTime, double> list_Pmin = new SortedList<DateTime, double>();
             SortedList<DateTime, double> list_Pmax = new SortedList<DateTime, double>();
             SortedList<DateTime, double> list_Pzad = new SortedList<DateTime, double>();
@@ -266,6 +268,10 @@ namespace NPRCHApp
             list_Fmin.Add(date.AddHours(1), 49.98);
             list_Fmax.Add(date, 50.02);
             list_Fmax.Add(date.AddHours(1), 50.02);
+            list_FminReal.Add(date, 49.987);
+            list_FminReal.Add(date.AddHours(1), 49.987);
+            list_FmaxReal.Add(date, 50.013);
+            list_FmaxReal.Add(date.AddHours(1), 50.013);
 
             foreach (Record rec in Data.Values)
             {
@@ -298,6 +304,8 @@ namespace NPRCHApp
             chart.AddSerie("P макс", list_Pmax, System.Drawing.Color.Pink, true, false, true, 0);
             chart.AddSerie("F мин", list_Fmin, System.Drawing.Color.LightBlue, true, false,true, 1);
             chart.AddSerie("F макс", list_Fmax, System.Drawing.Color.LightBlue, true, false,true, 1);
+            chart.AddSerie("F мин факт", list_FminReal, System.Drawing.Color.LightGreen, true, false, true, 1);
+            chart.AddSerie("F макс факт", list_FmaxReal, System.Drawing.Color.LightGreen, true, false, true, 1);
 
             chart.AddSerie("F", list_F, System.Drawing.Color.Blue, true, false,false, 1);
 

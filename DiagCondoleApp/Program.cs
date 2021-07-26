@@ -62,7 +62,7 @@ namespace DiagCondoleApp
                 DateStart = DateTime.Parse(Console.ReadLine());
                 Console.WriteLine("Введите дату конца выгрузки: ");
                 DateEnd = DateTime.Parse(Console.ReadLine());
-                Console.WriteLine("введите тип операции : ");
+                Console.WriteLine("введите тип операции  : ");
                 Console.WriteLine("считать данные-0:");
                 Console.WriteLine("исправить перескающиеся данные-1:");
                 Console.WriteLine("заполнить дополнительные данные-2:");
@@ -77,7 +77,7 @@ namespace DiagCondoleApp
                 DateEnd = GetDate(args[1]);
                 type = Int32.Parse(args[2]);
             }
-
+             
 
 
 
@@ -170,8 +170,8 @@ namespace DiagCondoleApp
             XLWorkbook wbFull = new XLWorkbook();
             IXLWorksheet sheetSvodGG = null;
             int stepDays = 7;
-            int[] GGArr = new int[] { 1, 3, 4, 5, 7,  2, 6, 8, 9, 10 };            
-            for (int ggInd = 1; ggInd <= 10; ggInd++)
+            int[] GGArr = new int[] { 1, 3, 4, 5, 7,  2, 6,  9, 10 };            
+            for (int ggInd = 1; ggInd <= 9; ggInd++)
             {
                 int ggNum = GGArr[ggInd - 1];
                 string FileNameTem = String.Format("c:/wrk/template3.xlsx", nasosCount);
@@ -360,7 +360,8 @@ namespace DiagCondoleApp
             Dictionary<int, List<PuskStopReader.PuskStopReaderRecord>> requestsDict = new Dictionary<int, List<PuskStopReader.PuskStopReaderRecord>>();
             for (int gg = 1; gg <= 10; gg++)
             {
-
+                if (gg == 8)
+                    continue;
                 List<PuskStopReader.PuskStopReaderRecord> request = new List<PuskStopReader.PuskStopReaderRecord>();
                 IEnumerable<PuskStopPoint> req = from p in diagDB.PuskStopPoints where p.gg == gg && p.analog == false select p;
                 foreach (PuskStopPoint pt in req)
@@ -386,6 +387,8 @@ namespace DiagCondoleApp
                 Logger.Info(date.ToString());
                 for (int gg = 1; gg <= 10; gg++)
                 {
+                    if (gg == 8)
+                        continue;
                     if (gg == 3 && date < DateTime.Parse("07.05.2020")) continue;
                     if (gg == 5 && date < DateTime.Parse("01.06.2019"))
                         continue;

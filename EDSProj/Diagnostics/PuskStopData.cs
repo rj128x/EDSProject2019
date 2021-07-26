@@ -371,7 +371,8 @@ namespace EDSProj.Diagnostics
             DiagDBEntities diagDB = new DiagDBEntities();
             for (int gg = 1; gg <= 10; gg++)
             {
-
+                if (gg == 8)
+                    continue;
                 IEnumerable<PuskStopInfo> reqGG = from r in diagDB.PuskStopInfoes
                                                   where r.GG == gg && r.TypeData.StartsWith("GG_") &&
                                                   r.TimeOn < DateEnd && r.TimeOff > DateStart
@@ -402,6 +403,8 @@ namespace EDSProj.Diagnostics
             DiagDBEntities diagDB = new DiagDBEntities();
             for (int gg = 1; gg <= 10; gg++)
             {
+                if (gg == 8)
+                    continue;
                 Logger.Info(String.Format("GG {0}", gg));
                 List<PuskStopInfo> data = (
                     from d in diagDB.PuskStopInfoes
@@ -444,6 +447,8 @@ namespace EDSProj.Diagnostics
             DiagDBEntities diagDB = new DiagDBEntities();
             for (int gg = 1; gg <= 10; gg++)
             {
+                if (gg == 8)
+                    continue;
                 try
                 {
                     EDSClass.Disconnect();
