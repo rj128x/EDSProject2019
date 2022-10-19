@@ -15,7 +15,62 @@
   <DKMail>chekunovamv@rushydro.ru</DKMail>
   <DiagMail>chekunovamv@rushydro.ru</DiagMail>
   <DiagFolder>C:\wrk</DiagFolder>
+	<DiagNewGG>01~03~04~05~07~10</DiagNewGG>
+	<DiagOldGG>02~06~09</DiagOldGG>
 
-  <LogPath>c:/edscalc/logs</LogPath> 
+  <LogPath>c:/edscalc/logs</LogPath>
+	<DiagSettings>
+		<DiagGGRecord>
+			<gg>01</gg>
+			<dateStartRead>01.07.2021</dateStartRead>
+			<activeReport>1</activeReport>
+		</DiagGGRecord>
+		<DiagGGRecord>
+			<gg>02</gg>
+			<dateStartRead>01.07.2017</dateStartRead>
+			<activeReport>1</activeReport>
+		</DiagGGRecord>
+		<DiagGGRecord>
+			<gg>03</gg>
+			<dateStartRead>01.07.2020</dateStartRead>
+			<activeReport>1</activeReport>
+		</DiagGGRecord>
+		<DiagGGRecord>
+			<gg>04</gg>
+			<dateStartRead>01.07.2017</dateStartRead>
+			<activeReport>1</activeReport>
+		</DiagGGRecord>
+		<DiagGGRecord>
+			<gg>05</gg>
+			<dateStartRead>01.07.2019</dateStartRead>
+			<activeReport>1</activeReport>
+		</DiagGGRecord>
+		<DiagGGRecord>
+			<gg>06</gg>
+			<dateStartRead>01.07.2017</dateStartRead>
+			<activeReport>1</activeReport>
+		</DiagGGRecord>
+		<DiagGGRecord>
+			<gg>07</gg>
+			<dateStartRead>01.07.2018</dateStartRead>
+			<activeReport>1</activeReport>
+		</DiagGGRecord>
+		<DiagGGRecord>
+			<gg>08</gg>
+			<dateStartRead>01.07.2022</dateStartRead>
+			<activeReport>1</activeReport>
+		</DiagGGRecord>
+		<DiagGGRecord>
+			<gg>09</gg>
+			<dateStartRead>01.07.2017</dateStartRead>
+			<activeReport>1</activeReport>
+		</DiagGGRecord>
+		<DiagGGRecord>
+			<gg>10</gg>
+			<dateStartRead>01.07.2023</dateStartRead>
+			<activeReport>0</activeReport>
+		</DiagGGRecord>
+	</DiagSettings>
+
 
 </Settings>

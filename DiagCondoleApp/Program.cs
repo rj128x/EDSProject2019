@@ -58,35 +58,48 @@ namespace DiagCondoleApp
             int type = 0;
             if (args.Count() == 0)
             {
-                Console.WriteLine("Введите дату начала выгрузки: ");
-                DateStart = DateTime.Parse(Console.ReadLine());
-                Console.WriteLine("Введите дату конца выгрузки: ");
-                DateEnd = DateTime.Parse(Console.ReadLine());
                 Console.WriteLine("введите тип операции  : ");
                 Console.WriteLine("считать данные-0:");
                 Console.WriteLine("исправить перескающиеся данные-1:");
                 Console.WriteLine("заполнить дополнительные данные-2:");
-                Console.WriteLine("1-2-3 -100:");
-                Console.WriteLine("отчет по МНУ-201:");
-                Console.WriteLine("отчет по ДН-202:");
+                Console.WriteLine("1-2-3 - 100:");
+                Console.WriteLine("отчет по МНУ - 201:");
+                Console.WriteLine("отчет по ДН - 202:");
+                Console.WriteLine("отчет по ДН - 203:");
+                Console.WriteLine("обновить точки БД - 300:");
                 type = Int32.Parse(Console.ReadLine());
+                if (type == 300)
+                {
+                    fillDBPoints();
+                    return;
+                }
+
+                Console.WriteLine("Введите дату начала выгрузки: ");
+                DateStart = DateTime.Parse(Console.ReadLine());
+                Console.WriteLine("Введите дату конца выгрузки: ");
+                DateEnd = DateTime.Parse(Console.ReadLine());
+                
             }
             if (args.Count() == 3)
             {
                 DateStart = GetDate(args[0]);
                 DateEnd = GetDate(args[1]);
                 type = Int32.Parse(args[2]);
+                if (type == 300)
+                {
+                    fillDBPoints();
+                    return;
+                }
             }
              
-
 
 
             Task<bool> res = run(DateStart, DateEnd, type);
             res.Wait();
 
+            
 
-
-           /* fillDBPoints();
+            /*fillDBPoints();
             Console.ReadLine();*/
 
         }
@@ -166,16 +179,21 @@ namespace DiagCondoleApp
             string typeRunGG = "GG_RUN";
 
 
-            string FileNameFull = String.Format("c:/wrk/test{0}.xlsx", type);
+            
+            string FileNameFull = String.Format("{0}/test{1}.xlsx", Settings.Single.DiagFolder,type);
             XLWorkbook wbFull = new XLWorkbook();
             IXLWorksheet sheetSvodGG = null;
             int stepDays = 7;
-            int[] GGArr = new int[] { 1, 3, 4, 5, 7,  2, 6,  9, 10 };            
-            for (int ggInd = 1; ggInd <= 9; ggInd++)
+            
+            string[] GGArrStr = (Settings.Single.DiagNewGG + "~" + Settings.Single.DiagOldGG).Split('~');            
+            //int[] GGArr = new int[] { 1, 3, 4, 5, 7, 8, 10,  2, 6,  9 };            
+            for (int ggInd = 1; ggInd <= 10; ggInd++)
             {
-                int ggNum = GGArr[ggInd - 1];
-                string FileNameTem = String.Format("c:/wrk/template3.xlsx", nasosCount);
-                string FileName = String.Format("c:/wrk/test{0}_GG{1}.xlsx", type, ggNum);
+                int ggNum = Int32.Parse(GGArrStr[ggInd - 1]);
+                if (!Settings.Single.DiagSettings[ggNum - 1].activeReport)
+                    continue;
+                string FileNameTem = String.Format("{0}/template3.xlsx", Settings.Single.DiagFolder);
+                string FileName = String.Format("{0}/test{1}_GG{2}.xlsx",Settings.Single.DiagFolder, type, ggNum);
 
                 try
                 {
@@ -349,7 +367,7 @@ namespace DiagCondoleApp
 
             }
             wbFull.SaveAs(FileNameFull);
-            sendDiagData(FileNameFull,Header);
+            //sendDiagData(FileNameFull,Header);
         }
 
         public static async Task<bool> process(DateTime dateStart, DateTime dateEnd)
@@ -360,7 +378,7 @@ namespace DiagCondoleApp
             Dictionary<int, List<PuskStopReader.PuskStopReaderRecord>> requestsDict = new Dictionary<int, List<PuskStopReader.PuskStopReaderRecord>>();
             for (int gg = 1; gg <= 10; gg++)
             {
-                if (gg == 8)
+                if (!Settings.Single.DiagSettings[gg - 1].activeReport)
                     continue;
                 List<PuskStopReader.PuskStopReaderRecord> request = new List<PuskStopReader.PuskStopReaderRecord>();
                 IEnumerable<PuskStopPoint> req = from p in diagDB.PuskStopPoints where p.gg == gg && p.analog == false select p;
@@ -387,13 +405,17 @@ namespace DiagCondoleApp
                 Logger.Info(date.ToString());
                 for (int gg = 1; gg <= 10; gg++)
                 {
-                    if (gg == 8)
+                    if (!Settings.Single.DiagSettings[gg - 1].activeReport)
                         continue;
+                    if (date < DateTime.Parse(Settings.Single.DiagSettings[gg - 1].dateStartRead))
+                        continue;
+                    /*if (gg == 10) continue;
+                    if (gg == 8 && date < DateTime.Parse("01.07.2022")) continue;
                     if (gg == 3 && date < DateTime.Parse("07.05.2020")) continue;
                     if (gg == 5 && date < DateTime.Parse("01.06.2019"))
                         continue;
                     if (gg == 1 && date < DateTime.Parse("21.04.2021"))
-                        continue;
+                        continue;*/
                     Logger.Info(String.Format("ГГ {0} Дата {1}", gg, date));
                     List<PuskStopReader.PuskStopReaderRecord> request = requestsDict[gg];
 
@@ -412,7 +434,8 @@ namespace DiagCondoleApp
         {
 
             List<PuskStopReader.PuskStopReaderRecord> request = new List<PuskStopReader.PuskStopReaderRecord>();
-            foreach (string gg in new string[] {"01", "04", "05", "07", "03" })
+            string[] newGG=Settings.Single.DiagNewGG.Split('~');
+            foreach (string gg in newGG)
             {
                 int ggInt = Int32.Parse(gg);
                 request.Add(new PuskStopReader.PuskStopReaderRecord()
@@ -506,8 +529,8 @@ namespace DiagCondoleApp
 
             }
 
-
-            foreach (string gg in new string[] {  "02", "06", "08", "09", "10" })
+            string[] oldGG = Settings.Single.DiagOldGG.Split('~');
+            foreach (string gg in oldGG)
             {
                 int ggInt = Int32.Parse(gg);
                 string suffix = "";

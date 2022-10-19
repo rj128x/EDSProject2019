@@ -371,7 +371,7 @@ namespace EDSProj.Diagnostics
             DiagDBEntities diagDB = new DiagDBEntities();
             for (int gg = 1; gg <= 10; gg++)
             {
-                if (gg == 8)
+                if (!Settings.Single.DiagSettings[gg - 1].activeReport)
                     continue;
                 IEnumerable<PuskStopInfo> reqGG = from r in diagDB.PuskStopInfoes
                                                   where r.GG == gg && r.TypeData.StartsWith("GG_") &&
@@ -403,7 +403,7 @@ namespace EDSProj.Diagnostics
             DiagDBEntities diagDB = new DiagDBEntities();
             for (int gg = 1; gg <= 10; gg++)
             {
-                if (gg == 8)
+                if (!Settings.Single.DiagSettings[gg - 1].activeReport)
                     continue;
                 Logger.Info(String.Format("GG {0}", gg));
                 List<PuskStopInfo> data = (
@@ -447,7 +447,7 @@ namespace EDSProj.Diagnostics
             DiagDBEntities diagDB = new DiagDBEntities();
             for (int gg = 1; gg <= 10; gg++)
             {
-                if (gg == 8)
+                if (!Settings.Single.DiagSettings[gg-1].activeReport)
                     continue;
                 try
                 {
@@ -524,7 +524,7 @@ namespace EDSProj.Diagnostics
                 {
                     
                     Logger.Info(String.Format("GG {0} {1} ", gg, date));
-                    if (gg == 5 && date < DateTime.Parse("01.06.2019"))
+                    /* if (gg == 5 && date < DateTime.Parse("01.06.2019"))
                     {
                         date = DateTime.Parse("01.06.2019");
                         continue;
@@ -539,6 +539,18 @@ namespace EDSProj.Diagnostics
                         date = DateTime.Parse("21.04.2020");
                         continue;
                     }
+                    if (gg == 8 && date < DateTime.Parse("01.07.2022"))
+                    {
+                        date = DateTime.Parse("01.07.2022");
+                        continue;
+                    }*/
+
+                    if ( date < DateTime.Parse(Settings.Single.DiagSettings[gg - 1].dateStartRead))
+                    {
+                        date= DateTime.Parse(Settings.Single.DiagSettings[gg - 1].dateStartRead);
+                        continue;
+                    }
+
                     foreach (string type in Types)
                     {
                         if (string.IsNullOrEmpty(pointsDict[type]))

@@ -50,12 +50,28 @@
     </MCSettingsRecord>
 
     <MCSettingsRecord>
-      <!--ГГ 4-->
+      <!--ГГ 1-->
+      <MCName>100320</MCName>
+      <PiramidaCode>11</PiramidaCode>
+      <EDSPoint>MC_NPRCH_GG1.EDS@CALC</EDSPoint>
+      <ReadNPRCH>1</ReadNPRCH>
+    </MCSettingsRecord>
+
+    <MCSettingsRecord>
+      <!--ГГ 3-->
+      <MCName>100323</MCName>
+      <PiramidaCode>13</PiramidaCode>
+      <EDSPoint>MC_NPRCH_GG3.EDS@CALC</EDSPoint>
+      <ReadNPRCH>1</ReadNPRCH>
+    </MCSettingsRecord>
+
+    <!--<MCSettingsRecord>
+      ГГ 4
       <MCName>100324</MCName>
       <PiramidaCode>14</PiramidaCode>
       <EDSPoint>MC_NPRCH_GG4.EDS@CALC</EDSPoint>
       <ReadNPRCH>1</ReadNPRCH>
-    </MCSettingsRecord>
+    </MCSettingsRecord>-->
     
       <MCSettingsRecord>
       <!--ГГ 5-->
@@ -64,22 +80,22 @@
       <EDSPoint>MC_NPRCH_GG5.EDS@CALC</EDSPoint>
       <ReadNPRCH>1</ReadNPRCH>
     </MCSettingsRecord>
-    
-      <MCSettingsRecord>
-      <!--ГГ 7-->
+
+    <!--<MCSettingsRecord>
+      ГГ 7
       <MCName>100327</MCName>
       <PiramidaCode>17</PiramidaCode>
       <EDSPoint>MC_NPRCH_GG7.EDS@CALC</EDSPoint>
       <ReadNPRCH>1</ReadNPRCH>
-    </MCSettingsRecord>
+    </MCSettingsRecord>-->
 
-    <MCSettingsRecord>
-      <!--ГГ 10-->
+    <!--<MCSettingsRecord>
+      ГГ 10
       <MCName>100322</MCName>
       <PiramidaCode>20</PiramidaCode>
       <EDSPoint>MC_NPRCH_GG10.EDS@CALC</EDSPoint>
       <ReadNPRCH>1</ReadNPRCH>
-    </MCSettingsRecord>
+    </MCSettingsRecord>-->
 
   </MCData>
 

@@ -589,11 +589,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public byte id {
-            get {
+        public byte id
+        {
+            get
+            {
                 return this.idField;
             }
-            set {
+            set
+            {
                 this.idField = value;
                 this.RaisePropertyChanged("id");
             }
@@ -601,11 +604,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public string name {
-            get {
+        public string name
+        {
+            get
+            {
                 return this.nameField;
             }
-            set {
+            set
+            {
                 this.nameField = value;
                 this.RaisePropertyChanged("name");
             }
@@ -613,11 +619,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public string desc {
-            get {
+        public string desc
+        {
+            get
+            {
                 return this.descField;
             }
-            set {
+            set
+            {
                 this.descField = value;
                 this.RaisePropertyChanged("desc");
             }
@@ -650,11 +659,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public string name {
-            get {
+        public string name
+        {
+            get
+            {
                 return this.nameField;
             }
-            set {
+            set
+            {
                 this.nameField = value;
                 this.RaisePropertyChanged("name");
             }
@@ -662,11 +674,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public string value {
-            get {
+        public string value
+        {
+            get
+            {
                 return this.valueField;
             }
-            set {
+            set
+            {
                 this.valueField = value;
                 this.RaisePropertyChanged("value");
             }
@@ -699,11 +714,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public double x {
-            get {
+        public double x
+        {
+            get
+            {
                 return this.xField;
             }
-            set {
+            set
+            {
                 this.xField = value;
                 this.RaisePropertyChanged("x");
             }
@@ -711,11 +729,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public double y {
-            get {
+        public double y
+        {
+            get
+            {
                 return this.yField;
             }
-            set {
+            set
+            {
                 this.yField = value;
                 this.RaisePropertyChanged("y");
             }
@@ -748,11 +769,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public DiagramPosition topLeft {
-            get {
+        public DiagramPosition topLeft
+        {
+            get
+            {
                 return this.topLeftField;
             }
-            set {
+            set
+            {
                 this.topLeftField = value;
                 this.RaisePropertyChanged("topLeft");
             }
@@ -760,11 +784,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public DiagramPosition bottomRight {
-            get {
+        public DiagramPosition bottomRight
+        {
+            get
+            {
                 return this.bottomRightField;
             }
-            set {
+            set
+            {
                 this.bottomRightField = value;
                 this.RaisePropertyChanged("bottomRight");
             }
@@ -797,11 +824,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public ushort width {
-            get {
+        public ushort width
+        {
+            get
+            {
                 return this.widthField;
             }
-            set {
+            set
+            {
                 this.widthField = value;
                 this.RaisePropertyChanged("width");
             }
@@ -809,11 +839,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public ushort height {
-            get {
+        public ushort height
+        {
+            get
+            {
                 return this.heightField;
             }
-            set {
+            set
+            {
                 this.heightField = value;
                 this.RaisePropertyChanged("height");
             }
@@ -844,11 +877,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("cells", Order = 0)]
-        public string[] cells {
-            get {
+        public string[] cells
+        {
+            get
+            {
                 return this.cellsField;
             }
-            set {
+            set
+            {
                 this.cellsField = value;
                 this.RaisePropertyChanged("cells");
             }
@@ -887,11 +923,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public string content {
-            get {
+        public string content
+        {
+            get
+            {
                 return this.contentField;
             }
-            set {
+            set
+            {
                 this.contentField = value;
                 this.RaisePropertyChanged("content");
             }
@@ -899,11 +938,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 1)]
-        public System.Nullable<bool> showQuality {
-            get {
+        public System.Nullable<bool> showQuality
+        {
+            get
+            {
                 return this.showQualityField;
             }
-            set {
+            set
+            {
                 this.showQualityField = value;
                 this.RaisePropertyChanged("showQuality");
             }
@@ -911,11 +953,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool showQualitySpecified {
-            get {
+        public bool showQualitySpecified
+        {
+            get
+            {
                 return this.showQualityFieldSpecified;
             }
-            set {
+            set
+            {
                 this.showQualityFieldSpecified = value;
                 this.RaisePropertyChanged("showQualitySpecified");
             }
@@ -923,11 +968,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 2)]
-        public System.Nullable<byte> precision {
-            get {
+        public System.Nullable<byte> precision
+        {
+            get
+            {
                 return this.precisionField;
             }
-            set {
+            set
+            {
                 this.precisionField = value;
                 this.RaisePropertyChanged("precision");
             }
@@ -935,11 +983,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool precisionSpecified {
-            get {
+        public bool precisionSpecified
+        {
+            get
+            {
                 return this.precisionFieldSpecified;
             }
-            set {
+            set
+            {
                 this.precisionFieldSpecified = value;
                 this.RaisePropertyChanged("precisionSpecified");
             }
@@ -993,11 +1044,14 @@ namespace EDSProj.EDSWebService
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
         [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool localTime {
-            get {
+        public bool localTime
+        {
+            get
+            {
                 return this.localTimeField;
             }
-            set {
+            set
+            {
                 this.localTimeField = value;
                 this.RaisePropertyChanged("localTime");
             }
@@ -1006,11 +1060,14 @@ namespace EDSProj.EDSWebService
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
         [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool showDstTransition {
-            get {
+        public bool showDstTransition
+        {
+            get
+            {
                 return this.showDstTransitionField;
             }
-            set {
+            set
+            {
                 this.showDstTransitionField = value;
                 this.RaisePropertyChanged("showDstTransition");
             }
@@ -1019,11 +1076,14 @@ namespace EDSProj.EDSWebService
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
         [System.ComponentModel.DefaultValueAttribute(true)]
-        public bool showQualities {
-            get {
+        public bool showQualities
+        {
+            get
+            {
                 return this.showQualitiesField;
             }
-            set {
+            set
+            {
                 this.showQualitiesField = value;
                 this.RaisePropertyChanged("showQualities");
             }
@@ -1032,11 +1092,14 @@ namespace EDSProj.EDSWebService
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 3)]
         [System.ComponentModel.DefaultValueAttribute(typeof(byte), "6")]
-        public byte precisions {
-            get {
+        public byte precisions
+        {
+            get
+            {
                 return this.precisionsField;
             }
-            set {
+            set
+            {
                 this.precisionsField = value;
                 this.RaisePropertyChanged("precisions");
             }
@@ -1045,11 +1108,14 @@ namespace EDSProj.EDSWebService
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 4)]
         [System.ComponentModel.DefaultValueAttribute(ReportAddressingType.REPORTADDRESSINGTYPEA1)]
-        public ReportAddressingType addressingType {
-            get {
+        public ReportAddressingType addressingType
+        {
+            get
+            {
                 return this.addressingTypeField;
             }
-            set {
+            set
+            {
                 this.addressingTypeField = value;
                 this.RaisePropertyChanged("addressingType");
             }
@@ -1058,11 +1124,14 @@ namespace EDSProj.EDSWebService
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 5)]
         [System.ComponentModel.DefaultValueAttribute(ShadePriority.DEFAULTSHADEPRIORITY)]
-        public ShadePriority shadesPriority {
-            get {
+        public ShadePriority shadesPriority
+        {
+            get
+            {
                 return this.shadesPriorityField;
             }
-            set {
+            set
+            {
                 this.shadesPriorityField = value;
                 this.RaisePropertyChanged("shadesPriority");
             }
@@ -1071,11 +1140,14 @@ namespace EDSProj.EDSWebService
         /// <remarks/>
         [System.Xml.Serialization.XmlArrayAttribute(Order = 6)]
         [System.Xml.Serialization.XmlArrayItemAttribute("cells", typeof(ReportDefinitionCell[]), IsNullable = false)]
-        public ReportDefinitionCell[][] rows {
-            get {
+        public ReportDefinitionCell[][] rows
+        {
+            get
+            {
                 return this.rowsField;
             }
-            set {
+            set
+            {
                 this.rowsField = value;
                 this.RaisePropertyChanged("rows");
             }
@@ -1154,11 +1226,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public ReportDefinition rdf {
-            get {
+        public ReportDefinition rdf
+        {
+            get
+            {
                 return this.rdfField;
             }
-            set {
+            set
+            {
                 this.rdfField = value;
                 this.RaisePropertyChanged("rdf");
             }
@@ -1166,11 +1241,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public Timestamp dtRef {
-            get {
+        public Timestamp dtRef
+        {
+            get
+            {
                 return this.dtRefField;
             }
-            set {
+            set
+            {
                 this.dtRefField = value;
                 this.RaisePropertyChanged("dtRef");
             }
@@ -1178,11 +1256,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("args", Order = 2)]
-        public ReportArgument[] args {
-            get {
+        public ReportArgument[] args
+        {
+            get
+            {
                 return this.argsField;
             }
-            set {
+            set
+            {
                 this.argsField = value;
                 this.RaisePropertyChanged("args");
             }
@@ -1213,11 +1294,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public long second {
-            get {
+        public long second
+        {
+            get
+            {
                 return this.secondField;
             }
-            set {
+            set
+            {
                 this.secondField = value;
                 this.RaisePropertyChanged("second");
             }
@@ -1250,11 +1334,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public string name {
-            get {
+        public string name
+        {
+            get
+            {
                 return this.nameField;
             }
-            set {
+            set
+            {
                 this.nameField = value;
                 this.RaisePropertyChanged("name");
             }
@@ -1262,11 +1349,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public ReportValue value {
-            get {
+        public ReportValue value
+        {
+            get
+            {
                 return this.valueField;
             }
-            set {
+            set
+            {
                 this.valueField = value;
                 this.RaisePropertyChanged("value");
             }
@@ -1320,11 +1410,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 0)]
-        public System.Nullable<bool> boolean {
-            get {
+        public System.Nullable<bool> boolean
+        {
+            get
+            {
                 return this.booleanField;
             }
-            set {
+            set
+            {
                 this.booleanField = value;
                 this.RaisePropertyChanged("boolean");
             }
@@ -1332,11 +1425,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool booleanSpecified {
-            get {
+        public bool booleanSpecified
+        {
+            get
+            {
                 return this.booleanFieldSpecified;
             }
-            set {
+            set
+            {
                 this.booleanFieldSpecified = value;
                 this.RaisePropertyChanged("booleanSpecified");
             }
@@ -1344,11 +1440,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 1)]
-        public System.Nullable<double> number {
-            get {
+        public System.Nullable<double> number
+        {
+            get
+            {
                 return this.numberField;
             }
-            set {
+            set
+            {
                 this.numberField = value;
                 this.RaisePropertyChanged("number");
             }
@@ -1356,11 +1455,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool numberSpecified {
-            get {
+        public bool numberSpecified
+        {
+            get
+            {
                 return this.numberFieldSpecified;
             }
-            set {
+            set
+            {
                 this.numberFieldSpecified = value;
                 this.RaisePropertyChanged("numberSpecified");
             }
@@ -1368,11 +1470,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 2)]
-        public System.Nullable<uint> packed {
-            get {
+        public System.Nullable<uint> packed
+        {
+            get
+            {
                 return this.packedField;
             }
-            set {
+            set
+            {
                 this.packedField = value;
                 this.RaisePropertyChanged("packed");
             }
@@ -1380,11 +1485,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool packedSpecified {
-            get {
+        public bool packedSpecified
+        {
+            get
+            {
                 return this.packedFieldSpecified;
             }
-            set {
+            set
+            {
                 this.packedFieldSpecified = value;
                 this.RaisePropertyChanged("packedSpecified");
             }
@@ -1392,11 +1500,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 3)]
-        public string @string {
-            get {
+        public string @string
+        {
+            get
+            {
                 return this.stringField;
             }
-            set {
+            set
+            {
                 this.stringField = value;
                 this.RaisePropertyChanged("string");
             }
@@ -1404,11 +1515,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 4)]
-        public Timestamp timestamp {
-            get {
+        public Timestamp timestamp
+        {
+            get
+            {
                 return this.timestampField;
             }
-            set {
+            set
+            {
                 this.timestampField = value;
                 this.RaisePropertyChanged("timestamp");
             }
@@ -1416,11 +1530,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 5)]
-        public string point {
-            get {
+        public string point
+        {
+            get
+            {
                 return this.pointField;
             }
-            set {
+            set
+            {
                 this.pointField = value;
                 this.RaisePropertyChanged("point");
             }
@@ -1429,11 +1546,14 @@ namespace EDSProj.EDSWebService
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 6)]
         [System.ComponentModel.DefaultValueAttribute(Quality.QUALITYGOOD)]
-        public Quality quality {
-            get {
+        public Quality quality
+        {
+            get
+            {
                 return this.qualityField;
             }
-            set {
+            set
+            {
                 this.qualityField = value;
                 this.RaisePropertyChanged("quality");
             }
@@ -1496,11 +1616,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public uint reportConfigId {
-            get {
+        public uint reportConfigId
+        {
+            get
+            {
                 return this.reportConfigIdField;
             }
-            set {
+            set
+            {
                 this.reportConfigIdField = value;
                 this.RaisePropertyChanged("reportConfigId");
             }
@@ -1508,11 +1631,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public Timestamp dtRef {
-            get {
+        public Timestamp dtRef
+        {
+            get
+            {
                 return this.dtRefField;
             }
-            set {
+            set
+            {
                 this.dtRefField = value;
                 this.RaisePropertyChanged("dtRef");
             }
@@ -1520,11 +1646,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("args", Order = 2)]
-        public ReportArgument[] args {
-            get {
+        public ReportArgument[] args
+        {
+            get
+            {
                 return this.argsField;
             }
-            set {
+            set
+            {
                 this.argsField = value;
                 this.RaisePropertyChanged("args");
             }
@@ -1581,11 +1710,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public string referenceTimeShift {
-            get {
+        public string referenceTimeShift
+        {
+            get
+            {
                 return this.referenceTimeShiftField;
             }
-            set {
+            set
+            {
                 this.referenceTimeShiftField = value;
                 this.RaisePropertyChanged("referenceTimeShift");
             }
@@ -1593,11 +1725,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public TimeDuration runDelay {
-            get {
+        public TimeDuration runDelay
+        {
+            get
+            {
                 return this.runDelayField;
             }
-            set {
+            set
+            {
                 this.runDelayField = value;
                 this.RaisePropertyChanged("runDelay");
             }
@@ -1605,11 +1740,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public string timeMaskExpression {
-            get {
+        public string timeMaskExpression
+        {
+            get
+            {
                 return this.timeMaskExpressionField;
             }
-            set {
+            set
+            {
                 this.timeMaskExpressionField = value;
                 this.RaisePropertyChanged("timeMaskExpression");
             }
@@ -1617,11 +1755,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 3)]
-        public string eventsExpression {
-            get {
+        public string eventsExpression
+        {
+            get
+            {
                 return this.eventsExpressionField;
             }
-            set {
+            set
+            {
                 this.eventsExpressionField = value;
                 this.RaisePropertyChanged("eventsExpression");
             }
@@ -1629,11 +1770,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 4)]
-        public string inputValues {
-            get {
+        public string inputValues
+        {
+            get
+            {
                 return this.inputValuesField;
             }
-            set {
+            set
+            {
                 this.inputValuesField = value;
                 this.RaisePropertyChanged("inputValues");
             }
@@ -1641,11 +1785,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 5)]
-        public string outputMaskFileTxt {
-            get {
+        public string outputMaskFileTxt
+        {
+            get
+            {
                 return this.outputMaskFileTxtField;
             }
-            set {
+            set
+            {
                 this.outputMaskFileTxtField = value;
                 this.RaisePropertyChanged("outputMaskFileTxt");
             }
@@ -1653,11 +1800,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 6)]
-        public string outputMaskFileRdf {
-            get {
+        public string outputMaskFileRdf
+        {
+            get
+            {
                 return this.outputMaskFileRdfField;
             }
-            set {
+            set
+            {
                 this.outputMaskFileRdfField = value;
                 this.RaisePropertyChanged("outputMaskFileRdf");
             }
@@ -1665,11 +1815,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 7)]
-        public string outputMaskFileEdf {
-            get {
+        public string outputMaskFileEdf
+        {
+            get
+            {
                 return this.outputMaskFileEdfField;
             }
-            set {
+            set
+            {
                 this.outputMaskFileEdfField = value;
                 this.RaisePropertyChanged("outputMaskFileEdf");
             }
@@ -1677,11 +1830,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 8)]
-        public string outputMaskFileHtml {
-            get {
+        public string outputMaskFileHtml
+        {
+            get
+            {
                 return this.outputMaskFileHtmlField;
             }
-            set {
+            set
+            {
                 this.outputMaskFileHtmlField = value;
                 this.RaisePropertyChanged("outputMaskFileHtml");
             }
@@ -1689,11 +1845,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 9)]
-        public string outputMaskFilePdf {
-            get {
+        public string outputMaskFilePdf
+        {
+            get
+            {
                 return this.outputMaskFilePdfField;
             }
-            set {
+            set
+            {
                 this.outputMaskFilePdfField = value;
                 this.RaisePropertyChanged("outputMaskFilePdf");
             }
@@ -1701,11 +1860,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 10)]
-        public string outputMaskFileCsv {
-            get {
+        public string outputMaskFileCsv
+        {
+            get
+            {
                 return this.outputMaskFileCsvField;
             }
-            set {
+            set
+            {
                 this.outputMaskFileCsvField = value;
                 this.RaisePropertyChanged("outputMaskFileCsv");
             }
@@ -1713,11 +1875,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 11)]
-        public string outputMaskDatabaseRdf {
-            get {
+        public string outputMaskDatabaseRdf
+        {
+            get
+            {
                 return this.outputMaskDatabaseRdfField;
             }
-            set {
+            set
+            {
                 this.outputMaskDatabaseRdfField = value;
                 this.RaisePropertyChanged("outputMaskDatabaseRdf");
             }
@@ -1725,11 +1890,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 12)]
-        public string outputMaskDatabaseEdf {
-            get {
+        public string outputMaskDatabaseEdf
+        {
+            get
+            {
                 return this.outputMaskDatabaseEdfField;
             }
-            set {
+            set
+            {
                 this.outputMaskDatabaseEdfField = value;
                 this.RaisePropertyChanged("outputMaskDatabaseEdf");
             }
@@ -1737,11 +1905,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 13)]
-        public string outputMaskDatabaseHtml {
-            get {
+        public string outputMaskDatabaseHtml
+        {
+            get
+            {
                 return this.outputMaskDatabaseHtmlField;
             }
-            set {
+            set
+            {
                 this.outputMaskDatabaseHtmlField = value;
                 this.RaisePropertyChanged("outputMaskDatabaseHtml");
             }
@@ -1772,11 +1943,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public long seconds {
-            get {
+        public long seconds
+        {
+            get
+            {
                 return this.secondsField;
             }
-            set {
+            set
+            {
                 this.secondsField = value;
                 this.RaisePropertyChanged("seconds");
             }
@@ -1839,11 +2013,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public uint id {
-            get {
+        public uint id
+        {
+            get
+            {
                 return this.idField;
             }
-            set {
+            set
+            {
                 this.idField = value;
                 this.RaisePropertyChanged("id");
             }
@@ -1851,11 +2028,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public string reportDefinitionSource {
-            get {
+        public string reportDefinitionSource
+        {
+            get
+            {
                 return this.reportDefinitionSourceField;
             }
-            set {
+            set
+            {
                 this.reportDefinitionSourceField = value;
                 this.RaisePropertyChanged("reportDefinitionSource");
             }
@@ -1863,11 +2043,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public string reportDefinitionFile {
-            get {
+        public string reportDefinitionFile
+        {
+            get
+            {
                 return this.reportDefinitionFileField;
             }
-            set {
+            set
+            {
                 this.reportDefinitionFileField = value;
                 this.RaisePropertyChanged("reportDefinitionFile");
             }
@@ -1875,11 +2058,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 3)]
-        public string referenceTimeShift {
-            get {
+        public string referenceTimeShift
+        {
+            get
+            {
                 return this.referenceTimeShiftField;
             }
-            set {
+            set
+            {
                 this.referenceTimeShiftField = value;
                 this.RaisePropertyChanged("referenceTimeShift");
             }
@@ -1887,11 +2073,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 4)]
-        public TimeDuration runDelay {
-            get {
+        public TimeDuration runDelay
+        {
+            get
+            {
                 return this.runDelayField;
             }
-            set {
+            set
+            {
                 this.runDelayField = value;
                 this.RaisePropertyChanged("runDelay");
             }
@@ -1899,11 +2088,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 5)]
-        public string timeMaskExpression {
-            get {
+        public string timeMaskExpression
+        {
+            get
+            {
                 return this.timeMaskExpressionField;
             }
-            set {
+            set
+            {
                 this.timeMaskExpressionField = value;
                 this.RaisePropertyChanged("timeMaskExpression");
             }
@@ -1911,11 +2103,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 6)]
-        public string eventsExpression {
-            get {
+        public string eventsExpression
+        {
+            get
+            {
                 return this.eventsExpressionField;
             }
-            set {
+            set
+            {
                 this.eventsExpressionField = value;
                 this.RaisePropertyChanged("eventsExpression");
             }
@@ -1923,11 +2118,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 7)]
-        public string inputValues {
-            get {
+        public string inputValues
+        {
+            get
+            {
                 return this.inputValuesField;
             }
-            set {
+            set
+            {
                 this.inputValuesField = value;
                 this.RaisePropertyChanged("inputValues");
             }
@@ -1935,11 +2133,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 8)]
-        public string outputMaskFileTxt {
-            get {
+        public string outputMaskFileTxt
+        {
+            get
+            {
                 return this.outputMaskFileTxtField;
             }
-            set {
+            set
+            {
                 this.outputMaskFileTxtField = value;
                 this.RaisePropertyChanged("outputMaskFileTxt");
             }
@@ -1947,11 +2148,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 9)]
-        public string outputMaskFileRdf {
-            get {
+        public string outputMaskFileRdf
+        {
+            get
+            {
                 return this.outputMaskFileRdfField;
             }
-            set {
+            set
+            {
                 this.outputMaskFileRdfField = value;
                 this.RaisePropertyChanged("outputMaskFileRdf");
             }
@@ -1959,11 +2163,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 10)]
-        public string outputMaskFileEdf {
-            get {
+        public string outputMaskFileEdf
+        {
+            get
+            {
                 return this.outputMaskFileEdfField;
             }
-            set {
+            set
+            {
                 this.outputMaskFileEdfField = value;
                 this.RaisePropertyChanged("outputMaskFileEdf");
             }
@@ -1971,11 +2178,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 11)]
-        public string outputMaskFileHtml {
-            get {
+        public string outputMaskFileHtml
+        {
+            get
+            {
                 return this.outputMaskFileHtmlField;
             }
-            set {
+            set
+            {
                 this.outputMaskFileHtmlField = value;
                 this.RaisePropertyChanged("outputMaskFileHtml");
             }
@@ -1983,11 +2193,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 12)]
-        public string outputMaskFilePdf {
-            get {
+        public string outputMaskFilePdf
+        {
+            get
+            {
                 return this.outputMaskFilePdfField;
             }
-            set {
+            set
+            {
                 this.outputMaskFilePdfField = value;
                 this.RaisePropertyChanged("outputMaskFilePdf");
             }
@@ -1995,11 +2208,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 13)]
-        public string outputMaskFileCsv {
-            get {
+        public string outputMaskFileCsv
+        {
+            get
+            {
                 return this.outputMaskFileCsvField;
             }
-            set {
+            set
+            {
                 this.outputMaskFileCsvField = value;
                 this.RaisePropertyChanged("outputMaskFileCsv");
             }
@@ -2007,11 +2223,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 14)]
-        public string outputMaskDatabaseRdf {
-            get {
+        public string outputMaskDatabaseRdf
+        {
+            get
+            {
                 return this.outputMaskDatabaseRdfField;
             }
-            set {
+            set
+            {
                 this.outputMaskDatabaseRdfField = value;
                 this.RaisePropertyChanged("outputMaskDatabaseRdf");
             }
@@ -2019,11 +2238,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 15)]
-        public string outputMaskDatabaseEdf {
-            get {
+        public string outputMaskDatabaseEdf
+        {
+            get
+            {
                 return this.outputMaskDatabaseEdfField;
             }
-            set {
+            set
+            {
                 this.outputMaskDatabaseEdfField = value;
                 this.RaisePropertyChanged("outputMaskDatabaseEdf");
             }
@@ -2031,11 +2253,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 16)]
-        public string outputMaskDatabaseHtml {
-            get {
+        public string outputMaskDatabaseHtml
+        {
+            get
+            {
                 return this.outputMaskDatabaseHtmlField;
             }
-            set {
+            set
+            {
                 this.outputMaskDatabaseHtmlField = value;
                 this.RaisePropertyChanged("outputMaskDatabaseHtml");
             }
@@ -2076,11 +2301,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public ObjectFilter objectFilter {
-            get {
+        public ObjectFilter objectFilter
+        {
+            get
+            {
                 return this.objectFilterField;
             }
-            set {
+            set
+            {
                 this.objectFilterField = value;
                 this.RaisePropertyChanged("objectFilter");
             }
@@ -2089,11 +2317,14 @@ namespace EDSProj.EDSWebService
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
         [System.ComponentModel.DefaultValueAttribute(ReportOutputType.REPORTOUTPUTTYPEUNKNOWN)]
-        public ReportOutputType outputType {
-            get {
+        public ReportOutputType outputType
+        {
+            get
+            {
                 return this.outputTypeField;
             }
-            set {
+            set
+            {
                 this.outputTypeField = value;
                 this.RaisePropertyChanged("outputType");
             }
@@ -2102,11 +2333,14 @@ namespace EDSProj.EDSWebService
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
         [System.ComponentModel.DefaultValueAttribute(ReportExecutionCondition.REPORTEXECUTIONCONDITIONUNKNOWN)]
-        public ReportExecutionCondition executionCondition {
-            get {
+        public ReportExecutionCondition executionCondition
+        {
+            get
+            {
                 return this.executionConditionField;
             }
-            set {
+            set
+            {
                 this.executionConditionField = value;
                 this.RaisePropertyChanged("executionCondition");
             }
@@ -2155,11 +2389,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public string fileRe {
-            get {
+        public string fileRe
+        {
+            get
+            {
                 return this.fileReField;
             }
-            set {
+            set
+            {
                 this.fileReField = value;
                 this.RaisePropertyChanged("fileRe");
             }
@@ -2167,11 +2404,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public string nameRe {
-            get {
+        public string nameRe
+        {
+            get
+            {
                 return this.nameReField;
             }
-            set {
+            set
+            {
                 this.nameReField = value;
                 this.RaisePropertyChanged("nameRe");
             }
@@ -2179,11 +2419,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public string sourceNameRe {
-            get {
+        public string sourceNameRe
+        {
+            get
+            {
                 return this.sourceNameReField;
             }
-            set {
+            set
+            {
                 this.sourceNameReField = value;
                 this.RaisePropertyChanged("sourceNameRe");
             }
@@ -2191,11 +2434,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("sourceId", Order = 3)]
-        public uint[] sourceId {
-            get {
+        public uint[] sourceId
+        {
+            get
+            {
                 return this.sourceIdField;
             }
-            set {
+            set
+            {
                 this.sourceIdField = value;
                 this.RaisePropertyChanged("sourceId");
             }
@@ -2203,11 +2449,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 4)]
-        public TimePeriod modified {
-            get {
+        public TimePeriod modified
+        {
+            get
+            {
                 return this.modifiedField;
             }
-            set {
+            set
+            {
                 this.modifiedField = value;
                 this.RaisePropertyChanged("modified");
             }
@@ -2215,11 +2464,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("sg", Order = 5)]
-        public byte[] sg {
-            get {
+        public byte[] sg
+        {
+            get
+            {
                 return this.sgField;
             }
-            set {
+            set
+            {
                 this.sgField = value;
                 this.RaisePropertyChanged("sg");
             }
@@ -2227,11 +2479,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("tg", Order = 6)]
-        public byte[] tg {
-            get {
+        public byte[] tg
+        {
+            get
+            {
                 return this.tgField;
             }
-            set {
+            set
+            {
                 this.tgField = value;
                 this.RaisePropertyChanged("tg");
             }
@@ -2239,11 +2494,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("md5", Order = 7)]
-        public string[] md5 {
-            get {
+        public string[] md5
+        {
+            get
+            {
                 return this.md5Field;
             }
-            set {
+            set
+            {
                 this.md5Field = value;
                 this.RaisePropertyChanged("md5");
             }
@@ -2251,11 +2509,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 8)]
-        public bool withoutPermission {
-            get {
+        public bool withoutPermission
+        {
+            get
+            {
                 return this.withoutPermissionField;
             }
-            set {
+            set
+            {
                 this.withoutPermissionField = value;
                 this.RaisePropertyChanged("withoutPermission");
             }
@@ -2263,11 +2524,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool withoutPermissionSpecified {
-            get {
+        public bool withoutPermissionSpecified
+        {
+            get
+            {
                 return this.withoutPermissionFieldSpecified;
             }
-            set {
+            set
+            {
                 this.withoutPermissionFieldSpecified = value;
                 this.RaisePropertyChanged("withoutPermissionSpecified");
             }
@@ -2300,11 +2564,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public Timestamp from {
-            get {
+        public Timestamp from
+        {
+            get
+            {
                 return this.fromField;
             }
-            set {
+            set
+            {
                 this.fromField = value;
                 this.RaisePropertyChanged("from");
             }
@@ -2312,11 +2579,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public Timestamp till {
-            get {
+        public Timestamp till
+        {
+            get
+            {
                 return this.tillField;
             }
-            set {
+            set
+            {
                 this.tillField = value;
                 this.RaisePropertyChanged("till");
             }
@@ -2439,11 +2709,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public EventCategory category {
-            get {
+        public EventCategory category
+        {
+            get
+            {
                 return this.categoryField;
             }
-            set {
+            set
+            {
                 this.categoryField = value;
                 this.RaisePropertyChanged("category");
             }
@@ -2451,11 +2724,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public EventType type {
-            get {
+        public EventType type
+        {
+            get
+            {
                 return this.typeField;
             }
-            set {
+            set
+            {
                 this.typeField = value;
                 this.RaisePropertyChanged("type");
             }
@@ -2463,11 +2739,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public byte priority {
-            get {
+        public byte priority
+        {
+            get
+            {
                 return this.priorityField;
             }
-            set {
+            set
+            {
                 this.priorityField = value;
                 this.RaisePropertyChanged("priority");
             }
@@ -2475,11 +2754,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 3)]
-        public string message {
-            get {
+        public string message
+        {
+            get
+            {
                 return this.messageField;
             }
-            set {
+            set
+            {
                 this.messageField = value;
                 this.RaisePropertyChanged("message");
             }
@@ -2487,11 +2769,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 4)]
-        public PointId pointId {
-            get {
+        public PointId pointId
+        {
+            get
+            {
                 return this.pointIdField;
             }
-            set {
+            set
+            {
                 this.pointIdField = value;
                 this.RaisePropertyChanged("pointId");
             }
@@ -2499,11 +2784,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 5)]
-        public double floatValue {
-            get {
+        public double floatValue
+        {
+            get
+            {
                 return this.floatValueField;
             }
-            set {
+            set
+            {
                 this.floatValueField = value;
                 this.RaisePropertyChanged("floatValue");
             }
@@ -2511,11 +2799,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 6)]
-        public long intValue {
-            get {
+        public long intValue
+        {
+            get
+            {
                 return this.intValueField;
             }
-            set {
+            set
+            {
                 this.intValueField = value;
                 this.RaisePropertyChanged("intValue");
             }
@@ -2523,11 +2814,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 7)]
-        public uint st {
-            get {
+        public uint st
+        {
+            get
+            {
                 return this.stField;
             }
-            set {
+            set
+            {
                 this.stField = value;
                 this.RaisePropertyChanged("st");
             }
@@ -2535,11 +2829,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 8)]
-        public Timestamp ts {
-            get {
+        public Timestamp ts
+        {
+            get
+            {
                 return this.tsField;
             }
-            set {
+            set
+            {
                 this.tsField = value;
                 this.RaisePropertyChanged("ts");
             }
@@ -2547,11 +2844,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 9)]
-        public TimeDuration tss {
-            get {
+        public TimeDuration tss
+        {
+            get
+            {
                 return this.tssField;
             }
-            set {
+            set
+            {
                 this.tssField = value;
                 this.RaisePropertyChanged("tss");
             }
@@ -2559,11 +2859,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 10)]
-        public uint aux {
-            get {
+        public uint aux
+        {
+            get
+            {
                 return this.auxField;
             }
-            set {
+            set
+            {
                 this.auxField = value;
                 this.RaisePropertyChanged("aux");
             }
@@ -2571,11 +2874,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 11)]
-        public Color foreground {
-            get {
+        public Color foreground
+        {
+            get
+            {
                 return this.foregroundField;
             }
-            set {
+            set
+            {
                 this.foregroundField = value;
                 this.RaisePropertyChanged("foreground");
             }
@@ -2583,11 +2889,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 12)]
-        public Color background {
-            get {
+        public Color background
+        {
+            get
+            {
                 return this.backgroundField;
             }
-            set {
+            set
+            {
                 this.backgroundField = value;
                 this.RaisePropertyChanged("background");
             }
@@ -2810,11 +3119,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public uint sid {
-            get {
+        public uint sid
+        {
+            get
+            {
                 return this.sidField;
             }
-            set {
+            set
+            {
                 this.sidField = value;
                 this.RaisePropertyChanged("sid");
             }
@@ -2822,11 +3134,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool sidSpecified {
-            get {
+        public bool sidSpecified
+        {
+            get
+            {
                 return this.sidFieldSpecified;
             }
-            set {
+            set
+            {
                 this.sidFieldSpecified = value;
                 this.RaisePropertyChanged("sidSpecified");
             }
@@ -2834,11 +3149,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public string iess {
-            get {
+        public string iess
+        {
+            get
+            {
                 return this.iessField;
             }
-            set {
+            set
+            {
                 this.iessField = value;
                 this.RaisePropertyChanged("iess");
             }
@@ -2846,11 +3164,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public string idcs {
-            get {
+        public string idcs
+        {
+            get
+            {
                 return this.idcsField;
             }
-            set {
+            set
+            {
                 this.idcsField = value;
                 this.RaisePropertyChanged("idcs");
             }
@@ -2858,11 +3179,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 3)]
-        public string zd {
-            get {
+        public string zd
+        {
+            get
+            {
                 return this.zdField;
             }
-            set {
+            set
+            {
                 this.zdField = value;
                 this.RaisePropertyChanged("zd");
             }
@@ -2893,11 +3217,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public uint argb {
-            get {
+        public uint argb
+        {
+            get
+            {
                 return this.argbField;
             }
-            set {
+            set
+            {
                 this.argbField = value;
                 this.RaisePropertyChanged("argb");
             }
@@ -2944,11 +3271,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public TimePeriod period {
-            get {
+        public TimePeriod period
+        {
+            get
+            {
                 return this.periodField;
             }
-            set {
+            set
+            {
                 this.periodField = value;
                 this.RaisePropertyChanged("period");
             }
@@ -2956,11 +3286,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("category", Order = 1)]
-        public EventCategory[] category {
-            get {
+        public EventCategory[] category
+        {
+            get
+            {
                 return this.categoryField;
             }
-            set {
+            set
+            {
                 this.categoryField = value;
                 this.RaisePropertyChanged("category");
             }
@@ -2968,11 +3301,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("rt", Order = 2)]
-        public PointType[] rt {
-            get {
+        public PointType[] rt
+        {
+            get
+            {
                 return this.rtField;
             }
-            set {
+            set
+            {
                 this.rtField = value;
                 this.RaisePropertyChanged("rt");
             }
@@ -2980,11 +3316,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("priority", Order = 3)]
-        public byte[] priority {
-            get {
+        public byte[] priority
+        {
+            get
+            {
                 return this.priorityField;
             }
-            set {
+            set
+            {
                 this.priorityField = value;
                 this.RaisePropertyChanged("priority");
             }
@@ -2992,11 +3331,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("tg", Order = 4)]
-        public byte[] tg {
-            get {
+        public byte[] tg
+        {
+            get
+            {
                 return this.tgField;
             }
-            set {
+            set
+            {
                 this.tgField = value;
                 this.RaisePropertyChanged("tg");
             }
@@ -3004,11 +3346,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("zd", Order = 5)]
-        public string[] zd {
-            get {
+        public string[] zd
+        {
+            get
+            {
                 return this.zdField;
             }
-            set {
+            set
+            {
                 this.zdField = value;
                 this.RaisePropertyChanged("zd");
             }
@@ -3016,11 +3361,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 6)]
-        public string iessRe {
-            get {
+        public string iessRe
+        {
+            get
+            {
                 return this.iessReField;
             }
-            set {
+            set
+            {
                 this.iessReField = value;
                 this.RaisePropertyChanged("iessRe");
             }
@@ -3028,11 +3376,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 7)]
-        public string messageRe {
-            get {
+        public string messageRe
+        {
+            get
+            {
                 return this.messageReField;
             }
-            set {
+            set
+            {
                 this.messageReField = value;
                 this.RaisePropertyChanged("messageRe");
             }
@@ -3040,11 +3391,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("pointId", Order = 8)]
-        public PointId[] pointId {
-            get {
+        public PointId[] pointId
+        {
+            get
+            {
                 return this.pointIdField;
             }
-            set {
+            set
+            {
                 this.pointIdField = value;
                 this.RaisePropertyChanged("pointId");
             }
@@ -3111,11 +3465,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public PointId srcPointId {
-            get {
+        public PointId srcPointId
+        {
+            get
+            {
                 return this.srcPointIdField;
             }
-            set {
+            set
+            {
                 this.srcPointIdField = value;
                 this.RaisePropertyChanged("srcPointId");
             }
@@ -3123,11 +3480,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public PointId dstPointId {
-            get {
+        public PointId dstPointId
+        {
+            get
+            {
                 return this.dstPointIdField;
             }
-            set {
+            set
+            {
                 this.dstPointIdField = value;
                 this.RaisePropertyChanged("dstPointId");
             }
@@ -3135,11 +3495,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public TimePeriod period {
-            get {
+        public TimePeriod period
+        {
+            get
+            {
                 return this.periodField;
             }
-            set {
+            set
+            {
                 this.periodField = value;
                 this.RaisePropertyChanged("period");
             }
@@ -3174,11 +3537,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public PointValue value {
-            get {
+        public PointValue value
+        {
+            get
+            {
                 return this.valueField;
             }
-            set {
+            set
+            {
                 this.valueField = value;
                 this.RaisePropertyChanged("value");
             }
@@ -3186,11 +3552,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public Quality quality {
-            get {
+        public Quality quality
+        {
+            get
+            {
                 return this.qualityField;
             }
-            set {
+            set
+            {
                 this.qualityField = value;
                 this.RaisePropertyChanged("quality");
             }
@@ -3198,11 +3567,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public TimePeriod period {
-            get {
+        public TimePeriod period
+        {
+            get
+            {
                 return this.periodField;
             }
-            set {
+            set
+            {
                 this.periodField = value;
                 this.RaisePropertyChanged("period");
             }
@@ -3251,11 +3623,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 0)]
-        public System.Nullable<float> av {
-            get {
+        public System.Nullable<float> av
+        {
+            get
+            {
                 return this.avField;
             }
-            set {
+            set
+            {
                 this.avField = value;
                 this.RaisePropertyChanged("av");
             }
@@ -3263,11 +3638,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool avSpecified {
-            get {
+        public bool avSpecified
+        {
+            get
+            {
                 return this.avFieldSpecified;
             }
-            set {
+            set
+            {
                 this.avFieldSpecified = value;
                 this.RaisePropertyChanged("avSpecified");
             }
@@ -3275,11 +3653,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 1)]
-        public System.Nullable<double> dav {
-            get {
+        public System.Nullable<double> dav
+        {
+            get
+            {
                 return this.davField;
             }
-            set {
+            set
+            {
                 this.davField = value;
                 this.RaisePropertyChanged("dav");
             }
@@ -3287,11 +3668,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool davSpecified {
-            get {
+        public bool davSpecified
+        {
+            get
+            {
                 return this.davFieldSpecified;
             }
-            set {
+            set
+            {
                 this.davFieldSpecified = value;
                 this.RaisePropertyChanged("davSpecified");
             }
@@ -3299,11 +3683,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 2)]
-        public System.Nullable<bool> bv {
-            get {
+        public System.Nullable<bool> bv
+        {
+            get
+            {
                 return this.bvField;
             }
-            set {
+            set
+            {
                 this.bvField = value;
                 this.RaisePropertyChanged("bv");
             }
@@ -3311,11 +3698,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool bvSpecified {
-            get {
+        public bool bvSpecified
+        {
+            get
+            {
                 return this.bvFieldSpecified;
             }
-            set {
+            set
+            {
                 this.bvFieldSpecified = value;
                 this.RaisePropertyChanged("bvSpecified");
             }
@@ -3323,11 +3713,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 3)]
-        public System.Nullable<uint> pv {
-            get {
+        public System.Nullable<uint> pv
+        {
+            get
+            {
                 return this.pvField;
             }
-            set {
+            set
+            {
                 this.pvField = value;
                 this.RaisePropertyChanged("pv");
             }
@@ -3335,11 +3728,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool pvSpecified {
-            get {
+        public bool pvSpecified
+        {
+            get
+            {
                 return this.pvFieldSpecified;
             }
-            set {
+            set
+            {
                 this.pvFieldSpecified = value;
                 this.RaisePropertyChanged("pvSpecified");
             }
@@ -3347,11 +3743,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 4)]
-        public System.Nullable<long> ipv {
-            get {
+        public System.Nullable<long> ipv
+        {
+            get
+            {
                 return this.ipvField;
             }
-            set {
+            set
+            {
                 this.ipvField = value;
                 this.RaisePropertyChanged("ipv");
             }
@@ -3359,11 +3758,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ipvSpecified {
-            get {
+        public bool ipvSpecified
+        {
+            get
+            {
                 return this.ipvFieldSpecified;
             }
-            set {
+            set
+            {
                 this.ipvFieldSpecified = value;
                 this.RaisePropertyChanged("ipvSpecified");
             }
@@ -3396,11 +3798,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public PointId pointId {
-            get {
+        public PointId pointId
+        {
+            get
+            {
                 return this.pointIdField;
             }
-            set {
+            set
+            {
                 this.pointIdField = value;
                 this.RaisePropertyChanged("pointId");
             }
@@ -3408,11 +3813,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("values", Order = 1)]
-        public ShadeValue[] values {
-            get {
+        public ShadeValue[] values
+        {
+            get
+            {
                 return this.valuesField;
             }
-            set {
+            set
+            {
                 this.valuesField = value;
                 this.RaisePropertyChanged("values");
             }
@@ -3445,11 +3853,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public PointId pointId {
-            get {
+        public PointId pointId
+        {
+            get
+            {
                 return this.pointIdField;
             }
-            set {
+            set
+            {
                 this.pointIdField = value;
                 this.RaisePropertyChanged("pointId");
             }
@@ -3457,11 +3868,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public TimePeriod period {
-            get {
+        public TimePeriod period
+        {
+            get
+            {
                 return this.periodField;
             }
-            set {
+            set
+            {
                 this.periodField = value;
                 this.RaisePropertyChanged("period");
             }
@@ -3496,11 +3910,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public PointValue value {
-            get {
+        public PointValue value
+        {
+            get
+            {
                 return this.valueField;
             }
-            set {
+            set
+            {
                 this.valueField = value;
                 this.RaisePropertyChanged("value");
             }
@@ -3508,11 +3925,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public Quality quality {
-            get {
+        public Quality quality
+        {
+            get
+            {
                 return this.qualityField;
             }
-            set {
+            set
+            {
                 this.qualityField = value;
                 this.RaisePropertyChanged("quality");
             }
@@ -3520,11 +3940,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public TimeDuration tss {
-            get {
+        public TimeDuration tss
+        {
+            get
+            {
                 return this.tssField;
             }
-            set {
+            set
+            {
                 this.tssField = value;
                 this.RaisePropertyChanged("tss");
             }
@@ -3557,11 +3980,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public Timestamp ts {
-            get {
+        public Timestamp ts
+        {
+            get
+            {
                 return this.tsField;
             }
-            set {
+            set
+            {
                 this.tsField = value;
                 this.RaisePropertyChanged("ts");
             }
@@ -3569,11 +3995,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("values", Order = 1)]
-        public TabularValue[] values {
-            get {
+        public TabularValue[] values
+        {
+            get
+            {
                 return this.valuesField;
             }
-            set {
+            set
+            {
                 this.valuesField = value;
                 this.RaisePropertyChanged("values");
             }
@@ -3616,11 +4045,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public PointId pointId {
-            get {
+        public PointId pointId
+        {
+            get
+            {
                 return this.pointIdField;
             }
-            set {
+            set
+            {
                 this.pointIdField = value;
                 this.RaisePropertyChanged("pointId");
             }
@@ -3629,11 +4061,14 @@ namespace EDSProj.EDSWebService
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
         [System.ComponentModel.DefaultValueAttribute(ShadePriority.DEFAULTSHADEPRIORITY)]
-        public ShadePriority shadePriority {
-            get {
+        public ShadePriority shadePriority
+        {
+            get
+            {
                 return this.shadePriorityField;
             }
-            set {
+            set
+            {
                 this.shadePriorityField = value;
                 this.RaisePropertyChanged("shadePriority");
             }
@@ -3642,11 +4077,14 @@ namespace EDSProj.EDSWebService
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
         [System.ComponentModel.DefaultValueAttribute("VALUE")]
-        public string function {
-            get {
+        public string function
+        {
+            get
+            {
                 return this.functionField;
             }
-            set {
+            set
+            {
                 this.functionField = value;
                 this.RaisePropertyChanged("function");
             }
@@ -3654,11 +4092,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("params", Order = 3)]
-        public double[] @params {
-            get {
+        public double[] @params
+        {
+            get
+            {
                 return this.paramsField;
             }
-            set {
+            set
+            {
                 this.paramsField = value;
                 this.RaisePropertyChanged("params");
             }
@@ -3693,11 +4134,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public TimePeriod period {
-            get {
+        public TimePeriod period
+        {
+            get
+            {
                 return this.periodField;
             }
-            set {
+            set
+            {
                 this.periodField = value;
                 this.RaisePropertyChanged("period");
             }
@@ -3705,11 +4149,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public TimeDuration step {
-            get {
+        public TimeDuration step
+        {
+            get
+            {
                 return this.stepField;
             }
-            set {
+            set
+            {
                 this.stepField = value;
                 this.RaisePropertyChanged("step");
             }
@@ -3717,11 +4164,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("items", Order = 2)]
-        public TabularRequestItem[] items {
-            get {
+        public TabularRequestItem[] items
+        {
+            get
+            {
                 return this.itemsField;
             }
-            set {
+            set
+            {
                 this.itemsField = value;
                 this.RaisePropertyChanged("items");
             }
@@ -3758,11 +4208,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public PointValue value {
-            get {
+        public PointValue value
+        {
+            get
+            {
                 return this.valueField;
             }
-            set {
+            set
+            {
                 this.valueField = value;
                 this.RaisePropertyChanged("value");
             }
@@ -3770,11 +4223,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public Quality quality {
-            get {
+        public Quality quality
+        {
+            get
+            {
                 return this.qualityField;
             }
-            set {
+            set
+            {
                 this.qualityField = value;
                 this.RaisePropertyChanged("quality");
             }
@@ -3782,11 +4238,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public Timestamp ts {
-            get {
+        public Timestamp ts
+        {
+            get
+            {
                 return this.tsField;
             }
-            set {
+            set
+            {
                 this.tsField = value;
                 this.RaisePropertyChanged("ts");
             }
@@ -3794,11 +4253,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 3)]
-        public TimeDuration tss {
-            get {
+        public TimeDuration tss
+        {
+            get
+            {
                 return this.tssField;
             }
-            set {
+            set
+            {
                 this.tssField = value;
                 this.RaisePropertyChanged("tss");
             }
@@ -3833,11 +4295,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public PointId pointId {
-            get {
+        public PointId pointId
+        {
+            get
+            {
                 return this.pointIdField;
             }
-            set {
+            set
+            {
                 this.pointIdField = value;
                 this.RaisePropertyChanged("pointId");
             }
@@ -3845,11 +4310,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("values", Order = 1)]
-        public TrendValue[] values {
-            get {
+        public TrendValue[] values
+        {
+            get
+            {
                 return this.valuesField;
             }
-            set {
+            set
+            {
                 this.valuesField = value;
                 this.RaisePropertyChanged("values");
             }
@@ -3857,11 +4325,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public PointValue average {
-            get {
+        public PointValue average
+        {
+            get
+            {
                 return this.averageField;
             }
-            set {
+            set
+            {
                 this.averageField = value;
                 this.RaisePropertyChanged("average");
             }
@@ -3899,11 +4370,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public PointId pointId {
-            get {
+        public PointId pointId
+        {
+            get
+            {
                 return this.pointIdField;
             }
-            set {
+            set
+            {
                 this.pointIdField = value;
                 this.RaisePropertyChanged("pointId");
             }
@@ -3912,11 +4386,14 @@ namespace EDSProj.EDSWebService
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
         [System.ComponentModel.DefaultValueAttribute(ShadePriority.DEFAULTSHADEPRIORITY)]
-        public ShadePriority shadePriority {
-            get {
+        public ShadePriority shadePriority
+        {
+            get
+            {
                 return this.shadePriorityField;
             }
-            set {
+            set
+            {
                 this.shadePriorityField = value;
                 this.RaisePropertyChanged("shadePriority");
             }
@@ -3959,11 +4436,14 @@ namespace EDSProj.EDSWebService
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
         [System.ComponentModel.DefaultValueAttribute(true)]
-        public bool useAverages {
-            get {
+        public bool useAverages
+        {
+            get
+            {
                 return this.useAveragesField;
             }
-            set {
+            set
+            {
                 this.useAveragesField = value;
                 this.RaisePropertyChanged("useAverages");
             }
@@ -3971,11 +4451,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public TimePeriod period {
-            get {
+        public TimePeriod period
+        {
+            get
+            {
                 return this.periodField;
             }
-            set {
+            set
+            {
                 this.periodField = value;
                 this.RaisePropertyChanged("period");
             }
@@ -3983,11 +4466,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public uint pixelCount {
-            get {
+        public uint pixelCount
+        {
+            get
+            {
                 return this.pixelCountField;
             }
-            set {
+            set
+            {
                 this.pixelCountField = value;
                 this.RaisePropertyChanged("pixelCount");
             }
@@ -3995,11 +4481,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("items", Order = 3)]
-        public TrendRequestItem[] items {
-            get {
+        public TrendRequestItem[] items
+        {
+            get
+            {
                 return this.itemsField;
             }
-            set {
+            set
+            {
                 this.itemsField = value;
                 this.RaisePropertyChanged("items");
             }
@@ -4038,11 +4527,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public PointId id {
-            get {
+        public PointId id
+        {
+            get
+            {
                 return this.idField;
             }
-            set {
+            set
+            {
                 this.idField = value;
                 this.RaisePropertyChanged("id");
             }
@@ -4050,11 +4542,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 1)]
-        public PointValue value {
-            get {
+        public PointValue value
+        {
+            get
+            {
                 return this.valueField;
             }
-            set {
+            set
+            {
                 this.valueField = value;
                 this.RaisePropertyChanged("value");
             }
@@ -4062,11 +4557,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 2)]
-        public System.Nullable<Quality> quality {
-            get {
+        public System.Nullable<Quality> quality
+        {
+            get
+            {
                 return this.qualityField;
             }
-            set {
+            set
+            {
                 this.qualityField = value;
                 this.RaisePropertyChanged("quality");
             }
@@ -4074,11 +4572,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool qualitySpecified {
-            get {
+        public bool qualitySpecified
+        {
+            get
+            {
                 return this.qualityFieldSpecified;
             }
-            set {
+            set
+            {
                 this.qualityFieldSpecified = value;
                 this.RaisePropertyChanged("qualitySpecified");
             }
@@ -4086,11 +4587,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 3)]
-        public TimeDuration duration {
-            get {
+        public TimeDuration duration
+        {
+            get
+            {
                 return this.durationField;
             }
-            set {
+            set
+            {
                 this.durationField = value;
                 this.RaisePropertyChanged("duration");
             }
@@ -4225,11 +4729,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute()]
-        public PointId id {
-            get {
+        public PointId id
+        {
+            get
+            {
                 return this.idField;
             }
-            set {
+            set
+            {
                 this.idField = value;
                 this.RaisePropertyChanged("id");
             }
@@ -4237,11 +4744,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute()]
-        public PointType rt {
-            get {
+        public PointType rt
+        {
+            get
+            {
                 return this.rtField;
             }
-            set {
+            set
+            {
                 this.rtField = value;
                 this.RaisePropertyChanged("rt");
             }
@@ -4249,11 +4759,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute()]
-        public PointValue value {
-            get {
+        public PointValue value
+        {
+            get
+            {
                 return this.valueField;
             }
-            set {
+            set
+            {
                 this.valueField = value;
                 this.RaisePropertyChanged("value");
             }
@@ -4261,11 +4774,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute()]
-        public Quality quality {
-            get {
+        public Quality quality
+        {
+            get
+            {
                 return this.qualityField;
             }
-            set {
+            set
+            {
                 this.qualityField = value;
                 this.RaisePropertyChanged("quality");
             }
@@ -4273,11 +4789,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute()]
-        public Timestamp ts {
-            get {
+        public Timestamp ts
+        {
+            get
+            {
                 return this.tsField;
             }
-            set {
+            set
+            {
                 this.tsField = value;
                 this.RaisePropertyChanged("ts");
             }
@@ -4285,11 +4804,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute()]
-        public TimeDuration tss {
-            get {
+        public TimeDuration tss
+        {
+            get
+            {
                 return this.tssField;
             }
-            set {
+            set
+            {
                 this.tssField = value;
                 this.RaisePropertyChanged("tss");
             }
@@ -4297,11 +4819,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute()]
-        public Timestamp at {
-            get {
+        public Timestamp at
+        {
+            get
+            {
                 return this.atField;
             }
-            set {
+            set
+            {
                 this.atField = value;
                 this.RaisePropertyChanged("at");
             }
@@ -4309,11 +4834,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute()]
-        public TimeDuration atss {
-            get {
+        public TimeDuration atss
+        {
+            get
+            {
                 return this.atssField;
             }
-            set {
+            set
+            {
                 this.atssField = value;
                 this.RaisePropertyChanged("atss");
             }
@@ -4321,11 +4849,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute()]
-        public string desc {
-            get {
+        public string desc
+        {
+            get
+            {
                 return this.descField;
             }
-            set {
+            set
+            {
                 this.descField = value;
                 this.RaisePropertyChanged("desc");
             }
@@ -4333,11 +4864,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute()]
-        public uint st {
-            get {
+        public uint st
+        {
+            get
+            {
                 return this.stField;
             }
-            set {
+            set
+            {
                 this.stField = value;
                 this.RaisePropertyChanged("st");
             }
@@ -4345,11 +4879,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public System.Nullable<uint> xst1 {
-            get {
+        public System.Nullable<uint> xst1
+        {
+            get
+            {
                 return this.xst1Field;
             }
-            set {
+            set
+            {
                 this.xst1Field = value;
                 this.RaisePropertyChanged("xst1");
             }
@@ -4357,11 +4894,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool xst1Specified {
-            get {
+        public bool xst1Specified
+        {
+            get
+            {
                 return this.xst1FieldSpecified;
             }
-            set {
+            set
+            {
                 this.xst1FieldSpecified = value;
                 this.RaisePropertyChanged("xst1Specified");
             }
@@ -4369,11 +4909,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public System.Nullable<uint> xst2 {
-            get {
+        public System.Nullable<uint> xst2
+        {
+            get
+            {
                 return this.xst2Field;
             }
-            set {
+            set
+            {
                 this.xst2Field = value;
                 this.RaisePropertyChanged("xst2");
             }
@@ -4381,11 +4924,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool xst2Specified {
-            get {
+        public bool xst2Specified
+        {
+            get
+            {
                 return this.xst2FieldSpecified;
             }
-            set {
+            set
+            {
                 this.xst2FieldSpecified = value;
                 this.RaisePropertyChanged("xst2Specified");
             }
@@ -4393,11 +4939,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public System.Nullable<uint> xst3 {
-            get {
+        public System.Nullable<uint> xst3
+        {
+            get
+            {
                 return this.xst3Field;
             }
-            set {
+            set
+            {
                 this.xst3Field = value;
                 this.RaisePropertyChanged("xst3");
             }
@@ -4405,11 +4954,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool xst3Specified {
-            get {
+        public bool xst3Specified
+        {
+            get
+            {
                 return this.xst3FieldSpecified;
             }
-            set {
+            set
+            {
                 this.xst3FieldSpecified = value;
                 this.RaisePropertyChanged("xst3Specified");
             }
@@ -4417,11 +4969,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute()]
-        public ArchivingType ar {
-            get {
+        public ArchivingType ar
+        {
+            get
+            {
                 return this.arField;
             }
-            set {
+            set
+            {
                 this.arField = value;
                 this.RaisePropertyChanged("ar");
             }
@@ -4429,11 +4984,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute()]
-        public ArchivingDeadbandType artd {
-            get {
+        public ArchivingDeadbandType artd
+        {
+            get
+            {
                 return this.artdField;
             }
-            set {
+            set
+            {
                 this.artdField = value;
                 this.RaisePropertyChanged("artd");
             }
@@ -4441,11 +4999,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("sg")]
-        public List<byte> sg {
-            get {
+        public List<byte> sg
+        {
+            get
+            {
                 return this.sgField;
             }
-            set {
+            set
+            {
                 this.sgField = value;
                 this.RaisePropertyChanged("sg");
             }
@@ -4453,11 +5014,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("tg")]
-        public List<byte> tg {
-            get {
+        public List<byte> tg
+        {
+            get
+            {
                 return this.tgField;
             }
-            set {
+            set
+            {
                 this.tgField = value;
                 this.RaisePropertyChanged("tg");
             }
@@ -4465,11 +5029,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute()]
-        public ushort df {
-            get {
+        public ushort df
+        {
+            get
+            {
                 return this.dfField;
             }
-            set {
+            set
+            {
                 this.dfField = value;
                 this.RaisePropertyChanged("df");
             }
@@ -4477,11 +5044,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute()]
-        public byte ap {
-            get {
+        public byte ap
+        {
+            get
+            {
                 return this.apField;
             }
-            set {
+            set
+            {
                 this.apField = value;
                 this.RaisePropertyChanged("ap");
             }
@@ -4489,11 +5059,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute()]
-        public string aux {
-            get {
+        public string aux
+        {
+            get
+            {
                 return this.auxField;
             }
-            set {
+            set
+            {
                 this.auxField = value;
                 this.RaisePropertyChanged("aux");
             }
@@ -4501,11 +5074,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public string un {
-            get {
+        public string un
+        {
+            get
+            {
                 return this.unField;
             }
-            set {
+            set
+            {
                 this.unField = value;
                 this.RaisePropertyChanged("un");
             }
@@ -4513,11 +5089,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public System.Nullable<byte> dp {
-            get {
+        public System.Nullable<byte> dp
+        {
+            get
+            {
                 return this.dpField;
             }
-            set {
+            set
+            {
                 this.dpField = value;
                 this.RaisePropertyChanged("dp");
             }
@@ -4525,11 +5104,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool dpSpecified {
-            get {
+        public bool dpSpecified
+        {
+            get
+            {
                 return this.dpFieldSpecified;
             }
-            set {
+            set
+            {
                 this.dpFieldSpecified = value;
                 this.RaisePropertyChanged("dpSpecified");
             }
@@ -4537,11 +5119,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public System.Nullable<float> ard {
-            get {
+        public System.Nullable<float> ard
+        {
+            get
+            {
                 return this.ardField;
             }
-            set {
+            set
+            {
                 this.ardField = value;
                 this.RaisePropertyChanged("ard");
             }
@@ -4549,11 +5134,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ardSpecified {
-            get {
+        public bool ardSpecified
+        {
+            get
+            {
                 return this.ardFieldSpecified;
             }
-            set {
+            set
+            {
                 this.ardFieldSpecified = value;
                 this.RaisePropertyChanged("ardSpecified");
             }
@@ -4561,11 +5149,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public System.Nullable<float> tb {
-            get {
+        public System.Nullable<float> tb
+        {
+            get
+            {
                 return this.tbField;
             }
-            set {
+            set
+            {
                 this.tbField = value;
                 this.RaisePropertyChanged("tb");
             }
@@ -4573,11 +5164,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool tbSpecified {
-            get {
+        public bool tbSpecified
+        {
+            get
+            {
                 return this.tbFieldSpecified;
             }
-            set {
+            set
+            {
                 this.tbFieldSpecified = value;
                 this.RaisePropertyChanged("tbSpecified");
             }
@@ -4585,11 +5179,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public System.Nullable<float> bb {
-            get {
+        public System.Nullable<float> bb
+        {
+            get
+            {
                 return this.bbField;
             }
-            set {
+            set
+            {
                 this.bbField = value;
                 this.RaisePropertyChanged("bb");
             }
@@ -4597,11 +5194,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool bbSpecified {
-            get {
+        public bool bbSpecified
+        {
+            get
+            {
                 return this.bbFieldSpecified;
             }
-            set {
+            set
+            {
                 this.bbFieldSpecified = value;
                 this.RaisePropertyChanged("bbSpecified");
             }
@@ -4609,11 +5209,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public System.Nullable<float> hl {
-            get {
+        public System.Nullable<float> hl
+        {
+            get
+            {
                 return this.hlField;
             }
-            set {
+            set
+            {
                 this.hlField = value;
                 this.RaisePropertyChanged("hl");
             }
@@ -4621,11 +5224,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool hlSpecified {
-            get {
+        public bool hlSpecified
+        {
+            get
+            {
                 return this.hlFieldSpecified;
             }
-            set {
+            set
+            {
                 this.hlFieldSpecified = value;
                 this.RaisePropertyChanged("hlSpecified");
             }
@@ -4633,11 +5239,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public System.Nullable<float> ll {
-            get {
+        public System.Nullable<float> ll
+        {
+            get
+            {
                 return this.llField;
             }
-            set {
+            set
+            {
                 this.llField = value;
                 this.RaisePropertyChanged("ll");
             }
@@ -4645,11 +5254,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool llSpecified {
-            get {
+        public bool llSpecified
+        {
+            get
+            {
                 return this.llFieldSpecified;
             }
-            set {
+            set
+            {
                 this.llFieldSpecified = value;
                 this.RaisePropertyChanged("llSpecified");
             }
@@ -4657,11 +5269,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public string dun {
-            get {
+        public string dun
+        {
+            get
+            {
                 return this.dunField;
             }
-            set {
+            set
+            {
                 this.dunField = value;
                 this.RaisePropertyChanged("dun");
             }
@@ -4669,11 +5284,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public System.Nullable<byte> ddp {
-            get {
+        public System.Nullable<byte> ddp
+        {
+            get
+            {
                 return this.ddpField;
             }
-            set {
+            set
+            {
                 this.ddpField = value;
                 this.RaisePropertyChanged("ddp");
             }
@@ -4681,11 +5299,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ddpSpecified {
-            get {
+        public bool ddpSpecified
+        {
+            get
+            {
                 return this.ddpFieldSpecified;
             }
-            set {
+            set
+            {
                 this.ddpFieldSpecified = value;
                 this.RaisePropertyChanged("ddpSpecified");
             }
@@ -4693,11 +5314,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public System.Nullable<double> dard {
-            get {
+        public System.Nullable<double> dard
+        {
+            get
+            {
                 return this.dardField;
             }
-            set {
+            set
+            {
                 this.dardField = value;
                 this.RaisePropertyChanged("dard");
             }
@@ -4705,11 +5329,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool dardSpecified {
-            get {
+        public bool dardSpecified
+        {
+            get
+            {
                 return this.dardFieldSpecified;
             }
-            set {
+            set
+            {
                 this.dardFieldSpecified = value;
                 this.RaisePropertyChanged("dardSpecified");
             }
@@ -4717,11 +5344,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public System.Nullable<double> dtb {
-            get {
+        public System.Nullable<double> dtb
+        {
+            get
+            {
                 return this.dtbField;
             }
-            set {
+            set
+            {
                 this.dtbField = value;
                 this.RaisePropertyChanged("dtb");
             }
@@ -4729,11 +5359,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool dtbSpecified {
-            get {
+        public bool dtbSpecified
+        {
+            get
+            {
                 return this.dtbFieldSpecified;
             }
-            set {
+            set
+            {
                 this.dtbFieldSpecified = value;
                 this.RaisePropertyChanged("dtbSpecified");
             }
@@ -4741,11 +5374,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public System.Nullable<double> dbb {
-            get {
+        public System.Nullable<double> dbb
+        {
+            get
+            {
                 return this.dbbField;
             }
-            set {
+            set
+            {
                 this.dbbField = value;
                 this.RaisePropertyChanged("dbb");
             }
@@ -4753,11 +5389,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool dbbSpecified {
-            get {
+        public bool dbbSpecified
+        {
+            get
+            {
                 return this.dbbFieldSpecified;
             }
-            set {
+            set
+            {
                 this.dbbFieldSpecified = value;
                 this.RaisePropertyChanged("dbbSpecified");
             }
@@ -4765,11 +5404,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public System.Nullable<double> dhl {
-            get {
+        public System.Nullable<double> dhl
+        {
+            get
+            {
                 return this.dhlField;
             }
-            set {
+            set
+            {
                 this.dhlField = value;
                 this.RaisePropertyChanged("dhl");
             }
@@ -4777,11 +5419,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool dhlSpecified {
-            get {
+        public bool dhlSpecified
+        {
+            get
+            {
                 return this.dhlFieldSpecified;
             }
-            set {
+            set
+            {
                 this.dhlFieldSpecified = value;
                 this.RaisePropertyChanged("dhlSpecified");
             }
@@ -4789,11 +5434,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public System.Nullable<double> dll {
-            get {
+        public System.Nullable<double> dll
+        {
+            get
+            {
                 return this.dllField;
             }
-            set {
+            set
+            {
                 this.dllField = value;
                 this.RaisePropertyChanged("dll");
             }
@@ -4801,11 +5449,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool dllSpecified {
-            get {
+        public bool dllSpecified
+        {
+            get
+            {
                 return this.dllFieldSpecified;
             }
-            set {
+            set
+            {
                 this.dllFieldSpecified = value;
                 this.RaisePropertyChanged("dllSpecified");
             }
@@ -4813,11 +5464,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public string sd {
-            get {
+        public string sd
+        {
+            get
+            {
                 return this.sdField;
             }
-            set {
+            set
+            {
                 this.sdField = value;
                 this.RaisePropertyChanged("sd");
             }
@@ -4825,11 +5479,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
-        public string rd {
-            get {
+        public string rd
+        {
+            get
+            {
                 return this.rdField;
             }
-            set {
+            set
+            {
                 this.rdField = value;
                 this.RaisePropertyChanged("rd");
             }
@@ -4837,11 +5494,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute()]
-        public Color foreground {
-            get {
+        public Color foreground
+        {
+            get
+            {
                 return this.foregroundField;
             }
-            set {
+            set
+            {
                 this.foregroundField = value;
                 this.RaisePropertyChanged("foreground");
             }
@@ -4849,11 +5509,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute()]
-        public Color background {
-            get {
+        public Color background
+        {
+            get
+            {
                 return this.backgroundField;
             }
-            set {
+            set
+            {
                 this.backgroundField = value;
                 this.RaisePropertyChanged("background");
             }
@@ -5018,11 +5681,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("sid", Order = 0)]
-        public uint[] sid {
-            get {
+        public uint[] sid
+        {
+            get
+            {
                 return this.sidField;
             }
-            set {
+            set
+            {
                 this.sidField = value;
                 this.RaisePropertyChanged("sid");
             }
@@ -5030,11 +5696,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public string iessRe {
-            get {
+        public string iessRe
+        {
+            get
+            {
                 return this.iessReField;
             }
-            set {
+            set
+            {
                 this.iessReField = value;
                 this.RaisePropertyChanged("iessRe");
             }
@@ -5042,11 +5711,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public string idcsRe {
-            get {
+        public string idcsRe
+        {
+            get
+            {
                 return this.idcsReField;
             }
-            set {
+            set
+            {
                 this.idcsReField = value;
                 this.RaisePropertyChanged("idcsRe");
             }
@@ -5054,11 +5726,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 3)]
-        public string zdRe {
-            get {
+        public string zdRe
+        {
+            get
+            {
                 return this.zdReField;
             }
-            set {
+            set
+            {
                 this.zdReField = value;
                 this.RaisePropertyChanged("zdRe");
             }
@@ -5066,11 +5741,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 4)]
-        public string descRe {
-            get {
+        public string descRe
+        {
+            get
+            {
                 return this.descReField;
             }
-            set {
+            set
+            {
                 this.descReField = value;
                 this.RaisePropertyChanged("descRe");
             }
@@ -5078,11 +5756,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 5)]
-        public string auxRe {
-            get {
+        public string auxRe
+        {
+            get
+            {
                 return this.auxReField;
             }
-            set {
+            set
+            {
                 this.auxReField = value;
                 this.RaisePropertyChanged("auxRe");
             }
@@ -5090,11 +5771,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("rt", Order = 6)]
-        public PointType[] rt {
-            get {
+        public PointType[] rt
+        {
+            get
+            {
                 return this.rtField;
             }
-            set {
+            set
+            {
                 this.rtField = value;
                 this.RaisePropertyChanged("rt");
             }
@@ -5102,11 +5786,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 7)]
-        public TimePeriod ts {
-            get {
+        public TimePeriod ts
+        {
+            get
+            {
                 return this.tsField;
             }
-            set {
+            set
+            {
                 this.tsField = value;
                 this.RaisePropertyChanged("ts");
             }
@@ -5114,11 +5801,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("quality", Order = 8)]
-        public Quality[] quality {
-            get {
+        public Quality[] quality
+        {
+            get
+            {
                 return this.qualityField;
             }
-            set {
+            set
+            {
                 this.qualityField = value;
                 this.RaisePropertyChanged("quality");
             }
@@ -5126,11 +5816,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 9)]
-        public uint stSet {
-            get {
+        public uint stSet
+        {
+            get
+            {
                 return this.stSetField;
             }
-            set {
+            set
+            {
                 this.stSetField = value;
                 this.RaisePropertyChanged("stSet");
             }
@@ -5138,11 +5831,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool stSetSpecified {
-            get {
+        public bool stSetSpecified
+        {
+            get
+            {
                 return this.stSetFieldSpecified;
             }
-            set {
+            set
+            {
                 this.stSetFieldSpecified = value;
                 this.RaisePropertyChanged("stSetSpecified");
             }
@@ -5150,11 +5846,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 10)]
-        public uint stUnset {
-            get {
+        public uint stUnset
+        {
+            get
+            {
                 return this.stUnsetField;
             }
-            set {
+            set
+            {
                 this.stUnsetField = value;
                 this.RaisePropertyChanged("stUnset");
             }
@@ -5162,11 +5861,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool stUnsetSpecified {
-            get {
+        public bool stUnsetSpecified
+        {
+            get
+            {
                 return this.stUnsetFieldSpecified;
             }
-            set {
+            set
+            {
                 this.stUnsetFieldSpecified = value;
                 this.RaisePropertyChanged("stUnsetSpecified");
             }
@@ -5174,11 +5876,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 11)]
-        public ushort dfSet {
-            get {
+        public ushort dfSet
+        {
+            get
+            {
                 return this.dfSetField;
             }
-            set {
+            set
+            {
                 this.dfSetField = value;
                 this.RaisePropertyChanged("dfSet");
             }
@@ -5186,11 +5891,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool dfSetSpecified {
-            get {
+        public bool dfSetSpecified
+        {
+            get
+            {
                 return this.dfSetFieldSpecified;
             }
-            set {
+            set
+            {
                 this.dfSetFieldSpecified = value;
                 this.RaisePropertyChanged("dfSetSpecified");
             }
@@ -5198,11 +5906,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 12)]
-        public ushort dfUnset {
-            get {
+        public ushort dfUnset
+        {
+            get
+            {
                 return this.dfUnsetField;
             }
-            set {
+            set
+            {
                 this.dfUnsetField = value;
                 this.RaisePropertyChanged("dfUnset");
             }
@@ -5210,11 +5921,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool dfUnsetSpecified {
-            get {
+        public bool dfUnsetSpecified
+        {
+            get
+            {
                 return this.dfUnsetFieldSpecified;
             }
-            set {
+            set
+            {
                 this.dfUnsetFieldSpecified = value;
                 this.RaisePropertyChanged("dfUnsetSpecified");
             }
@@ -5222,11 +5936,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("ar", Order = 13)]
-        public ArchivingType[] ar {
-            get {
+        public ArchivingType[] ar
+        {
+            get
+            {
                 return this.arField;
             }
-            set {
+            set
+            {
                 this.arField = value;
                 this.RaisePropertyChanged("ar");
             }
@@ -5234,11 +5951,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("artd", Order = 14)]
-        public ArchivingDeadbandType[] artd {
-            get {
+        public ArchivingDeadbandType[] artd
+        {
+            get
+            {
                 return this.artdField;
             }
-            set {
+            set
+            {
                 this.artdField = value;
                 this.RaisePropertyChanged("artd");
             }
@@ -5246,11 +5966,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("sg", Order = 15)]
-        public byte[] sg {
-            get {
+        public byte[] sg
+        {
+            get
+            {
                 return this.sgField;
             }
-            set {
+            set
+            {
                 this.sgField = value;
                 this.RaisePropertyChanged("sg");
             }
@@ -5258,11 +5981,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("tg", Order = 16)]
-        public byte[] tg {
-            get {
+        public byte[] tg
+        {
+            get
+            {
                 return this.tgField;
             }
-            set {
+            set
+            {
                 this.tgField = value;
                 this.RaisePropertyChanged("tg");
             }
@@ -5270,11 +5996,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("ap", Order = 17)]
-        public byte[] ap {
-            get {
+        public byte[] ap
+        {
+            get
+            {
                 return this.apField;
             }
-            set {
+            set
+            {
                 this.apField = value;
                 this.RaisePropertyChanged("ap");
             }
@@ -5282,11 +6011,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 18)]
-        public bool withoutPermission {
-            get {
+        public bool withoutPermission
+        {
+            get
+            {
                 return this.withoutPermissionField;
             }
-            set {
+            set
+            {
                 this.withoutPermissionField = value;
                 this.RaisePropertyChanged("withoutPermission");
             }
@@ -5294,11 +6026,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool withoutPermissionSpecified {
-            get {
+        public bool withoutPermissionSpecified
+        {
+            get
+            {
                 return this.withoutPermissionFieldSpecified;
             }
-            set {
+            set
+            {
                 this.withoutPermissionFieldSpecified = value;
                 this.RaisePropertyChanged("withoutPermissionSpecified");
             }
@@ -5333,11 +6068,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 0)]
-        public string desc {
-            get {
+        public string desc
+        {
+            get
+            {
                 return this.descField;
             }
-            set {
+            set
+            {
                 this.descField = value;
                 this.RaisePropertyChanged("desc");
             }
@@ -5345,11 +6083,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("sg", Order = 1)]
-        public byte[] sg {
-            get {
+        public byte[] sg
+        {
+            get
+            {
                 return this.sgField;
             }
-            set {
+            set
+            {
                 this.sgField = value;
                 this.RaisePropertyChanged("sg");
             }
@@ -5357,11 +6098,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("tg", Order = 2)]
-        public byte[] tg {
-            get {
+        public byte[] tg
+        {
+            get
+            {
                 return this.tgField;
             }
-            set {
+            set
+            {
                 this.tgField = value;
                 this.RaisePropertyChanged("tg");
             }
@@ -5412,11 +6156,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public uint id {
-            get {
+        public uint id
+        {
+            get
+            {
                 return this.idField;
             }
-            set {
+            set
+            {
                 this.idField = value;
                 this.RaisePropertyChanged("id");
             }
@@ -5424,11 +6171,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public string name {
-            get {
+        public string name
+        {
+            get
+            {
                 return this.nameField;
             }
-            set {
+            set
+            {
                 this.nameField = value;
                 this.RaisePropertyChanged("name");
             }
@@ -5436,11 +6186,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public string desc {
-            get {
+        public string desc
+        {
+            get
+            {
                 return this.descField;
             }
-            set {
+            set
+            {
                 this.descField = value;
                 this.RaisePropertyChanged("desc");
             }
@@ -5448,11 +6201,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("sg", Order = 3)]
-        public byte[] sg {
-            get {
+        public byte[] sg
+        {
+            get
+            {
                 return this.sgField;
             }
-            set {
+            set
+            {
                 this.sgField = value;
                 this.RaisePropertyChanged("sg");
             }
@@ -5460,11 +6216,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("tg", Order = 4)]
-        public byte[] tg {
-            get {
+        public byte[] tg
+        {
+            get
+            {
                 return this.tgField;
             }
-            set {
+            set
+            {
                 this.tgField = value;
                 this.RaisePropertyChanged("tg");
             }
@@ -5472,11 +6231,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 5)]
-        public ObjectSourceKind kind {
-            get {
+        public ObjectSourceKind kind
+        {
+            get
+            {
                 return this.kindField;
             }
-            set {
+            set
+            {
                 this.kindField = value;
                 this.RaisePropertyChanged("kind");
             }
@@ -5484,11 +6246,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 6)]
-        public string host {
-            get {
+        public string host
+        {
+            get
+            {
                 return this.hostField;
             }
-            set {
+            set
+            {
                 this.hostField = value;
                 this.RaisePropertyChanged("host");
             }
@@ -5496,11 +6261,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 7)]
-        public string prefix {
-            get {
+        public string prefix
+        {
+            get
+            {
                 return this.prefixField;
             }
-            set {
+            set
+            {
                 this.prefixField = value;
                 this.RaisePropertyChanged("prefix");
             }
@@ -5508,11 +6276,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 8)]
-        public string suffix {
-            get {
+        public string suffix
+        {
+            get
+            {
                 return this.suffixField;
             }
-            set {
+            set
+            {
                 this.suffixField = value;
                 this.RaisePropertyChanged("suffix");
             }
@@ -5520,11 +6291,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 9)]
-        public uint options {
-            get {
+        public uint options
+        {
+            get
+            {
                 return this.optionsField;
             }
-            set {
+            set
+            {
                 this.optionsField = value;
                 this.RaisePropertyChanged("options");
             }
@@ -5532,11 +6306,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 10)]
-        public bool hasPermission {
-            get {
+        public bool hasPermission
+        {
+            get
+            {
                 return this.hasPermissionField;
             }
-            set {
+            set
+            {
                 this.hasPermissionField = value;
                 this.RaisePropertyChanged("hasPermission");
             }
@@ -5624,11 +6401,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("id", Order = 0)]
-        public uint[] id {
-            get {
+        public uint[] id
+        {
+            get
+            {
                 return this.idField;
             }
-            set {
+            set
+            {
                 this.idField = value;
                 this.RaisePropertyChanged("id");
             }
@@ -5636,11 +6416,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public string nameRe {
-            get {
+        public string nameRe
+        {
+            get
+            {
                 return this.nameReField;
             }
-            set {
+            set
+            {
                 this.nameReField = value;
                 this.RaisePropertyChanged("nameRe");
             }
@@ -5648,11 +6431,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public string descRe {
-            get {
+        public string descRe
+        {
+            get
+            {
                 return this.descReField;
             }
-            set {
+            set
+            {
                 this.descReField = value;
                 this.RaisePropertyChanged("descRe");
             }
@@ -5660,11 +6446,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("sg", Order = 3)]
-        public byte[] sg {
-            get {
+        public byte[] sg
+        {
+            get
+            {
                 return this.sgField;
             }
-            set {
+            set
+            {
                 this.sgField = value;
                 this.RaisePropertyChanged("sg");
             }
@@ -5672,11 +6461,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("tg", Order = 4)]
-        public byte[] tg {
-            get {
+        public byte[] tg
+        {
+            get
+            {
                 return this.tgField;
             }
-            set {
+            set
+            {
                 this.tgField = value;
                 this.RaisePropertyChanged("tg");
             }
@@ -5685,11 +6477,14 @@ namespace EDSProj.EDSWebService
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 5)]
         [System.ComponentModel.DefaultValueAttribute(ObjectSourceKind.OBJECTSOURCEKINDUNKNOWN)]
-        public ObjectSourceKind kind {
-            get {
+        public ObjectSourceKind kind
+        {
+            get
+            {
                 return this.kindField;
             }
-            set {
+            set
+            {
                 this.kindField = value;
                 this.RaisePropertyChanged("kind");
             }
@@ -5697,11 +6492,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 6)]
-        public string hostRe {
-            get {
+        public string hostRe
+        {
+            get
+            {
                 return this.hostReField;
             }
-            set {
+            set
+            {
                 this.hostReField = value;
                 this.RaisePropertyChanged("hostRe");
             }
@@ -5709,11 +6507,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 7)]
-        public string prefixRe {
-            get {
+        public string prefixRe
+        {
+            get
+            {
                 return this.prefixReField;
             }
-            set {
+            set
+            {
                 this.prefixReField = value;
                 this.RaisePropertyChanged("prefixRe");
             }
@@ -5721,11 +6522,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 8)]
-        public string suffixRe {
-            get {
+        public string suffixRe
+        {
+            get
+            {
                 return this.suffixReField;
             }
-            set {
+            set
+            {
                 this.suffixReField = value;
                 this.RaisePropertyChanged("suffixRe");
             }
@@ -5733,11 +6537,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 9)]
-        public uint optionsSet {
-            get {
+        public uint optionsSet
+        {
+            get
+            {
                 return this.optionsSetField;
             }
-            set {
+            set
+            {
                 this.optionsSetField = value;
                 this.RaisePropertyChanged("optionsSet");
             }
@@ -5745,11 +6552,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool optionsSetSpecified {
-            get {
+        public bool optionsSetSpecified
+        {
+            get
+            {
                 return this.optionsSetFieldSpecified;
             }
-            set {
+            set
+            {
                 this.optionsSetFieldSpecified = value;
                 this.RaisePropertyChanged("optionsSetSpecified");
             }
@@ -5757,11 +6567,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 10)]
-        public uint optionsUnset {
-            get {
+        public uint optionsUnset
+        {
+            get
+            {
                 return this.optionsUnsetField;
             }
-            set {
+            set
+            {
                 this.optionsUnsetField = value;
                 this.RaisePropertyChanged("optionsUnset");
             }
@@ -5769,11 +6582,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool optionsUnsetSpecified {
-            get {
+        public bool optionsUnsetSpecified
+        {
+            get
+            {
                 return this.optionsUnsetFieldSpecified;
             }
-            set {
+            set
+            {
                 this.optionsUnsetFieldSpecified = value;
                 this.RaisePropertyChanged("optionsUnsetSpecified");
             }
@@ -5781,11 +6597,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 11)]
-        public bool withoutPermission {
-            get {
+        public bool withoutPermission
+        {
+            get
+            {
                 return this.withoutPermissionField;
             }
-            set {
+            set
+            {
                 this.withoutPermissionField = value;
                 this.RaisePropertyChanged("withoutPermission");
             }
@@ -5793,11 +6612,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool withoutPermissionSpecified {
-            get {
+        public bool withoutPermissionSpecified
+        {
+            get
+            {
                 return this.withoutPermissionFieldSpecified;
             }
-            set {
+            set
+            {
                 this.withoutPermissionFieldSpecified = value;
                 this.RaisePropertyChanged("withoutPermissionSpecified");
             }
@@ -5832,11 +6654,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(IsNullable = true, Order = 0)]
-        public string name {
-            get {
+        public string name
+        {
+            get
+            {
                 return this.nameField;
             }
-            set {
+            set
+            {
                 this.nameField = value;
                 this.RaisePropertyChanged("name");
             }
@@ -5844,11 +6669,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("sg", Order = 1)]
-        public byte[] sg {
-            get {
+        public byte[] sg
+        {
+            get
+            {
                 return this.sgField;
             }
-            set {
+            set
+            {
                 this.sgField = value;
                 this.RaisePropertyChanged("sg");
             }
@@ -5856,11 +6684,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("tg", Order = 2)]
-        public byte[] tg {
-            get {
+        public byte[] tg
+        {
+            get
+            {
                 return this.tgField;
             }
-            set {
+            set
+            {
                 this.tgField = value;
                 this.RaisePropertyChanged("tg");
             }
@@ -5907,11 +6738,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public string file {
-            get {
+        public string file
+        {
+            get
+            {
                 return this.fileField;
             }
-            set {
+            set
+            {
                 this.fileField = value;
                 this.RaisePropertyChanged("file");
             }
@@ -5919,11 +6753,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public string name {
-            get {
+        public string name
+        {
+            get
+            {
                 return this.nameField;
             }
-            set {
+            set
+            {
                 this.nameField = value;
                 this.RaisePropertyChanged("name");
             }
@@ -5931,11 +6768,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public string sourceName {
-            get {
+        public string sourceName
+        {
+            get
+            {
                 return this.sourceNameField;
             }
-            set {
+            set
+            {
                 this.sourceNameField = value;
                 this.RaisePropertyChanged("sourceName");
             }
@@ -5943,11 +6783,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 3)]
-        public uint sourceId {
-            get {
+        public uint sourceId
+        {
+            get
+            {
                 return this.sourceIdField;
             }
-            set {
+            set
+            {
                 this.sourceIdField = value;
                 this.RaisePropertyChanged("sourceId");
             }
@@ -5955,11 +6798,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 4)]
-        public Timestamp lastModified {
-            get {
+        public Timestamp lastModified
+        {
+            get
+            {
                 return this.lastModifiedField;
             }
-            set {
+            set
+            {
                 this.lastModifiedField = value;
                 this.RaisePropertyChanged("lastModified");
             }
@@ -5967,11 +6813,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("sg", Order = 5)]
-        public byte[] sg {
-            get {
+        public byte[] sg
+        {
+            get
+            {
                 return this.sgField;
             }
-            set {
+            set
+            {
                 this.sgField = value;
                 this.RaisePropertyChanged("sg");
             }
@@ -5979,11 +6828,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("tg", Order = 6)]
-        public byte[] tg {
-            get {
+        public byte[] tg
+        {
+            get
+            {
                 return this.tgField;
             }
-            set {
+            set
+            {
                 this.tgField = value;
                 this.RaisePropertyChanged("tg");
             }
@@ -5991,11 +6843,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 7)]
-        public string md5 {
-            get {
+        public string md5
+        {
+            get
+            {
                 return this.md5Field;
             }
-            set {
+            set
+            {
                 this.md5Field = value;
                 this.RaisePropertyChanged("md5");
             }
@@ -6003,11 +6858,14 @@ namespace EDSProj.EDSWebService
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 8)]
-        public bool hasPermission {
-            get {
+        public bool hasPermission
+        {
+            get
+            {
                 return this.hasPermissionField;
             }
-            set {
+            set
+            {
                 this.hasPermissionField = value;
                 this.RaisePropertyChanged("hasPermission");
             }

@@ -1382,7 +1382,7 @@ namespace NPRCHApp
         {
             Random r = new Random();
             str = str.Replace(":", ";");
-            str = str.Replace(".", ",");
+            //str = str.Replace(".", ",");
             string[] vals = str.Split(new char[] { ';' });
             int sec = Int32.Parse(vals[0]);
             F_ob = Double.Parse(vals[1]);

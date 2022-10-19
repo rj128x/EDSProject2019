@@ -30,7 +30,7 @@
                         <TextBox Name="txtDiffHour" Width="50" HorizontalAlignment="Right" FontSize="20"/>
                     </StackPanel>
                     <Calendar Name="clndDate"  IsTodayHighlighted="False"/>
-                    <CheckBox Content="Считывать участие НПРЧ по макету" x:Name="chbNPRCHMaket" IsChecked="True"/>
+                    <CheckBox Content="Считывать участие НПРЧ по макету" x:Name="chbNPRCHMaket" IsChecked="False"/>
 
                     <Button Name="btnLoadFiles" Click="btnLoadFiles_Click" Content="Получить файлы" Height="30" />
                 </StackPanel>

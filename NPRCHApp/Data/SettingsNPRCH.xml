@@ -3,12 +3,12 @@
 			 xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
   <FTPActive>false</FTPActive>
-  <FTPServer>10.7.3.14</FTPServer>
+  <FTPServer>10.101.3.1</FTPServer>
   <FTPPort>21</FTPPort>
-  <FTPUser>nprch_i_votges</FTPUser>
-  <FTPPassword>V0t#1Nt</FTPPassword>
+  <FTPUser>NPRCH_GES</FTPUser>
+  <FTPPassword>NPRCH_GES</FTPPassword>
   <FTPFolder></FTPFolder>
   <!--<BlocksString>10~100~35~100~48;04~115~40~115~44;</BlocksString>-->
-  <BlocksString>10~100~35~100~48;04~115~40~115~44;05~115~40~115~44;07~115~40~115~44;</BlocksString>
+  <BlocksString>03~115~40~115~44~13;05~115~40~115~44~13;07~115~40~115~44~8</BlocksString>
 
 </SettingsNPRCH>

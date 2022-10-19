@@ -35,13 +35,16 @@ namespace NPRCHApp
         public double FNom { get; set; }
         public double PMin { get; set; }
         public double PMax { get; set; }
-        public BlockData(string num,double pnom,double pmin,double pmax,double Fnom)
+
+        public double MPFakt { get; set; }
+        public BlockData(string num,double pnom, double pmin, double pmax, double Fnom, double mpFakt)
         {
             BlockNumber = num;
             PMax = pmax;
             PMin = pmin;
             PNom = pnom;
             FNom = Fnom;
+            MPFakt = mpFakt;
         }
 
     }
@@ -113,7 +116,7 @@ namespace NPRCHApp
 
          public  async void init()
         {
-            bool ok=await RecordHour.initEDS();
+            //bool ok=await RecordHour.initEDS();
         }
         private void btnLoad_Click(object sender, RoutedEventArgs e)
         {
@@ -121,7 +124,7 @@ namespace NPRCHApp
         }
 
         private void btnLoadFiles_Click(object sender, RoutedEventArgs e)
-        {
+        {            
             StatusText = "Загрузка";
             string FN = chbReserv.IsChecked.Value ? "/Data/settingsNPRCHReserv.xml" : "/Data/settingsNPRCH.xml";
             SettingsNPRCH.init(System.AppDomain.CurrentDomain.BaseDirectory + FN);
@@ -268,10 +271,10 @@ namespace NPRCHApp
             list_Fmin.Add(date.AddHours(1), 49.98);
             list_Fmax.Add(date, 50.02);
             list_Fmax.Add(date.AddHours(1), 50.02);
-            list_FminReal.Add(date, 49.987);
-            list_FminReal.Add(date.AddHours(1), 49.987);
-            list_FmaxReal.Add(date, 50.013);
-            list_FmaxReal.Add(date.AddHours(1), 50.013);
+            list_FminReal.Add(date, 50- SettingsNPRCH.BlocksDict[block].MPFakt);
+            list_FminReal.Add(date.AddHours(1), 50 - SettingsNPRCH.BlocksDict[block].MPFakt);
+            list_FmaxReal.Add(date, 50 + SettingsNPRCH.BlocksDict[block].MPFakt);
+            list_FmaxReal.Add(date.AddHours(1), 50 + SettingsNPRCH.BlocksDict[block].MPFakt);
 
             foreach (Record rec in Data.Values)
             {

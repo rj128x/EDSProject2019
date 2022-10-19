@@ -208,7 +208,7 @@ namespace EDSProj.ModesCentre
             {
                 IList<IGenObject> objs = new List<IGenObject>();
                 objs.Add(obj);
-                api.RefreshGenObjects(objs, dt1, SyncZone.First);
+                api.RefreshGenObjects(objs, dt1,1,0,ModesTaskType.OU, SyncZone.First);
                 IVarParam vp = obj.GetVarParam("НПРЧ_уч");
                 for (int i = 0; i < 24; i++)
                 {

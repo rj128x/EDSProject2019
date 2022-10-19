@@ -2,6 +2,7 @@
 using EDSProj.EDS;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Runtime.InteropServices;
@@ -330,6 +331,7 @@ namespace EDSProj
                 table = string.Format("<table border='1'>{0}{1}</table></html>", header, table);
 
 
+                
                 //FileInfo file = new FileInfo("c:/int/ftpfolder/"+fn);
                 System.Net.Mail.MailMessage mess = new System.Net.Mail.MailMessage();
 
@@ -337,6 +339,14 @@ namespace EDSProj
 
                 mess.Subject = String.Format("Диспетчерские команды {0} - {1}", DateStart.ToString("dd.MM.yyyy"), DateEnd.ToString("dd.MM.yyyy"));
                 mess.Body = String.Format("<html><h1>{0}</h1>{1}</html>", mess.Subject, table);
+
+                try
+                {
+                    StreamWriter sw = new StreamWriter(String.Format("E:/DKData/{0}.html", mess.Subject));
+                    sw.Write(mess.Body);
+                    sw.Close();
+                }
+                catch { }
 
                 string[] mails = Settings.Single.DKMail.Split(';');
                 foreach (string mail in mails)

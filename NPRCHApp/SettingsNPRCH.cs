@@ -65,7 +65,11 @@ namespace NPRCHApp
                     try
                     {
                         string[] arr = blockStr.Split(new char[] { '~' });
-                        BlockData bd = new BlockData(arr[0], Int32.Parse(arr[1]), Int32.Parse(arr[2]), Int32.Parse(arr[3]),60.0/Int32.Parse(arr[4])*50.0);
+                        BlockData bd = new BlockData(arr[0], 
+							Int32.Parse(arr[1]), 
+							Int32.Parse(arr[2]), 
+							Int32.Parse(arr[3]), 60.0 / Int32.Parse(arr[4]) * 50.0, 
+							Int32.Parse(arr[5])/1000.0);
                         BlocksDict.Add(bd.BlockNumber, bd);
                     }
                     catch { }

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>EDSProj</RootNamespace>
     <AssemblyName>EDSProj</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -57,8 +57,9 @@
       <HintPath>..\libs\MODES082019\Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <HintPath>..\libs\log4net\log4net.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\EDSProj\libs\MODES082019\log4net.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="ModesApiExternal, Version=1.4.7.12, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

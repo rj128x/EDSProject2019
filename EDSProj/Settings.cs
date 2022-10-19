@@ -38,6 +38,13 @@ namespace EDSProj
 		}
 	}
 
+	public class DiagGGRecord
+	{
+		public string gg { get; set; }
+		public string dateStartRead { get; set; }
+		public bool activeReport { get; set; }
+	}
+
 	public class Settings
 	{
 		public string DBName { get; set; }
@@ -57,6 +64,11 @@ namespace EDSProj
 
 		public string DiagFolder { get; set; }
 		public string DiagMail { get; set; }
+		public string DiagNewGG { get; set; }
+		public string DiagOldGG { get; set; }
+
+		public List<DiagGGRecord> DiagSettings { get; set; }
+				
 
 		public static Settings Single { get; protected set; }
 		public static void init(string filename) {
